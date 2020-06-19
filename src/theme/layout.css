@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,900&display=swap');
+html, body,div,p,a,button,span{
+    font-family: 'Ubuntu', sans-serif;
+}
+html{
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+body{
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+img{
+    max-width: 100%;
+}
+#app{
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 auto;
+}
