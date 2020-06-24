@@ -1,15 +1,15 @@
 import React from 'react';
 import {
-  Toolbar, Typography, IconButton, Button,
+  Typography, IconButton, Button,
 } from '@material-ui/core/';
 import MenuIcon from '@material-ui/icons/Menu';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import PropTypes from 'prop-types';
-import { AppBarCustom, TitleWrapper } from './index.styled';
+import { AppBarCustom, Header, TitleWrapper } from './index.styled';
 
 const HeaderComponent = ({ sidebarToggle, handleToggleSidebar, logout }) => (
   <AppBarCustom open={sidebarToggle} position="fixed">
-    <Toolbar>
+    <Header>
       <IconButton
         edge="start"
         color="inherit"
@@ -24,7 +24,7 @@ const HeaderComponent = ({ sidebarToggle, handleToggleSidebar, logout }) => (
         </Typography>
       </TitleWrapper>
       <Button onClick={logout} color="inherit"><ExitToAppIcon /></Button>
-    </Toolbar>
+    </Header>
   </AppBarCustom>
 );
 
