@@ -51,32 +51,39 @@ const columnsDefault = [
   },
 ];
 
-const TableComponent = ({ elements, columns }) => (
+const TableComponent = ({ elements, columns, editButton }) => (
   <TableContainer component={Paper}>
     <Table aria-label="simple table">
       <TableHead>
         <TableRow>
           {columns.map((col, i) => (
-            <TableCellComponent cellvalue={col.label} cellindex={i} />
+            <TableCellComponent
+              key={`table-head-${col.attr}`}
+              cellvalue={col.label}
+              cellindex={i}
+            />
           ))}
-          <TableCellComponent cellvalue="Editar" cellindex={columns.length} />
+          {editButton && <TableCellComponent cellvalue="Editar" cellindex={columns.length} />}
         </TableRow>
       </TableHead>
       <TableBody>
         {elements.map((el) => (
-          <TableRow>
+          <TableRow key={`table-row-${el.id}`}>
             {columns.map((col, i) => (
               <TableCellComponent
+                key={`table-cell-${col.attr}`}
                 cellvalue={el[col.attr]}
                 cellindex={i}
                 type={col.type}
               />
             ))}
+            {editButton && (
             <TableCellComponent
               cellvalue="/edit/id"
               cellindex={columns.length}
               type="edit"
             />
+            )}
           </TableRow>
         ))}
       </TableBody>
@@ -87,11 +94,13 @@ const TableComponent = ({ elements, columns }) => (
 TableComponent.defaultProps = {
   elements: elementsDefault,
   columns: columnsDefault,
+  editButton: false,
 };
 
 TableComponent.propTypes = {
   elements: PropTypes.arrayOf(PropTypes.object),
   columns: PropTypes.arrayOf(PropTypes.object),
+  editButton: PropTypes.bool,
 };
 
 export default TableComponent;

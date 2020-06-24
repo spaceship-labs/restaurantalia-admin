@@ -10,6 +10,10 @@ const initialState = {
     jwt: '',
     loginError: '',
   },
+  menus: {
+    menusList: {},
+    menuSingle: {},
+  },
 };
 
 const sagaMiddleware = createSagaMiddleware();
