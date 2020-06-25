@@ -9,7 +9,7 @@ import {
 import {
   watchgetMenusSaga,
   watchgetMenuSingleSaga,
-} from './menu';
+} from './restaurants';
 
 const getstatus = (state) => ({
   status: state.status,
