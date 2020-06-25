@@ -31,6 +31,11 @@ class MenusContainerNoConnect extends Component {
         label: 'Activo',
         type: 'bool',
       },
+      {
+        attr: 'qrUrl',
+        label: 'Descarga QR',
+        type: 'download',
+      },
     ];
     return (
       <>

@@ -1,5 +1,7 @@
 import restaurantActions from '../actions/restaurants';
 
+const googleUrl = 'https://chart.googleapis.com/chart?cht=qr&choe=UTF-8&chs=500x500&chl=';
+
 const initalState = {
   menusList: {},
   menusIds: [],
@@ -9,9 +11,19 @@ const initalState = {
   loading: false,
 };
 
+const generateQrUrl = (menu) => {
+  const pageUrl = 'http://restaurantalia.com/';
+  const { slug, restaurante } = menu;
+  return `${googleUrl}${pageUrl}${restaurante.slug}/${slug}`;
+};
+
 const formatMenus = (data) => {
   const menusList = data.reduce((r, item) => {
-    const newItem = { ...item, restauranteNombre: item.restaurante.nombre };
+    const newItem = {
+      ...item,
+      restauranteNombre: item.restaurante.nombre,
+      qrUrl: generateQrUrl(item),
+    };
     return { ...r, [item.slug]: newItem };
   }, {});
   const menusIds = Object.keys(menusList);
