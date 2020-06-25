@@ -12,7 +12,11 @@ const initialState = {
   },
   menus: {
     menusList: {},
+    menusIds: [],
     menuSingle: {},
+    restaurantesList: {},
+    restaurantesIds: [],
+    loading: false,
   },
 };
 

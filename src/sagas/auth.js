@@ -19,6 +19,8 @@ const {
 
 const {
   GET_MENUS,
+  SET_LOADING,
+  SET_RESTAURANTES,
 } = menuActions.types;
 
 const loginRequest = async (data) => login(data);
@@ -57,7 +59,10 @@ function* getUserSaga() {
       user: localData.user,
     };
     yield put({ type: SET_LOGIN, payload: { result: loginResponse } });
+    const restaurantesResponse = loginResponse.user.restaurantes;
+    yield put({ type: SET_RESTAURANTES, payload: { restaurantesResponse } });
     yield put({ type: GET_MENUS, payload: { page: 1 } });
+    yield put({ type: SET_LOADING, payload: { loading: true } });
   }
 }
 

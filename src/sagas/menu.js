@@ -3,11 +3,13 @@ import {
 } from 'redux-saga/effects';
 import { getMenus, getMenu } from '../api';
 import menuActions from '../actions/restaurants';
+import { menusList } from './fakedata';
 
 const {
   GET_MENUS,
   GET_MENU,
   SET_MENUS,
+  SET_LOADING,
 } = menuActions.types;
 
 const getMenusRequest = async (data) => getMenus(data);
@@ -23,9 +25,11 @@ function* getMenusSaga(action) {
     const restaurantIds = user.restaurantes.map((r) => r.id);
     const menusResponse = yield call(getMenusRequest, { jwt, restaurantIds, page });
     // console.log('menusResponse', menusResponse);
+    yield put({ type: SET_LOADING, payload: { loading: false } });
     yield put({ type: SET_MENUS, payload: { menusResponse } });
   } catch {
-    const menusResponse = [];
+    const menusResponse = menusList;
+    yield put({ type: SET_LOADING, payload: { loading: false } });
     yield put({ type: SET_MENUS, payload: { menusResponse } });
     // set error
   }
