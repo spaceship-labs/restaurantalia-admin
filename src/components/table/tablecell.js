@@ -5,6 +5,7 @@ import { green, red } from '@material-ui/core/colors';
 import BlockIcon from '@material-ui/icons/Block';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import EditIcon from '@material-ui/icons/Edit';
+import GetAppIcon from '@material-ui/icons/GetApp';
 
 const TableCellComponent = ({ cellvalue, cellindex, type }) => {
   const getValue = (val) => {
@@ -21,6 +22,19 @@ const TableCellComponent = ({ cellvalue, cellindex, type }) => {
         <Button variant="contained" color="primary">
           <EditIcon />
         </Button>
+      );
+    }
+    if (type === 'download') {
+      return (
+        <a
+          href={cellvalue}
+          target="_blank"
+          download="CodigoQr.png"
+          aria-label="Download"
+          rel="noopener noreferrer"
+        >
+          <GetAppIcon />
+        </a>
       );
     }
     return val;

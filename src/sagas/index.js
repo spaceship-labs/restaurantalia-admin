@@ -3,9 +3,13 @@ import {
 } from 'redux-saga/effects';
 import {
   watchGetUserSaga,
-  watchForgetPokemonsSaga,
+  watchDoLoginSaga,
   watchLogoutSaga,
 } from './auth';
+import {
+  watchgetMenusSaga,
+  watchgetMenuSingleSaga,
+} from './restaurants';
 
 const getstatus = (state) => ({
   status: state.status,
@@ -24,8 +28,9 @@ export function* watchEmptySaga() {
 export function* rootSaga() {
   yield all([
     watchGetUserSaga(),
-    watchForgetPokemonsSaga(),
+    watchDoLoginSaga(),
     watchLogoutSaga(),
-    watchEmptySaga(),
+    watchgetMenusSaga(),
+    watchgetMenuSingleSaga,
   ]);
 }
