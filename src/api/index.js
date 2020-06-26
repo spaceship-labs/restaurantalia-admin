@@ -34,3 +34,13 @@ export const getMenu = async ({ jwt, id }) => {
   const { data } = await getData(`menus/${id}`, jwt);
   return data;
 };
+
+export const getCategories = async ({ jwt, empresasIds }) => {
+  const limit = -1;
+  const empresas = empresasIds.reduce((result, r) => (
+    `${result}&empresa=${r}`
+  ), '');
+  const params = `?_limit=${limit}${empresas}`;
+  const { data } = await getData(`categorias${params}`, jwt);
+  return data;
+};

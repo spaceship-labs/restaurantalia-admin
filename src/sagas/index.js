@@ -10,6 +10,9 @@ import {
   watchgetMenusSaga,
   watchgetMenuSingleSaga,
 } from './restaurants';
+import {
+  watchgetCategoriesSaga,
+} from './categories';
 
 const getstatus = (state) => ({
   status: state.status,
@@ -31,6 +34,7 @@ export function* rootSaga() {
     watchDoLoginSaga(),
     watchLogoutSaga(),
     watchgetMenusSaga(),
-    watchgetMenuSingleSaga,
+    watchgetMenuSingleSaga(),
+    watchgetCategoriesSaga(),
   ]);
 }
