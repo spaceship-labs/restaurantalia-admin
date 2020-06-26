@@ -63,7 +63,7 @@ class LayoutUnconnect extends Component {
           handleToggleSidebar={this.handleToggleSidebar}
         />
         <Content>
-          {children}
+          { userId > 0 && children}
         </Content>
       </Wrapper>
     );

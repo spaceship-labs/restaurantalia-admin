@@ -51,7 +51,8 @@ TableCellComponent.defaultProps = {
 };
 
 TableCellComponent.propTypes = {
-  cellvalue: PropTypes.string.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  cellvalue: PropTypes.any.isRequired,
   cellindex: PropTypes.number.isRequired,
   type: PropTypes.string,
 };

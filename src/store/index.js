@@ -18,6 +18,11 @@ const initialState = {
     restaurantesIds: [],
     loading: false,
   },
+  categories: {
+    categoriesList: {},
+    categoriesIds: [],
+    loading: false,
+  },
 };
 
 const sagaMiddleware = createSagaMiddleware();
