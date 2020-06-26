@@ -28,10 +28,10 @@ const categoriesReducer = (state = initalState, action) => {
       categoriesList,
       categoriesIds,
     };
-    console.log('categories state', newState);
+    // console.log('categories state', newState);
     return newState;
   }
-  if (type === categoriesActions.types.SET_CATEGORIES_LOGIN) {
+  if (type === categoriesActions.types.SET_CATEGORIES_LOADING) {
     const { loading } = action.payload;
     const newState = {
       ...state,

@@ -20,8 +20,12 @@ const LoadingComponent = ({ open }) => {
   );
 };
 
+LoadingComponent.defaultProps = {
+  open: false,
+};
+
 LoadingComponent.propTypes = {
-  open: PropTypes.bool.isRequired,
+  open: PropTypes.bool,
 };
 
 export default LoadingComponent;
