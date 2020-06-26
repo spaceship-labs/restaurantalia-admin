@@ -11,12 +11,12 @@ class CategoriesContainerNoConnect extends Component {
   constructor(props) {
     super(props);
     const {
-      categoriesIds, getCategories, setCategoriesLogin,
+      categoriesIds, getCategories, setCategoriesLoading,
     } = this.props;
     // console.log('categoriesIds', categoriesIds);
     if (categoriesIds.length === 0) {
       getCategories();
-      setCategoriesLogin({ loading: true });
+      setCategoriesLoading({ loading: true });
     }
   }
 
@@ -61,7 +61,7 @@ CategoriesContainerNoConnect.propTypes = {
   categoriesIds: PropTypes.arrayOf(PropTypes.string).isRequired,
   loading: PropTypes.bool.isRequired,
   getCategories: PropTypes.func.isRequired,
-  setCategoriesLogin: PropTypes.func.isRequired,
+  setCategoriesLoading: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => {
@@ -72,11 +72,11 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-  const { getCategories, setCategoriesLogin } = categoriesActions.creators;
+  const { getCategories, setCategoriesLoading } = categoriesActions.creators;
   return bindActionCreators(
     {
       getCategories,
-      setCategoriesLogin,
+      setCategoriesLoading,
     },
     dispatch,
   );
