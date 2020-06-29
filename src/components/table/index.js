@@ -37,7 +37,9 @@ const columnsDefault = [
   },
 ];
 
-const TableComponent = ({ elements, columns, editButton }) => {
+const TableComponent = ({
+  elements, columns, editButton, collection,
+}) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(15);
 
@@ -83,7 +85,7 @@ const TableComponent = ({ elements, columns, editButton }) => {
                     ))}
                     {editButton && (
                     <TableCellComponent
-                      cellvalue="/edit/id"
+                      cellvalue={`${collection}/editar/${el.id}`}
                       cellindex={columns.length}
                       type="edit"
                     />
@@ -111,12 +113,14 @@ TableComponent.defaultProps = {
   elements: elementsDefault,
   columns: columnsDefault,
   editButton: false,
+  collection: '',
 };
 
 TableComponent.propTypes = {
   elements: PropTypes.object,
   columns: PropTypes.arrayOf(PropTypes.object),
   editButton: PropTypes.bool,
+  collection: PropTypes.string,
 };
 
 export default TableComponent;

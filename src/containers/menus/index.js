@@ -51,6 +51,8 @@ class MenusContainerNoConnect extends Component {
         <TableComponent
           elements={menusList}
           columns={attrsArray}
+          collection="menus"
+          editButton
         />
         <LoadingComponent open={loading} />
       </>

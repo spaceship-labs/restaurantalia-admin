@@ -1,12 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form } from './index.styled';
+import { Divider, Button, Paper } from '@material-ui/core';
+import { Form, FormFooter } from './index.styled';
 import FieldComponent from './field';
 
 const FormComponent = ({ handleSubmit, fields }) => (
-  <Form onSubmit={handleSubmit}>
-    {fields.map((f) => <FieldComponent field={f} />)}
-  </Form>
+  <Paper>
+    <Form onSubmit={handleSubmit}>
+      {fields.map((f) => <FieldComponent field={f} />)}
+      <FormFooter>
+        <Divider variant="fullWidth" />
+        <br />
+        <Button type="submit" color="primary" variant="contained">
+          Guardar
+        </Button>
+      </FormFooter>
+    </Form>
+  </Paper>
 );
 
 FormComponent.propTypes = {

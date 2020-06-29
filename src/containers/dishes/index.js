@@ -48,10 +48,12 @@ class DishesContainerNoConnect extends Component {
         <HeadComponent
           title="Platillos"
           description="Listado de platillos disponibles en tus resaurantes"
+          createUrl="/platillos/crear"
         />
         <TableComponent
           elements={dishesList}
           columns={attrsArray}
+          collection="platillos"
           editButton
         />
         <LoadingComponent open={loading} />

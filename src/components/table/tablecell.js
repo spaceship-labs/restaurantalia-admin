@@ -20,7 +20,7 @@ const TableCellComponent = ({ cellvalue, cellindex, type }) => {
     }
     if (type === 'edit') {
       return (
-        <Button variant="contained" color="primary">
+        <Button href={cellvalue} variant="contained" color="primary">
           <EditIcon />
         </Button>
       );

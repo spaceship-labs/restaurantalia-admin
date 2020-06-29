@@ -7,7 +7,6 @@ export const Form = styled.form`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  max-width: 1000px;
   box-sizing: border-box;
   width: 100%;
   & > .MuiFormControl-root{
@@ -16,4 +15,7 @@ export const Form = styled.form`
   }
 `;
 
-export const FormWrapper = styled.div``;
+export const FormFooter = styled.div`
+  width: 100%;
+  margin-top: 25px;
+`;
