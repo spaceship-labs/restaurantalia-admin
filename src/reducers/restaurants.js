@@ -11,11 +11,13 @@ const initalState = {
   loading: false,
 };
 
-const generateQrUrl = (menu) => {
+const getUrl = (menu) => {
   const pageUrl = 'http://restaurantalia.com/';
   const { slug, restaurante } = menu;
-  return `${googleUrl}${pageUrl}${restaurante.slug}/${slug}`;
+  return `${pageUrl}${restaurante.slug}/${slug}`;
 };
+
+const generateQrUrl = (menu) => `${googleUrl}${getUrl(menu)}`;
 
 const formatMenus = (data) => {
   const menusList = data.reduce((r, item) => {
@@ -23,6 +25,7 @@ const formatMenus = (data) => {
       ...item,
       restauranteNombre: item.restaurante.nombre,
       qrUrl: generateQrUrl(item),
+      url: getUrl(item),
     };
     return { ...r, [item.slug]: newItem };
   }, {});

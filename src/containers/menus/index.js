@@ -32,6 +32,11 @@ class MenusContainerNoConnect extends Component {
         type: 'bool',
       },
       {
+        attr: 'url',
+        label: 'Ver menu',
+        type: 'link',
+      },
+      {
         attr: 'qrUrl',
         label: 'Descarga QR',
         type: 'download',
