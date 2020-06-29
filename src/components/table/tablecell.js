@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { TableCell, Button } from '@material-ui/core/';
+import { TableCell, Button, Link } from '@material-ui/core/';
 import { green, red } from '@material-ui/core/colors';
 import BlockIcon from '@material-ui/icons/Block';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import EditIcon from '@material-ui/icons/Edit';
 import GetAppIcon from '@material-ui/icons/GetApp';
+import LinkIcon from '@material-ui/icons/Link';
 
 const TableCellComponent = ({ cellvalue, cellindex, type }) => {
   const getValue = (val) => {
@@ -19,9 +20,16 @@ const TableCellComponent = ({ cellvalue, cellindex, type }) => {
     }
     if (type === 'edit') {
       return (
-        <Button variant="contained" color="primary">
+        <Button href={cellvalue} variant="contained" color="primary">
           <EditIcon />
         </Button>
+      );
+    }
+    if (type === 'link') {
+      return (
+        <Link href={cellvalue}>
+          <LinkIcon />
+        </Link>
       );
     }
     if (type === 'download') {

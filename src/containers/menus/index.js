@@ -32,6 +32,11 @@ class MenusContainerNoConnect extends Component {
         type: 'bool',
       },
       {
+        attr: 'url',
+        label: 'Ver menu',
+        type: 'link',
+      },
+      {
         attr: 'qrUrl',
         label: 'Descarga QR',
         type: 'download',
@@ -46,6 +51,8 @@ class MenusContainerNoConnect extends Component {
         <TableComponent
           elements={menusList}
           columns={attrsArray}
+          collection="menus"
+          editButton
         />
         <LoadingComponent open={loading} />
       </>

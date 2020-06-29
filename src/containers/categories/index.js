@@ -44,10 +44,12 @@ class CategoriesContainerNoConnect extends Component {
         <HeadComponent
           title="Categorias"
           description="Listado de categorias disponibles para tus menus"
+          createUrl="/categorias/crear"
         />
         <TableComponent
           elements={categoriesList}
           columns={attrsArray}
+          collection="categorias"
           editButton
         />
         <LoadingComponent open={loading} />
