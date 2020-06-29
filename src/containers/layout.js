@@ -23,10 +23,6 @@ class LayoutUnconnect extends Component {
   }
 
   componentDidMount() {
-    const { userId, getUser } = this.props;
-    if (userId === 0) {
-      getUser();
-    }
     window.addEventListener('resize', this.handleResize);
   }
 
@@ -73,7 +69,6 @@ class LayoutUnconnect extends Component {
 LayoutUnconnect.propTypes = {
   children: PropTypes.node.isRequired,
   userId: PropTypes.number.isRequired,
-  getUser: PropTypes.func.isRequired,
   logout: PropTypes.func.isRequired,
 };
 
