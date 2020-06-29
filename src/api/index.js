@@ -1,12 +1,12 @@
 import axios from 'axios';
 
-const apiBase = 'http://localhost:1337/';
+const apiBase = 'http://3.130.7.153:1338/';
 
 const getData = async (url, jwt) => axios.get(
-  `${apiBase}${url}`, {
+  `${apiBase}${url}`,
+  {
     headers: {
-      Authorization:
-        `Bearer ${jwt}`,
+      Authorization: `Bearer ${jwt}`,
     },
   },
 );
