@@ -5,6 +5,7 @@ const initalState = {
   user: {},
   jwt: '',
   loginError: '',
+  isLoggedIn: false,
 };
 
 const authReducer = (state = initalState, action) => {
@@ -13,6 +14,7 @@ const authReducer = (state = initalState, action) => {
     const { jwt, user } = payload.result;
     const newState = {
       ...state,
+      isLoggedIn: true,
       userId: user.id,
       user,
       jwt,

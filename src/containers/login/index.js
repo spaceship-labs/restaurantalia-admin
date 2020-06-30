@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
@@ -13,10 +12,12 @@ import {
   // makeStyles,
 } from '@material-ui/core/';
 import { Alert } from '@material-ui/lab/';
-import authActions from '../../actions/auth';
 
 import { GridContainer, GridImage, PaperDiv } from './index.styled';
 import CopyrightComponent from '../../components/copyright';
+
+import selectors from './selectors';
+import dispatcher from './dispatcher';
 
 class LoginContainerUnconnect extends Component {
   constructor(props) {
@@ -110,21 +111,6 @@ LoginContainerUnconnect.propTypes = {
 
 export { LoginContainerUnconnect };
 
-const mapStateToProps = (state) => {
-  const { loginError } = state.auth;
-  return { loginError };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  const { doLogin } = authActions.creators;
-  return bindActionCreators(
-    {
-      doLogin,
-    },
-    dispatch,
-  );
-};
-
-const LoginContainer = connect(mapStateToProps, mapDispatchToProps)(LoginContainerUnconnect);
+const LoginContainer = connect(selectors.propsSelector, dispatcher)(LoginContainerUnconnect);
 
 export default LoginContainer;
