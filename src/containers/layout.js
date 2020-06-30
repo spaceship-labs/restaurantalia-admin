@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
+import { Container } from '@material-ui/core';
 import authActions from '../actions/auth';
 
 import HeaderComponent from '../components/header';
@@ -59,7 +60,7 @@ class LayoutUnconnect extends Component {
           handleToggleSidebar={this.handleToggleSidebar}
         />
         <Content>
-          {children}
+          <Container>{userId > 0 && children}</Container>
         </Content>
       </Wrapper>
     );

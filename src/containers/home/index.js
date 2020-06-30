@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 // import PropTypes from 'prop-types';
 
 import Layout from '../layout';
+import AllComponentsList from '../../components/allcomponents';
 
 class HomeContainer extends Component {
   componentDidMount() {
@@ -11,7 +12,7 @@ class HomeContainer extends Component {
   render() {
     return (
       <Layout>
-        <h1>Home</h1>
+        <AllComponentsList />
       </Layout>
     );
   }

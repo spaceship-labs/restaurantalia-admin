@@ -7,6 +7,7 @@ import { loadState, saveState, clearState } from '../api/localstorage';
 import history from '../history';
 
 import authActions from '../actions/auth';
+import menuActions from '../actions/restaurants';
 
 const {
   DO_LOGIN,
@@ -15,6 +16,12 @@ const {
   LOGIN_ERROR,
   LOGOUT,
 } = authActions.types;
+
+const {
+  GET_MENUS,
+  SET_LOADING,
+  SET_RESTAURANTES,
+} = menuActions.types;
 
 const loginRequest = async (data) => login(data);
 
@@ -52,6 +59,10 @@ function* getUserSaga() {
       user: localData.user,
     };
     yield put({ type: SET_LOGIN, payload: { result: loginResponse } });
+    const restaurantesResponse = loginResponse.user.restaurantes;
+    yield put({ type: SET_RESTAURANTES, payload: { restaurantesResponse } });
+    yield put({ type: GET_MENUS, payload: { page: 1 } });
+    yield put({ type: SET_LOADING, payload: { loading: true } });
   }
 }
 
@@ -62,7 +73,7 @@ function* logoutSaga() {
 
 // Export generators
 
-export function* watchForgetPokemonsSaga() {
+export function* watchDoLoginSaga() {
   yield takeLatest(DO_LOGIN, getDoLoginSaga);
 }
 

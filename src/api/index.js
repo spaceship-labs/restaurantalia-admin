@@ -20,7 +20,37 @@ export const login = async (user) => {
   return data;
 };
 
-export const getMenus = async () => {
-  const { data } = await getData('/menus', '');
+export const getMenus = async ({ jwt, restaurantIds, page = 1 }) => {
+  const limit = page * 30;
+  const restaurantes = restaurantIds.reduce((result, r) => (
+    `${result}&restaurante=${r}`
+  ), '');
+  const params = `?_limit=${limit}${restaurantes}`;
+  const { data } = await getData(`menus${params}`, jwt);
+  return data;
+};
+
+export const getMenu = async ({ jwt, id }) => {
+  const { data } = await getData(`menus/${id}`, jwt);
+  return data;
+};
+
+export const getCategories = async ({ jwt, empresasIds }) => {
+  const limit = -1;
+  const empresas = empresasIds.reduce((result, r) => (
+    `${result}&empresa=${r}`
+  ), '');
+  const params = `?_limit=${limit}${empresas}`;
+  const { data } = await getData(`categorias${params}`, jwt);
+  return data;
+};
+
+export const getDishes = async ({ jwt, categoriesIds }) => {
+  const limit = -1;
+  const categories = categoriesIds.reduce((result, r) => (
+    `${result}&categorias.id_in=${r}`
+  ), '');
+  const params = `?_limit=${limit}${categories}`;
+  const { data } = await getData(`platillos${params}`, jwt);
   return data;
 };
