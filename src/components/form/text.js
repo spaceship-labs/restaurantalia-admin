@@ -11,9 +11,9 @@ const TextInputComponent = ({ field, handleChange }) => {
       <InputLabel htmlFor={attr}>{label}</InputLabel>
       <Input
         id={attr}
+        name={attr}
         value={value}
         onChange={handleChange}
-        aria-describedby="component-helper-text"
       />
     </FormControl>
   );

@@ -11,10 +11,10 @@ const NumberInputComponent = ({ field, handleChange }) => {
       <InputLabel htmlFor={attr}>{label}</InputLabel>
       <Input
         id={attr}
+        name={attr}
         type="number"
         value={value}
         onChange={handleChange}
-        aria-describedby="component-helper-text"
       />
     </FormControl>
   );

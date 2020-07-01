@@ -14,6 +14,7 @@ const SelectChipInputComponent = ({ field, handleChange }) => {
       <Select
         labelId={attr}
         id={attr}
+        name={attr}
         multiple
         value={value}
         onChange={handleChange}

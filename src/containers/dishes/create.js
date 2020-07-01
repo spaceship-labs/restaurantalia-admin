@@ -6,38 +6,38 @@ class CreateDishContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      formInputs: [
-        {
+      formInputs: {
+        name: {
           attr: 'name',
           label: 'Nombre',
           value: 'mi nombre',
           type: 'text',
         },
-        {
+        orden: {
           attr: 'orden',
           label: 'Orden',
           value: '1',
           type: 'number',
         },
-        {
+        precio: {
           attr: 'precio',
           label: 'Precio',
           value: '',
           type: 'number',
         },
-        {
+        cantidad: {
           attr: 'cantidad',
           label: 'Cantidad',
           value: '',
           type: 'number',
         },
-        {
+        descripcion: {
           attr: 'descripcion',
           label: 'Descripcion',
           value: '',
           type: 'text',
         },
-        {
+        categorias: {
           attr: 'categorias',
           label: 'Categorias',
           value: [],
@@ -53,9 +53,9 @@ class CreateDishContainer extends Component {
             },
           ],
         },
-      ],
+      },
     };
-    this.handleSubmit = this.handleSubmit(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleSubmit() {
@@ -71,6 +71,7 @@ class CreateDishContainer extends Component {
         />
         <FormComponent
           handleSubmit={this.handleSubmit}
+          handleInputChange={() => console.log('change')}
           fields={formInputs}
         />
       </>
