@@ -5,16 +5,20 @@ import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 
 const NumberInputComponent = ({ field, handleChange }) => {
-  const { label, attr, value } = field;
+  const {
+    label, attr, value, isRequired, error,
+  } = field;
   return (
     <FormControl>
       <InputLabel htmlFor={attr}>{label}</InputLabel>
       <Input
         id={attr}
+        error={error}
         name={attr}
         type="number"
         value={value}
         onChange={handleChange}
+        required={isRequired}
       />
     </FormControl>
   );

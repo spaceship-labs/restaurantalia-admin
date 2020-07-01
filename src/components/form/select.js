@@ -6,7 +6,7 @@ import {
 
 const SelectChipInputComponent = ({ field, handleChange }) => {
   const {
-    attr, label, value, items,
+    attr, label, value, items, isRequired, error,
   } = field;
   return (
     <FormControl>
@@ -14,6 +14,8 @@ const SelectChipInputComponent = ({ field, handleChange }) => {
       <Select
         labelId={attr}
         id={attr}
+        required={isRequired}
+        error={error}
         name={attr}
         multiple
         value={value}
@@ -22,7 +24,7 @@ const SelectChipInputComponent = ({ field, handleChange }) => {
         renderValue={(selected) => (
           <div>
             {selected.map((v) => (
-              <Chip key={v} label={v} />
+              <Chip key={v.id} label={v.nombre} />
             ))}
           </div>
         )}

@@ -6,7 +6,7 @@ import FieldComponent from './field';
 
 const FormComponent = ({ handleSubmit, fields, handleInputChange }) => (
   <Paper>
-    <Form onSubmit={handleSubmit}>
+    <Form onSubmit={handleSubmit} noValidate autoComplete="off">
       {Object.keys(fields).map((f) => (
         <FieldComponent
           key={fields[f].attr}
@@ -27,7 +27,7 @@ const FormComponent = ({ handleSubmit, fields, handleInputChange }) => (
 
 FormComponent.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
-  fields: PropTypes.arrayOf(PropTypes.object).isRequired,
+  fields: PropTypes.object.isRequired,
   handleInputChange: PropTypes.func.isRequired,
 };
 
