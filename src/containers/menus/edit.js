@@ -77,6 +77,43 @@ class FormMenuContainer extends Component {
             },
           ],
         },
+        logo: {
+          attr: 'logo',
+          label: 'Logo',
+          initArray: [
+            {
+              id: 1,
+              name: 'image_1',
+              url: '/uploads/logo_black_fb4c44b001.png',
+            },
+          ],
+          value: [],
+          type: 'image',
+          multiple: false,
+          isRequired: false,
+          error: false,
+        },
+        imagenes: {
+          attr: 'imagenes',
+          label: 'Imagenes decorativas',
+          initArray: [
+            {
+              id: 1,
+              name: 'image_1',
+              url: '/uploads/logo_black_fb4c44b001.png',
+            },
+            {
+              id: 2,
+              name: 'image_2',
+              url: '/uploads/logo_black_fb4c44b001.png',
+            },
+          ],
+          value: [],
+          type: 'image',
+          multiple: true,
+          isRequired: false,
+          error: false,
+        },
       };
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({
@@ -104,12 +141,16 @@ class FormMenuContainer extends Component {
     }
   }
 
-  handleInputChange(e) {
+  handleInputChange(e, type) {
     const { formInputs } = this.state;
-    const newFormInputs = inputHandle(formInputs, e.target);
-    this.setState({
-      formInputs: newFormInputs,
-    });
+    if (type && type === 'file') {
+      console.log('files', e);
+    } else {
+      const newFormInputs = inputHandle(formInputs, e.target);
+      this.setState({
+        formInputs: newFormInputs,
+      });
+    }
   }
 
   render() {

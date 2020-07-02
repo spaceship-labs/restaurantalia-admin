@@ -19,3 +19,14 @@ export const FormFooter = styled.div`
   width: 100%;
   margin-top: 25px;
 `;
+
+export const ImageFormWrapper = styled.div`
+  width: 45%;
+  margin: 10px 0;
+`;
+
+export const ImageList = styled.div`
+  display: flex;
+  flex-wrap: ${({ multiple }) => (multiple ? 'wrap' : 'nowrap')};
+  justify-content: ${({ multiple }) => (multiple ? 'space-between' : 'center')};
+`;

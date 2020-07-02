@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import TextInputComponent from './text';
 import SelectChipInputComponent from './select';
 import NumberInputComponent from './number';
+import ImageInputComponent from './image';
 
 const FieldComponent = ({ field, handleInputChange }) => {
   if (field.type === 'multiselect') {
@@ -13,6 +14,9 @@ const FieldComponent = ({ field, handleInputChange }) => {
   }
   if (field.type === 'number') {
     return <NumberInputComponent field={field} handleChange={handleInputChange} />;
+  }
+  if (field.type === 'image') {
+    return <ImageInputComponent field={field} handleChange={handleInputChange} />;
   }
   return <TextInputComponent field={field} handleChange={handleInputChange} />;
 };
