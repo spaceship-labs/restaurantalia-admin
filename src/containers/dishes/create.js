@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import HeadComponent from '../../components/head';
 import FormComponent from '../../components/form';
+import { createDispatcher } from './dispatcher';
 
 class CreateDishContainer extends Component {
   constructor(props) {
@@ -58,8 +61,28 @@ class CreateDishContainer extends Component {
     this.handleSubmit = this.handleSubmit(this);
   }
 
+  componentDidMount() {
+    const { match, getDish, setDishesLoading } = this.props;
+    const { params: { id: dishId } } = match;
+
+    if (dishId) {
+      getDish(dishId);
+      setDishesLoading({ loading: true });
+    }
+  }
+
   handleSubmit() {
     console.log('CREATE PROPS', this.state);
+    const {
+      updateDish,
+      createDish,
+      match: {
+        params: { id: dishId },
+      },
+    } = this.props;
+
+    if (dishId) updateDish();
+    else createDish();
   }
 
   render() {
@@ -78,4 +101,12 @@ class CreateDishContainer extends Component {
   }
 }
 
-export default CreateDishContainer;
+CreateDishContainer.propTypes = {
+  match: PropTypes.object.isRequired,
+  getDish: PropTypes.func.isRequired,
+  setDishesLoading: PropTypes.func.isRequired,
+  createDish: PropTypes.func.isRequired,
+  updateDish: PropTypes.func.isRequired,
+};
+
+export default connect(null, createDispatcher)(CreateDishContainer);
