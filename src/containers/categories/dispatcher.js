@@ -7,7 +7,7 @@ const {
   setCategoriesLoading,
   createCategory,
   updateCategory,
-} = categoriesActions;
+} = categoriesActions.creators;
 
 export const createDispatcher = (dispatch) => bindActionCreators({
   getCategory,

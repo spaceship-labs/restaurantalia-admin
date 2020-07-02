@@ -7,7 +7,7 @@ const {
   setDishesLoading,
   createDish,
   updateDish,
-} = dishesActions;
+} = dishesActions.creators;
 
 export const createDispatcher = (dispatch) => bindActionCreators({
   getDish,
