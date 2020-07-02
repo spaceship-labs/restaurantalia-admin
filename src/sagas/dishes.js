@@ -1,15 +1,17 @@
 import {
   call, select, put, takeLatest,
 } from 'redux-saga/effects';
-import { getCategories, getDishes } from '../api';
+import { getCategories, getDishes, getDish } from '../api';
 import dishesActions from '../actions/dishes';
 import categoriesActions from '../actions/categories';
 
 const {
   GET_CATEGORIES_DISHES,
   GET_DISHES,
+  GET_DISH,
   SET_DISHES,
   SET_DISHES_LOADING,
+  SET_DISH,
 } = dishesActions.types;
 
 const {
@@ -19,6 +21,7 @@ const {
 const getDishesRequest = async (data) => getDishes(data);
 const getCategoriesState = (state) => (state.categories.categoriesIds);
 const getCategoriesRequest = async (data) => getCategories(data);
+const getDishRequest = async (data) => getDish(data);
 const getUser = (state) => (state.auth.user);
 const getJwt = (state) => (state.auth.jwt);
 
@@ -58,6 +61,20 @@ function* getDishesSaga(action) {
   }
 }
 
+function* getDishSaga({ payload: dishId }) {
+  console.log(dishId);
+  const jwt = yield select(getJwt);
+  try {
+    const dishResponse = yield call(getDishRequest, { jwt, dishId });
+    yield put({ type: SET_DISH, payload: { ...dishResponse } });
+    console.log(dishResponse);
+  } catch (e) {
+    console.log(e);
+  } finally {
+    yield put({ type: SET_DISHES_LOADING, payload: { loading: false } });
+  }
+}
+
 // Export generators
 export function* watchgetCategoriesDishesSaga() {
   yield takeLatest(GET_CATEGORIES_DISHES, getCategoriesDishesSaga);
@@ -65,4 +82,8 @@ export function* watchgetCategoriesDishesSaga() {
 
 export function* watchgetDishesSaga() {
   yield takeLatest(GET_DISHES, getDishesSaga);
+}
+
+export function* watchgetDishSaga() {
+  yield takeLatest(GET_DISH, getDishSaga);
 }

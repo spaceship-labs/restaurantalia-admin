@@ -13,7 +13,7 @@ import {
 import {
   watchgetCategoriesSaga,
 } from './categories';
-import { watchgetCategoriesDishesSaga, watchgetDishesSaga } from './dishes';
+import { watchgetCategoriesDishesSaga, watchgetDishesSaga, watchgetDishSaga } from './dishes';
 
 const getstatus = (state) => ({
   status: state.status,
@@ -39,5 +39,6 @@ export function* rootSaga() {
     watchgetCategoriesSaga(),
     watchgetCategoriesDishesSaga(),
     watchgetDishesSaga(),
+    watchgetDishSaga(),
   ]);
 }

@@ -3,4 +3,6 @@ const propsSelector = ({ dishes }) => {
   return { dishesList, dishesIds, loading };
 };
 
-export default { propsSelector };
+const createSelector = ({ dishes: { loading, dish } }) => ({ loading, dish });
+
+export default { propsSelector, createSelector };
