@@ -19,6 +19,7 @@ import CategoriesContainer from '../categories';
 import DishesContainer from '../dishes';
 import FormCategoryContainer from '../categories/create';
 import FormDishContainer from '../dishes/create';
+import FormMenuContainer from '../menus/edit';
 
 const Routes = ({ isLoggedIn, getUser }) => {
   useEffect(() => {
@@ -35,6 +36,7 @@ const Routes = ({ isLoggedIn, getUser }) => {
         <Route exact path="/" component={MenusContainer} />
         <Route exact path="/menus" component={MenusContainer} />
         <Route exact path="/categorias" component={CategoriesContainer} />
+        <Route exact path="/platillos" component={DishesContainer} />
         <Route
           exact
           path="/categorias/crear"
@@ -42,12 +44,17 @@ const Routes = ({ isLoggedIn, getUser }) => {
           () => <FormCategoryContainer type="create" />
         }
         />
-        <Route exact path="/platillos" component={DishesContainer} />
         <Route
           exact
           path="/platillos/crear"
           render={
-            () => <FormDishContainer />
+            () => <FormDishContainer type="create" />
+          }
+        />
+        <Route
+          path="/menus/editar/:id"
+          render={
+            () => <FormMenuContainer type="edit" />
           }
         />
         <Route

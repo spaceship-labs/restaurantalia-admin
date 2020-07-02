@@ -3,6 +3,8 @@ const getError = (inputs, value) => {
   let er = false;
   if (type === 'number') {
     er = (isRequired && value === '') || Number(value) < 0;
+  } else if (type === 'multiselect') {
+    er = isRequired && value.length === 0;
   } else if (type === 'select') {
     er = isRequired && value.length === 0;
   } else {

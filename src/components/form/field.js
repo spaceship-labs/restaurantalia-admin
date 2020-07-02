@@ -5,7 +5,9 @@ import SelectChipInputComponent from './select';
 import NumberInputComponent from './number';
 
 const FieldComponent = ({ field, handleInputChange }) => {
-  // something
+  if (field.type === 'multiselect') {
+    return <SelectChipInputComponent multiple field={field} handleChange={handleInputChange} />;
+  }
   if (field.type === 'select') {
     return <SelectChipInputComponent field={field} handleChange={handleInputChange} />;
   }
