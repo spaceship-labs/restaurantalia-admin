@@ -38,7 +38,7 @@ const Routes = ({ isLoggedIn, getUser }) => {
         <Route exact path="/categorias/:id" component={CategoriesCreateContainer} />
         <Route exact path="/categorias" component={CategoriesContainer} />
         <Route exact path="/platillos/crear" component={DishesCreateContainer} />
-        <Route exact path="/platillos/:id" component={DishesCreateContainer} />
+        <Route exact path="/platillos/editar/:id" component={DishesCreateContainer} />
         <Route exact path="/platillos" component={DishesContainer} />
         <Route exact path="/menus" component={MenusContainer} />
         <Route exact path="/" component={HomeContainer} />

@@ -54,3 +54,8 @@ export const getDishes = async ({ jwt, categoriesIds }) => {
   const { data } = await getData(`platillos${params}`, jwt);
   return data;
 };
+
+export const getDish = async ({ jwt, dishId }) => {
+  const { data } = await getData(`platillos/${dishId}`, jwt);
+  return data;
+};
