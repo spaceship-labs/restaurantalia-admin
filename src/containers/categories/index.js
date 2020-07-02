@@ -1,23 +1,20 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import HeadComponent from '../../components/head';
 import TableComponent from '../../components/table';
 import LoadingComponent from '../../components/loading';
-import categoriesActions from '../../actions/categories';
+import { mainDispatcher } from './dispatcher';
+import selectors from './selectors';
 
 class CategoriesContainerNoConnect extends Component {
-  constructor(props) {
-    super(props);
+  componentDidMount() {
     const {
-      categoriesIds, getCategories, setCategoriesLoading,
+      getCategories, setCategoriesLoading,
     } = this.props;
-    // console.log('categoriesIds', categoriesIds);
-    if (categoriesIds.length === 0) {
-      getCategories();
-      setCategoriesLoading({ loading: true });
-    }
+
+    getCategories();
+    setCategoriesLoading({ loading: true });
   }
 
   render() {
@@ -60,33 +57,15 @@ class CategoriesContainerNoConnect extends Component {
 
 CategoriesContainerNoConnect.propTypes = {
   categoriesList: PropTypes.object.isRequired,
-  categoriesIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+  // categoriesIds: PropTypes.arrayOf(PropTypes.string).isRequired,
   loading: PropTypes.bool.isRequired,
   getCategories: PropTypes.func.isRequired,
   setCategoriesLoading: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => {
-  const { categoriesList, categoriesIds, loading } = state.categories;
-  return {
-    categoriesList, categoriesIds, loading,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  const { getCategories, setCategoriesLoading } = categoriesActions.creators;
-  return bindActionCreators(
-    {
-      getCategories,
-      setCategoriesLoading,
-    },
-    dispatch,
-  );
-};
-
 const CategoriesContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps,
+  selectors.propsSelector,
+  mainDispatcher,
 )(CategoriesContainerNoConnect);
 
 export { CategoriesContainerNoConnect };
