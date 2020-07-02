@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import Layout from '../layout';
 import HeadComponent from '../../components/head';
 import TableComponent from '../../components/table';
 import LoadingComponent from '../../components/loading';
@@ -42,7 +43,7 @@ class DishesContainerNoConnect extends Component {
       },
     ];
     return (
-      <>
+      <Layout>
         <HeadComponent
           title="Platillos"
           description="Listado de platillos disponibles en tus resaurantes"
@@ -55,7 +56,7 @@ class DishesContainerNoConnect extends Component {
           editButton
         />
         <LoadingComponent open={loading} />
-      </>
+      </Layout>
     );
   }
 }
