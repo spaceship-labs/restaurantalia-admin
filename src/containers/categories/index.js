@@ -8,7 +8,7 @@ import LoadingComponent from '../../components/loading';
 import { mainDispatcher } from './dispatcher';
 import selectors from './selectors';
 
-class CategoriesContainerNoConnect extends Component {
+class CategoriesContainer extends Component {
   componentDidMount() {
     const {
       getCategories, setCategoriesLoading,
@@ -56,7 +56,7 @@ class CategoriesContainerNoConnect extends Component {
   }
 }
 
-CategoriesContainerNoConnect.propTypes = {
+CategoriesContainer.propTypes = {
   categoriesList: PropTypes.object.isRequired,
   // categoriesIds: PropTypes.arrayOf(PropTypes.string).isRequired,
   loading: PropTypes.bool.isRequired,
@@ -64,10 +64,7 @@ CategoriesContainerNoConnect.propTypes = {
   setCategoriesLoading: PropTypes.func.isRequired,
 };
 
-const CategoriesContainer = connect(
+export default connect(
   selectors.propsSelector,
   mainDispatcher,
-)(CategoriesContainerNoConnect);
-
-export { CategoriesContainerNoConnect };
-export default CategoriesContainer;
+)(CategoriesContainer);

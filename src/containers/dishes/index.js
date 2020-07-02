@@ -8,7 +8,7 @@ import LoadingComponent from '../../components/loading';
 import { mainDispatcher } from './dispatcher';
 import selectors from './selectors';
 
-class DishesContainerNoConnect extends Component {
+class DishesContainer extends Component {
   componentDidMount() {
     const {
       getCategoriesDishes, setDishesLoading,
@@ -61,17 +61,14 @@ class DishesContainerNoConnect extends Component {
   }
 }
 
-DishesContainerNoConnect.propTypes = {
+DishesContainer.propTypes = {
   dishesList: PropTypes.object.isRequired,
   loading: PropTypes.bool.isRequired,
   getCategoriesDishes: PropTypes.func.isRequired,
   setDishesLoading: PropTypes.func.isRequired,
 };
 
-const DishesContainer = connect(
+export default connect(
   selectors.propsSelector,
   mainDispatcher,
-)(DishesContainerNoConnect);
-
-export { DishesContainerNoConnect };
-export default DishesContainer;
+)(DishesContainer);

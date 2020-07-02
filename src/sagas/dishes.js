@@ -37,7 +37,7 @@ function* getCategoriesDishesSaga() {
       yield put({ type: GET_DISHES, payload: { categoriesIds: ids } });
     }
   } catch {
-    yield put({ type: SET_DISHES_LOADING, payload: { login: true } });
+    yield put({ type: SET_DISHES_LOADING, payload: { loading: true } });
   }
 }
 
@@ -51,10 +51,10 @@ function* getDishesSaga(action) {
       // console.log('dishesResponse', categoriesIds, dishesResponse);
       yield put({ type: SET_DISHES, payload: { dishesResponse } });
     }
-    yield put({ type: SET_DISHES_LOADING, payload: { login: false } });
-  } catch {
-    yield put({ type: SET_DISHES_LOADING, payload: { login: false } });
-    // set error
+  } catch (e) {
+    console.log(e);
+  } finally {
+    yield put({ type: SET_DISHES_LOADING, payload: { loading: false } });
   }
 }
 

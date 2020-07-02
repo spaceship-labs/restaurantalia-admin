@@ -4,6 +4,7 @@ import {
 import { getCategories } from '../api';
 import categoriesActions from '../actions/categories';
 
+//  REFACTOr NEEDED
 const {
   GET_CATEGORY,
   GET_CATEGORIES,
@@ -24,10 +25,11 @@ function* getCategoriesSaga() {
     const categoriesResponse = yield call(getCategoriesRequest, { jwt, empresasIds });
     // console.log('categoriesResponse', categoriesResponse);
     yield put({ type: SET_CATEGORIES, payload: { categoriesResponse } });
-    yield put({ type: SET_CATEGORIES_LOADING, payload: { login: false } });
-  } catch {
-    yield put({ type: SET_CATEGORIES_LOADING, payload: { login: false } });
+  } catch (e) {
+    console.log(e);
     // set error
+  } finally {
+    yield put({ type: SET_CATEGORIES_LOADING, payload: { loading: false } });
   }
 }
 
