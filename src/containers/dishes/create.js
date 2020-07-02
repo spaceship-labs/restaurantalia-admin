@@ -69,7 +69,7 @@ class FormDishContainer extends Component {
           attr: 'categorias',
           label: 'Categorias',
           value: [],
-          type: 'select',
+          type: 'multiselect',
           isRequired: true,
           error: false,
           items: [

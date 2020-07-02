@@ -57,7 +57,7 @@ class FormCategoryContainerNoConnect extends Component {
           attr: 'menus',
           label: 'Menus',
           value: [],
-          type: 'select',
+          type: 'multiselect',
           isRequired: true,
           error: false,
           items: menusIds.map((m) => {

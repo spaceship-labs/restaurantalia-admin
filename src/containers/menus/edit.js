@@ -45,7 +45,7 @@ class FormMenuContainer extends Component {
           attr: 'categorias',
           label: 'Categorias',
           value: [],
-          type: 'select',
+          type: 'multiselect',
           isRequired: true,
           error: false,
           items: [
@@ -62,7 +62,7 @@ class FormMenuContainer extends Component {
         templates: {
           attr: 'templates',
           label: 'Template',
-          value: [],
+          value: '',
           type: 'select',
           isRequired: true,
           error: false,
