@@ -47,7 +47,7 @@ const Routes = ({ isLoggedIn, getUser }) => {
           exact
           path="/platillos/crear"
           render={
-            () => <FormDishContainer />
+            () => <FormDishContainer type="create" />
           }
         />
         <Route
