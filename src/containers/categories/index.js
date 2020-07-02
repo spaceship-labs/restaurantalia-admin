@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import Layout from '../layout';
 import HeadComponent from '../../components/head';
 import TableComponent from '../../components/table';
 import LoadingComponent from '../../components/loading';
@@ -40,7 +41,7 @@ class CategoriesContainerNoConnect extends Component {
       },
     ];
     return (
-      <>
+      <Layout>
         <HeadComponent
           title="Categorias"
           description="Listado de categorias disponibles para tus menus"
@@ -53,7 +54,7 @@ class CategoriesContainerNoConnect extends Component {
           editButton
         />
         <LoadingComponent open={loading} />
-      </>
+      </Layout>
     );
   }
 }

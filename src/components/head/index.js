@@ -20,7 +20,7 @@ const HeadComponent = ({ title, description, createUrl }) => (
         </Grid>
         <Grid>
           {createUrl && (
-            <Fab color="primary" aria-label="add" variant="extended">
+            <Fab href={createUrl} color="primary" aria-label="add" variant="extended">
               <AddIcon />
               {' '}
               Agregar
