@@ -1,69 +1,162 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import HeadComponent from '../../components/head';
 import FormComponent from '../../components/form';
+import categoryActions from '../../actions/categories';
+import { inputHandle, isValidForm } from '../../utils/inputvalidation';
+import MessageComponent from '../../components/message';
 
-class CreateCategoryContainer extends Component {
+class CreateCategoryContainerNoConnect extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      formInputs: [
-        {
+      validForm: false,
+      showAlert: false,
+      formInputs: [],
+    };
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleCloseMessage = this.handleCloseMessage.bind(this);
+    // si el prop indica que es editar hay que pedir la info de esta categoria
+  }
+
+  componentDidUpdate() {
+    const { formInputs } = this.state;
+    const { menusList, menusIds } = this.props;
+    // si el prop que indica crear/editar hay que esperar la info del elemento
+    if (formInputs.length === 0 && menusIds.length > 0) {
+      const newInputs = {
+        name: {
           attr: 'name',
           label: 'Nombre',
-          value: 'mi nombre',
+          value: '',
           type: 'text',
+          isRequired: true,
+          error: false,
         },
-        {
+        orden: {
           attr: 'orden',
           label: 'Orden',
-          value: '1',
+          value: 0,
           type: 'number',
+          isRequired: false,
+          error: false,
         },
-        {
+        descripcion: {
           attr: 'descripcion',
           label: 'Descripcion',
           value: '',
           type: 'text',
+          isRequired: false,
+          error: false,
         },
-        {
+        menus: {
           attr: 'menus',
           label: 'Menus',
           value: [],
           type: 'select',
-          items: [
-            {
-              id: 1,
-              nombre: 'opcion 1',
-            },
-            {
-              id: 2,
-              nombre: 'opcion 2',
-            },
-          ],
+          isRequired: true,
+          error: false,
+          items: menusIds.map((m) => {
+            const { id, nombre } = menusList[m];
+            return { id, nombre };
+          }),
         },
-      ],
-    };
-    this.handleSubmit = this.handleSubmit(this);
+      };
+      // eslint-disable-next-line react/no-did-update-set-state
+      this.setState({
+        formInputs: newInputs,
+      });
+    }
   }
 
-  handleSubmit() {
-    console.log('CREATE PROPS', this.state);
+  handleCloseMessage() {
+    this.setState({ showAlert: false });
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+    const { createCategory } = this.props;
+    const { formInputs } = this.state;
+    const newValidForm = isValidForm(formInputs);
+    this.setState({
+      validForm: newValidForm,
+      showAlert: true,
+    });
+    if (newValidForm) {
+      // dependiendo del prop es si llama a crear o a editar
+      createCategory();
+    }
+  }
+
+  handleInputChange(e) {
+    const { formInputs } = this.state;
+    const newFormInputs = inputHandle(formInputs, e.target);
+    this.setState({
+      formInputs: newFormInputs,
+    });
   }
 
   render() {
-    const { formInputs } = this.state;
+    const { action } = this.props;
+    const { validForm, formInputs, showAlert } = this.state;
+    const message = validForm
+      ? 'Creando categoria...!'
+      : 'Favor de revisar los datos...!';
+    const messageType = validForm ? 'success' : 'error';
     return (
       <>
         <HeadComponent
-          title="Crear categoria"
+          title={`${action === 'create' ? 'Crear' : 'Editar'} categoria`}
         />
         <FormComponent
           handleSubmit={this.handleSubmit}
+          handleInputChange={this.handleInputChange}
           fields={formInputs}
+        />
+        <MessageComponent
+          open={showAlert}
+          handleClose={this.handleCloseMessage}
+          message={message}
+          type={messageType}
         />
       </>
     );
   }
 }
 
+CreateCategoryContainerNoConnect.defaultProps = {
+  action: 'create',
+};
+
+CreateCategoryContainerNoConnect.propTypes = {
+  createCategory: PropTypes.func.isRequired,
+  menusIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+  menusList: PropTypes.object.isRequired,
+  action: PropTypes.string,
+};
+
+const mapStateToProps = (state) => {
+  const { menusList, menusIds, loading } = state.menus;
+  return { menusList, menusIds, loading };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  const { createCategory } = categoryActions.creators;
+  return bindActionCreators(
+    {
+      createCategory,
+    },
+    dispatch,
+  );
+};
+
+const CreateCategoryContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(CreateCategoryContainerNoConnect);
+
+export { CreateCategoryContainerNoConnect };
 export default CreateCategoryContainer;

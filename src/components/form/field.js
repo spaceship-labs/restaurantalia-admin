@@ -4,20 +4,20 @@ import TextInputComponent from './text';
 import SelectChipInputComponent from './select';
 import NumberInputComponent from './number';
 
-const FieldComponent = ({ field, handleChange }) => {
+const FieldComponent = ({ field, handleInputChange }) => {
   // something
   if (field.type === 'select') {
-    return <SelectChipInputComponent field={field} handleChange={handleChange} />;
+    return <SelectChipInputComponent field={field} handleChange={handleInputChange} />;
   }
   if (field.type === 'number') {
-    return <NumberInputComponent field={field} handleChange={handleChange} />;
+    return <NumberInputComponent field={field} handleChange={handleInputChange} />;
   }
-  return <TextInputComponent field={field} handleChange={handleChange} />;
+  return <TextInputComponent field={field} handleChange={handleInputChange} />;
 };
 
 FieldComponent.propTypes = {
   field: PropTypes.object.isRequired,
-  handleChange: PropTypes.func.isRequired,
+  handleInputChange: PropTypes.func.isRequired,
 };
 
 export default FieldComponent;
