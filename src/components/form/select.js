@@ -4,9 +4,9 @@ import {
   FormControl, InputLabel, Select, Input, Chip, MenuItem,
 } from '@material-ui/core/';
 
-const SelectChipInputComponent = ({ field, handleChange }) => {
+const SelectChipInputComponent = ({ field }) => {
   const {
-    attr, label, value, items, isRequired, error,
+    attr, label, value, items, isRequired, error, setValue,
   } = field;
   return (
     <FormControl>
@@ -19,7 +19,7 @@ const SelectChipInputComponent = ({ field, handleChange }) => {
         name={attr}
         multiple
         value={value}
-        onChange={handleChange}
+        onChange={({ target: { value: val } }) => setValue(val)}
         input={<Input id={attr} />}
         renderValue={(selected) => (
           <div>
@@ -41,7 +41,6 @@ const SelectChipInputComponent = ({ field, handleChange }) => {
 
 SelectChipInputComponent.propTypes = {
   field: PropTypes.object.isRequired,
-  handleChange: PropTypes.func.isRequired,
 };
 
 export default SelectChipInputComponent;

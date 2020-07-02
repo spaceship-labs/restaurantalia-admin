@@ -4,14 +4,13 @@ import { Divider, Button, Paper } from '@material-ui/core';
 import { Form, FormFooter } from './index.styled';
 import FieldComponent from './field';
 
-const FormComponent = ({ handleSubmit, fields, handleInputChange }) => (
+const FormComponent = ({ handleSubmit, fields }) => (
   <Paper>
     <Form onSubmit={handleSubmit} noValidate autoComplete="off">
-      {Object.keys(fields).map((f) => (
+      {fields.map((f) => (
         <FieldComponent
-          key={fields[f].attr}
-          handleInputChange={handleInputChange}
-          field={fields[f]}
+          key={f.attr}
+          field={f}
         />
       ))}
       <FormFooter>
@@ -27,8 +26,7 @@ const FormComponent = ({ handleSubmit, fields, handleInputChange }) => (
 
 FormComponent.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
-  fields: PropTypes.object.isRequired,
-  handleInputChange: PropTypes.func.isRequired,
+  fields: PropTypes.array.isRequired,
 };
 
 export default FormComponent;
