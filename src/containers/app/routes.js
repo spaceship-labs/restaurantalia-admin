@@ -34,12 +34,12 @@ const Routes = ({ isLoggedIn, getUser }) => {
   return (
     <Router history={history}>
       <Switch>
-        <Route exact path="/categories/create" component={CategoriesCreateContainer} />
-        <Route exact path="/categories/:id" component={CategoriesCreateContainer} />
-        <Route exact path="/categories" component={CategoriesContainer} />
-        <Route exact path="/dishes/create" component={DishesCreateContainer} />
-        <Route exact path="/dishes/:id" component={DishesCreateContainer} />
-        <Route exact path="/dishes" component={DishesContainer} />
+        <Route exact path="/categorias/create" component={CategoriesCreateContainer} />
+        <Route exact path="/categorias/:id" component={CategoriesCreateContainer} />
+        <Route exact path="/categorias" component={CategoriesContainer} />
+        <Route exact path="/platillos/crear" component={DishesCreateContainer} />
+        <Route exact path="/platillos/:id" component={DishesCreateContainer} />
+        <Route exact path="/platillos" component={DishesContainer} />
         <Route exact path="/menus" component={MenusContainer} />
         <Route exact path="/" component={HomeContainer} />
       </Switch>
