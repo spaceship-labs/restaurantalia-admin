@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
+import Layout from '../layout';
 import HeadComponent from '../../components/head';
 import FormComponent from '../../components/form';
 
-class CreateDishContainer extends Component {
+class FormDishContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -77,7 +78,7 @@ class CreateDishContainer extends Component {
   render() {
     const { formInputs } = this.state;
     return (
-      <>
+      <Layout>
         <HeadComponent
           title="Crear platillo"
         />
@@ -86,9 +87,9 @@ class CreateDishContainer extends Component {
           handleInputChange={() => console.log('change')}
           fields={formInputs}
         />
-      </>
+      </Layout>
     );
   }
 }
 
-export default CreateDishContainer;
+export default FormDishContainer;

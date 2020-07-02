@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import Layout from '../layout';
 import HeadComponent from '../../components/head';
 import FormComponent from '../../components/form';
 import categoryActions from '../../actions/categories';
 import { inputHandle, isValidForm } from '../../utils/inputvalidation';
 import MessageComponent from '../../components/message';
 
-class CreateCategoryContainerNoConnect extends Component {
+class FormCategoryContainerNoConnect extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -100,16 +101,16 @@ class CreateCategoryContainerNoConnect extends Component {
   }
 
   render() {
-    const { action } = this.props;
+    const { type } = this.props;
     const { validForm, formInputs, showAlert } = this.state;
     const message = validForm
       ? 'Creando categoria...!'
       : 'Favor de revisar los datos...!';
     const messageType = validForm ? 'success' : 'error';
     return (
-      <>
+      <Layout>
         <HeadComponent
-          title={`${action === 'create' ? 'Crear' : 'Editar'} categoria`}
+          title={`${type === 'create' ? 'Crear' : 'Editar'} categoria`}
         />
         <FormComponent
           handleSubmit={this.handleSubmit}
@@ -122,20 +123,16 @@ class CreateCategoryContainerNoConnect extends Component {
           message={message}
           type={messageType}
         />
-      </>
+      </Layout>
     );
   }
 }
 
-CreateCategoryContainerNoConnect.defaultProps = {
-  action: 'create',
-};
-
-CreateCategoryContainerNoConnect.propTypes = {
+FormCategoryContainerNoConnect.propTypes = {
   createCategory: PropTypes.func.isRequired,
   menusIds: PropTypes.arrayOf(PropTypes.string).isRequired,
   menusList: PropTypes.object.isRequired,
-  action: PropTypes.string,
+  type: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state) => {
@@ -153,10 +150,10 @@ const mapDispatchToProps = (dispatch) => {
   );
 };
 
-const CreateCategoryContainer = connect(
+const FormCategoryContainer = connect(
   mapStateToProps,
   mapDispatchToProps,
-)(CreateCategoryContainerNoConnect);
+)(FormCategoryContainerNoConnect);
 
-export { CreateCategoryContainerNoConnect };
-export default CreateCategoryContainer;
+export { FormCategoryContainerNoConnect };
+export default FormCategoryContainer;
