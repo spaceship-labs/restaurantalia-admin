@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
+import { Container } from '@material-ui/core';
 import authActions from '../actions/auth';
 
 import HeaderComponent from '../components/header';
@@ -23,10 +24,6 @@ class LayoutUnconnect extends Component {
   }
 
   componentDidMount() {
-    const { userId, getUser } = this.props;
-    if (userId === 0) {
-      getUser();
-    }
     window.addEventListener('resize', this.handleResize);
   }
 
@@ -63,7 +60,7 @@ class LayoutUnconnect extends Component {
           handleToggleSidebar={this.handleToggleSidebar}
         />
         <Content>
-          {children}
+          <Container>{userId > 0 && children}</Container>
         </Content>
       </Wrapper>
     );
@@ -73,7 +70,6 @@ class LayoutUnconnect extends Component {
 LayoutUnconnect.propTypes = {
   children: PropTypes.node.isRequired,
   userId: PropTypes.number.isRequired,
-  getUser: PropTypes.func.isRequired,
   logout: PropTypes.func.isRequired,
 };
 
