@@ -106,7 +106,11 @@ class LoginContainerUnconnect extends Component {
 
 LoginContainerUnconnect.propTypes = {
   doLogin: PropTypes.func.isRequired,
-  loginError: PropTypes.string.isRequired,
+  loginError: PropTypes.string,
+};
+
+LoginContainerUnconnect.defaultProps = {
+  loginError: '',
 };
 
 export { LoginContainerUnconnect };

@@ -1,159 +1,147 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import Layout from '../layout';
 import HeadComponent from '../../components/head';
 import FormComponent from '../../components/form';
-import categoryActions from '../../actions/categories';
-import { inputHandle, isValidForm } from '../../utils/inputvalidation';
-import MessageComponent from '../../components/message';
+import { createDispatcher } from './dispatcher';
+import Layout from '../layout';
+import selectors from './selectors';
 
-class FormCategoryContainerNoConnect extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      validForm: false,
-      showAlert: false,
-      formInputs: [],
-    };
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleCloseMessage = this.handleCloseMessage.bind(this);
-    // si el prop indica que es editar hay que pedir la info de esta categoria
-  }
+const formInputs = {
+  nombre: {
+    attr: 'nombre',
+    label: 'Nombre',
+    type: 'text',
+    isRequired: true,
+    error: false,
+  },
+  orden: {
+    attr: 'orden',
+    label: 'Orden',
+    type: 'number',
+    isRequired: false,
+    error: false,
+  },
+  descripcion: {
+    attr: 'descripcion',
+    label: 'Descripcion',
+    type: 'text',
+    isRequired: false,
+    error: false,
+  },
+  menus: {
+    attr: 'menus',
+    label: 'Menus',
+    type: 'select',
+    isRequired: true,
+    error: false,
+  },
+};
 
-  componentDidUpdate() {
-    const { formInputs } = this.state;
-    const { menusList, menusIds } = this.props;
-    // si el prop que indica crear/editar hay que esperar la info del elemento
-    if (formInputs.length === 0 && menusIds.length > 0) {
-      const newInputs = {
-        name: {
-          attr: 'name',
-          label: 'Nombre',
-          value: '',
-          type: 'text',
-          isRequired: true,
-          error: false,
-        },
-        orden: {
-          attr: 'orden',
-          label: 'Orden',
-          value: 0,
-          type: 'number',
-          isRequired: false,
-          error: false,
-        },
-        descripcion: {
-          attr: 'descripcion',
-          label: 'Descripcion',
-          value: '',
-          type: 'text',
-          isRequired: false,
-          error: false,
-        },
-        menus: {
-          attr: 'menus',
-          label: 'Menus',
-          value: [],
-          type: 'multiselect',
-          isRequired: true,
-          error: false,
-          items: menusIds.map((m) => {
-            const { id, nombre } = menusList[m];
-            return { id, nombre };
-          }),
-        },
-      };
-      // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({
-        formInputs: newInputs,
-      });
+const createChangeCb = (currentVal, setCb) => (newVal) => setCb({ ...currentVal, value: newVal });
+
+const CategoryCreate = ({
+  loading,
+  category,
+  match,
+  getCategory,
+  setCategoriesLoading,
+  menus,
+  updateCategory,
+  createCategory,
+  initForm,
+}) => {
+  const [nombreField, setName] = useState({ name: 'nombre', value: '' });
+  const [ordenField, setOrden] = useState({ name: 'orden', value: '' });
+  const [descripcionField, setDescripcion] = useState({ name: 'descripcion', value: '' });
+  const [menusField, setmenus] = useState({ name: 'menus', value: [] });
+
+  const { params: { id: catId } } = match;
+
+  useEffect(() => {
+    initForm();
+  }, []);
+
+  useEffect(() => {
+    if (catId) {
+      getCategory(catId);
+      setCategoriesLoading({ loading: true });
     }
-  }
+  }, [catId]);
 
-  handleCloseMessage() {
-    this.setState({ showAlert: false });
-  }
+  useEffect(() => {
+    const {
+      nombre,
+      orden,
+      descripcion,
+      menus: ms = [],
+    } = category;
+    // console.log('/////////////////////');
+    // console.log(category);
+    // console.log('/////////////////////');
+    setName({ ...nombreField, value: nombre });
+    setOrden({ ...ordenField, value: orden });
+    setDescripcion({ ...descripcionField, value: descripcion });
+    setmenus({ ...menusField, value: ms });
+  }, [loading]);
 
-  handleSubmit(e) {
+  function handleSubmit(e) {
     e.preventDefault();
-    const { createCategory } = this.props;
-    const { formInputs } = this.state;
-    const newValidForm = isValidForm(formInputs);
-    this.setState({
-      validForm: newValidForm,
-      showAlert: true,
-    });
-    if (newValidForm) {
-      // dependiendo del prop es si llama a crear o a editar
-      createCategory();
-    }
+    const actionPayload = {
+      nombreField,
+      ordenField,
+      descripcionField,
+      menusField,
+    };
+    if (catId) updateCategory({ ...actionPayload, catId });
+    else createCategory(actionPayload);
   }
 
-  handleInputChange(e) {
-    const { formInputs } = this.state;
-    const newFormInputs = inputHandle(formInputs, e.target);
-    this.setState({
-      formInputs: newFormInputs,
-    });
-  }
+  const formEntries = [
+    { ...nombreField, change: createChangeCb(nombreField, setName) },
+    { ...ordenField, change: createChangeCb(ordenField, setOrden) },
+    { ...descripcionField, change: createChangeCb(descripcionField, setDescripcion) },
+    { ...menusField, change: createChangeCb(menusField, setmenus), items: menus },
+  ];
 
-  render() {
-    const { type } = this.props;
-    const { validForm, formInputs, showAlert } = this.state;
-    const message = validForm
-      ? 'Creando categoria...!'
-      : 'Favor de revisar los datos...!';
-    const messageType = validForm ? 'success' : 'error';
-    return (
-      <Layout>
-        <HeadComponent
-          title={`${type === 'create' ? 'Crear' : 'Editar'} categoria`}
-        />
-        <FormComponent
-          handleSubmit={this.handleSubmit}
-          handleInputChange={this.handleInputChange}
-          fields={formInputs}
-        />
-        <MessageComponent
-          open={showAlert}
-          handleClose={this.handleCloseMessage}
-          message={message}
-          type={messageType}
-        />
-      </Layout>
-    );
-  }
-}
+  // console.log('*************');
+  // console.log(formEntries);
+  // console.log('*************');
+  if (loading) return <h1>Cargando...</h1>;
 
-FormCategoryContainerNoConnect.propTypes = {
-  createCategory: PropTypes.func.isRequired,
-  menusIds: PropTypes.arrayOf(PropTypes.string).isRequired,
-  menusList: PropTypes.object.isRequired,
-  type: PropTypes.string.isRequired,
-};
-
-const mapStateToProps = (state) => {
-  const { menusList, menusIds, loading } = state.menus;
-  return { menusList, menusIds, loading };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  const { createCategory } = categoryActions.creators;
-  return bindActionCreators(
-    {
-      createCategory,
-    },
-    dispatch,
+  return (
+    <Layout>
+      <HeadComponent
+        title={`${catId ? 'Editar' : 'Crear'} categoria`}
+      />
+      <FormComponent
+        handleSubmit={handleSubmit}
+        fields={formEntries}
+        config={formInputs}
+      />
+    </Layout>
   );
 };
 
-const FormCategoryContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(FormCategoryContainerNoConnect);
+CategoryCreate.propTypes = {
+  match: PropTypes.object.isRequired,
+  getCategory: PropTypes.func.isRequired,
+  setCategoriesLoading: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
+  createCategory: PropTypes.func.isRequired,
+  updateCategory: PropTypes.func.isRequired,
+  menus: PropTypes.array.isRequired,
+  initForm: PropTypes.func.isRequired,
+  category: PropTypes.object,
+};
 
-export { FormCategoryContainerNoConnect };
-export default FormCategoryContainer;
+CategoryCreate.defaultProps = {
+  category: {
+    name: '',
+    orden: '1',
+    descripcion: '',
+    // menus = [],
+  },
+};
+
+export default connect(selectors.createSelector, createDispatcher)(CategoryCreate);
