@@ -4,6 +4,13 @@ const initalState = {
   categoriesList: {},
   categoriesIds: [],
   loading: false,
+  category: {
+    nombre: '',
+    orden: '1',
+    descripcion: '',
+    menus: [],
+  },
+  menus: [],
 };
 
 const formatCategories = (data) => {
@@ -37,6 +44,18 @@ const categoriesReducer = (state = initalState, action) => {
       ...state,
       loading,
     };
+    return newState;
+  }
+  if (type === categoriesActions.types.SET_CATEGORY) {
+    const newState = {
+      ...state,
+      category: { ...payload },
+    };
+    if (!payload.menus) newState.menus = [];
+    return newState;
+  }
+  if (type === categoriesActions.types.SET_CREATE_MENUS) {
+    const newState = { ...state, menus: [...payload] };
     return newState;
   }
   return state;

@@ -137,7 +137,7 @@ const DishCreate = ({
   return (
     <Layout>
       <HeadComponent
-        title="Crear platillo"
+        title={`${dishId ? 'Editar' : 'Crear'} platillo`}
       />
       <FormComponent
         handleSubmit={handleSubmit}

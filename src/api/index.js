@@ -87,3 +87,36 @@ export const updateDish = async ({ jwt, dish }) => {
 
   return data;
 };
+
+export const getCategory = async ({ jwt, catId }) => {
+  const { data } = await getData(`categorias/${catId}`, jwt);
+  return data;
+};
+
+export const createCategory = async ({ jwt, cat }) => {
+  const { data } = await axios.post(
+    `${apiBase}categorias`,
+    { ...cat },
+    {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    },
+  );
+
+  return data;
+};
+
+export const updateCategory = async ({ jwt, cat }) => {
+  const { data } = await axios.put(
+    `${apiBase}categorias/${cat.catId}`,
+    { ...cat },
+    {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    },
+  );
+
+  return data;
+};

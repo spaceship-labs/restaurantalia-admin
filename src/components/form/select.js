@@ -4,10 +4,11 @@ import {
   FormControl, InputLabel, Select, Input, MenuItem, Chip,
 } from '@material-ui/core/';
 
-const SelectChipInputComponent = ({ field }) => {
+const SelectChipInputComponent = ({ field, fieldConfig }) => {
   const {
-    attr, label, value, items, isRequired, error, change,
+    attr, value, items, isRequired, error, change,
   } = field;
+  const { label } = fieldConfig;
   const vls = value.map((it) => JSON.stringify(it));
   const its = items.map((it) => JSON.stringify(it));
   return (
@@ -55,6 +56,7 @@ const SelectChipInputComponent = ({ field }) => {
 
 SelectChipInputComponent.propTypes = {
   field: PropTypes.object.isRequired,
+  fieldConfig: PropTypes.object.isRequired,
 };
 
 export default SelectChipInputComponent;

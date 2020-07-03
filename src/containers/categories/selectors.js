@@ -5,4 +5,16 @@ const propsSelector = ({ categories }) => {
   };
 };
 
-export default { propsSelector };
+const createSelector = ({
+  categories: {
+    loading,
+    category,
+    menus,
+  },
+}) => ({
+  loading,
+  category,
+  menus,
+});
+
+export default { createSelector, propsSelector };

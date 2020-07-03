@@ -7,6 +7,7 @@ const {
   setCategoriesLoading,
   createCategory,
   updateCategory,
+  initForm,
 } = categoriesActions.creators;
 
 export const createDispatcher = (dispatch) => bindActionCreators({
@@ -14,6 +15,7 @@ export const createDispatcher = (dispatch) => bindActionCreators({
   setCategoriesLoading,
   createCategory,
   updateCategory,
+  initForm,
 }, dispatch);
 
 export const mainDispatcher = (dispatch) => bindActionCreators({

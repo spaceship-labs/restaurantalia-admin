@@ -4,10 +4,11 @@ import FormControl from '@material-ui/core/FormControl';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 
-const TextInputComponent = ({ field }) => {
+const TextInputComponent = ({ field, fieldConfig }) => {
   const {
-    label, attr, value, isRequired, error, change,
-  } = field;
+    attr, label, isRequired, error,
+  } = fieldConfig;
+  const { value, change } = field;
   return (
     <FormControl>
       <InputLabel htmlFor={attr}>{label}</InputLabel>
@@ -25,6 +26,7 @@ const TextInputComponent = ({ field }) => {
 
 TextInputComponent.propTypes = {
   field: PropTypes.object.isRequired,
+  fieldConfig: PropTypes.object.isRequired,
 };
 
 export default TextInputComponent;

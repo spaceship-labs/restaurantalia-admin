@@ -12,6 +12,10 @@ import {
 } from './restaurants';
 import {
   watchgetCategoriesSaga,
+  watchInitCategoryFormSaga,
+  watchgetCategorySaga,
+  watchCreateCategorySaga,
+  watchUpdateCategorySaga,
 } from './categories';
 import {
   watchgetCategoriesDishesSaga,
@@ -50,5 +54,10 @@ export function* rootSaga() {
     watchCreateDishSaga(),
     watchUpdateDishSaga(),
     watchInitFormSaga(),
+    // catgories sagas
+    watchInitCategoryFormSaga(),
+    watchgetCategorySaga(),
+    watchCreateCategorySaga(),
+    watchUpdateCategorySaga(),
   ]);
 }
