@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const apiBase = 'http://3.130.7.153:1338/';
+// const apiBase = 'http://3.130.7.153:1338/';
+const apiBase = 'https://restaurantalia-api.spaceshiplabs.com/';
 
 const getData = async (url, jwt) => axios.get(
   `${apiBase}${url}`,
