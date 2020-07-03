@@ -22,7 +22,6 @@ import LoginContainer from '../login';
 // import FormCategoryContainer from '../categories/create';
 // import FormDishContainer from '../dishes/create';
 
-
 const Routes = ({ isLoggedIn, getUser }) => {
   useEffect(() => {
     getUser();
