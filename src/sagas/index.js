@@ -19,6 +19,7 @@ import {
   watchgetDishSaga,
   watchCreateDishSaga,
   watchUpdateDishSaga,
+  watchInitFormSaga,
 } from './dishes';
 
 const getstatus = (state) => ({
@@ -48,5 +49,6 @@ export function* rootSaga() {
     watchgetDishSaga(),
     watchCreateDishSaga(),
     watchUpdateDishSaga(),
+    watchInitFormSaga(),
   ]);
 }

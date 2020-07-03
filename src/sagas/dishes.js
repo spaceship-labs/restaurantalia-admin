@@ -17,6 +17,7 @@ const {
   CREATE_DISH,
   UPDATE_DISH,
   SET_CREATE_CATEGORIES,
+  INIT_FORM,
 } = dishesActions.types;
 
 const {
@@ -69,16 +70,24 @@ function* getDishesSaga(action) {
   }
 }
 
-function* getDishSaga({ payload: dishId }) {
+function* initFormSaga() {
   const jwt = yield select(getJwt);
   const user = yield select(getUser);
   const empresasIds = user.empresas.map((r) => r.id);
-
   try {
     const categoriesResponse = yield call(getCategoriesRequest, { jwt, empresasIds });
     const categoriesState = categoriesResponse.map((it) => ({ id: it.id, nombre: it.nombre }));
     yield put({ type: SET_CREATE_CATEGORIES, payload: [...categoriesState] });
+  } catch (e) {
+    console.log(e);
+  } finally {
+    yield put({ type: SET_DISHES_LOADING, payload: { loading: false } });
+  }
+}
 
+function* getDishSaga({ payload: dishId }) {
+  const jwt = yield select(getJwt);
+  try {
     const dishResponse = yield call(getDishRequest, { jwt, dishId });
     const dishCategories = dishResponse.categorias.map((it) => ({ id: it.id, nombre: it.nombre }));
     yield put({ type: SET_DISH, payload: { ...dishResponse, categorias: dishCategories } });
@@ -91,6 +100,8 @@ function* getDishSaga({ payload: dishId }) {
 
 function* createDishSaga({ payload }) {
   const jwt = yield select(getJwt);
+  const user = yield select(getUser);
+  const empresas = user.empresas.map((r) => r.id);
   const {
     nameField: { value: nombre },
     ordenField: { value: orden },
@@ -106,6 +117,7 @@ function* createDishSaga({ payload }) {
     cantidad,
     descripcion,
     categorias,
+    empresa: empresas[0],
   };
   try {
     const dishPostResponse = yield call(createDishRequest, { jwt, dish: { ...params } });
@@ -117,6 +129,8 @@ function* createDishSaga({ payload }) {
 
 function* updateDishSaga({ payload }) {
   const jwt = yield select(getJwt);
+  const user = yield select(getUser);
+  const empresas = user.empresas.map((r) => r.id);
   const {
     nameField: { value: nombre },
     ordenField: { value: orden },
@@ -133,6 +147,7 @@ function* updateDishSaga({ payload }) {
     cantidad,
     descripcion,
     categorias,
+    empresa: empresas[0],
     dishId,
   };
   try {
@@ -162,4 +177,8 @@ export function* watchCreateDishSaga() {
 
 export function* watchUpdateDishSaga() {
   yield takeLatest(UPDATE_DISH, updateDishSaga);
+}
+
+export function* watchInitFormSaga() {
+  yield takeLatest(INIT_FORM, initFormSaga);
 }
