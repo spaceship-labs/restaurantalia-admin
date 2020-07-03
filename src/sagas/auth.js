@@ -59,7 +59,7 @@ function* getUserSaga() {
       user: localData.user,
     };
     yield put({ type: SET_LOGIN, payload: { result: loginResponse } });
-    const restaurantesResponse = loginResponse.user.restaurantes;
+    const { restaurantes: restaurantesResponse } = loginResponse.user;
     yield put({ type: SET_RESTAURANTES, payload: { restaurantesResponse } });
     yield put({ type: GET_MENUS, payload: { page: 1 } });
     yield put({ type: SET_LOADING, payload: { loading: true } });

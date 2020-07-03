@@ -53,7 +53,6 @@ class MenusContainerNoConnect extends Component {
           elements={menusList}
           columns={attrsArray}
           collection="menus"
-          editButton
         />
         <LoadingComponent open={loading} />
       </Layout>

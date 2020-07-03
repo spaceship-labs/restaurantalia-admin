@@ -1,91 +1,62 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  FormControl, InputLabel, Select, Input, Chip, MenuItem,
+  FormControl, InputLabel, Select, Input, MenuItem, Chip,
 } from '@material-ui/core/';
 
-const MultipleSelectComponent = ({ field, handleChange }) => {
+const SelectChipInputComponent = ({ field, fieldConfig }) => {
   const {
-    attr, value, items, isRequired, error,
+    attr, value, items, isRequired, error, change,
   } = field;
-  return (
-    <Select
-      labelId={attr}
-      id={attr}
-      required={isRequired}
-      error={error}
-      name={attr}
-      multiple
-      value={value}
-      onChange={handleChange}
-      input={<Input id={attr} />}
-      renderValue={(selected) => (
-        <div>
-          {selected.map((v) => (
-            <Chip key={v.id} label={v.nombre} />
-          ))}
-        </div>
-      )}
-    >
-      {items.map((item) => (
-        <MenuItem key={item.id} value={item}>
-          {item.nombre}
-        </MenuItem>
-      ))}
-    </Select>
-  );
-};
-MultipleSelectComponent.propTypes = {
-  field: PropTypes.object.isRequired,
-  handleChange: PropTypes.func.isRequired,
-};
-
-const SingleSelectComponent = ({ field, handleChange }) => {
-  const {
-    attr, value, items, isRequired, error,
-  } = field;
-  return (
-    <Select
-      labelId={attr}
-      id={attr}
-      required={isRequired}
-      error={error}
-      name={attr}
-      value={value}
-      onChange={handleChange}
-      input={<Input id={attr} />}
-    >
-      {items.map((item) => (
-        <MenuItem key={item.id} value={item.id}>
-          {item.nombre}
-        </MenuItem>
-      ))}
-    </Select>
-  );
-};
-SingleSelectComponent.propTypes = {
-  field: PropTypes.object.isRequired,
-  handleChange: PropTypes.func.isRequired,
-};
-
-const SelectChipInputComponent = ({ field, handleChange, multiple }) => {
-  const { attr, label } = field;
+  const { label } = fieldConfig;
+  const vls = value.map((it) => JSON.stringify(it));
+  const its = items.map((it) => JSON.stringify(it));
   return (
     <FormControl>
       <InputLabel id={attr}>{label}</InputLabel>
-      {multiple
-        ? <MultipleSelectComponent field={field} handleChange={handleChange} />
-        : <SingleSelectComponent field={field} handleChange={handleChange} />}
+      <Select
+        labelId={attr}
+        id={attr}
+        required={isRequired}
+        error={error}
+        name={attr}
+        multiple
+        value={vls}
+        onChange={({ target: { value: val } }) => {
+          // console.log(';;;;;;;;;;;;;;;;;');
+          // console.log(val);
+          // console.log(';;;;;;;;;;;;;;;;;');
+          const newVal = val.map((it) => JSON.parse(it));
+          change(newVal);
+        }}
+        input={<Input id={attr} />}
+        renderValue={(selected) => (
+          <div>
+            {selected.map((v) => {
+              const vObj = JSON.parse(v);
+              return (
+                <Chip key={vObj.id} label={vObj.nombre} />
+              );
+            })}
+          </div>
+        )}
+      >
+        {its.map((item) => {
+          const tt = JSON.parse(item);
+          return (
+            <MenuItem key={tt.id} value={item}>
+              {tt.nombre}
+            </MenuItem>
+          );
+        })}
+      </Select>
     </FormControl>
   );
 };
-SelectChipInputComponent.defaultProps = {
-  multiple: false,
-};
+
 SelectChipInputComponent.propTypes = {
   field: PropTypes.object.isRequired,
-  handleChange: PropTypes.func.isRequired,
-  multiple: PropTypes.bool,
+  fieldConfig: PropTypes.object.isRequired,
 };
 
 export default SelectChipInputComponent;

@@ -1,153 +1,174 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import Layout from '../layout';
 import HeadComponent from '../../components/head';
 import FormComponent from '../../components/form';
-import { inputHandle, isValidForm } from '../../utils/inputvalidation';
-import MessageComponent from '../../components/message';
+import { createDispatcher } from './dispatcher';
+import selectors from './selectors';
 
-class FormDishContainer extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      validForm: false,
-      showAlert: false,
-      formInputs: [],
-    };
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleCloseMessage = this.handleCloseMessage.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
+const formInputs = {
+  name: {
+    attr: 'name',
+    label: 'Nombre',
+    type: 'text',
+    isRequired: true,
+    error: false,
+  },
+  orden: {
+    attr: 'orden',
+    label: 'Orden',
+    type: 'number',
+    isRequired: false,
+    error: false,
+  },
+  precio: {
+    attr: 'precio',
+    label: 'Precio',
+    type: 'number',
+    isRequired: true,
+    error: false,
+  },
+  cantidad: {
+    attr: 'cantidad',
+    label: 'Cantidad',
+    type: 'number',
+    isRequired: false,
+    error: false,
+  },
+  descripcion: {
+    attr: 'descripcion',
+    label: 'Descripcion',
+    type: 'text',
+    isRequired: false,
+    error: false,
+  },
+  categorias: {
+    attr: 'categorias',
+    label: 'Categorias',
+    type: 'select',
+    isRequired: true,
+    error: false,
+  },
+};
+const createChangeCb = (currentVal, setCb) => (newVal) => setCb({ ...currentVal, value: newVal });
 
-  componentDidMount() {
-    const { formInputs } = this.state;
-    // si el prop que indica crear/editar hay que esperar la info del elemento
-    if (formInputs.length === 0) {
-      const newInputs = {
-        name: {
-          attr: 'name',
-          label: 'Nombre',
-          value: '',
-          type: 'text',
-          isRequired: true,
-          error: false,
-        },
-        orden: {
-          attr: 'orden',
-          label: 'Orden',
-          value: 0,
-          type: 'number',
-          isRequired: false,
-          error: false,
-        },
-        precio: {
-          attr: 'precio',
-          label: 'Precio',
-          value: '',
-          type: 'number',
-          isRequired: true,
-          error: false,
-        },
-        cantidad: {
-          attr: 'cantidad',
-          label: 'Cantidad',
-          value: '',
-          type: 'number',
-          isRequired: false,
-          error: false,
-        },
-        descripcion: {
-          attr: 'descripcion',
-          label: 'Descripcion',
-          value: '',
-          type: 'text',
-          isRequired: false,
-          error: false,
-        },
-        categorias: {
-          attr: 'categorias',
-          label: 'Categorias',
-          value: [],
-          type: 'multiselect',
-          isRequired: true,
-          error: false,
-          items: [
-            {
-              id: 1,
-              nombre: 'opcion 1',
-            },
-            {
-              id: 2,
-              nombre: 'opcion 2',
-            },
-          ],
-        },
-      };
-      // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({
-        formInputs: newInputs,
-      });
+const DishCreate = ({
+  loading,
+  dish,
+  match,
+  getDish,
+  setDishesLoading,
+  categorias,
+  updateDish,
+  createDish,
+  initForm,
+}) => {
+  const [nameField, setName] = useState({ name: 'name', value: '' });
+  const [ordenField, setOrden] = useState({ name: 'orden', value: '' });
+  const [precioField, setPrecio] = useState({ name: 'precio', value: '' });
+  const [cantidadField, setCantidad] = useState({ name: 'cantidad', value: '' });
+  const [descripcionField, setDescripcion] = useState({ name: 'descripcion', value: '' });
+  const [categoriasField, setCategorias] = useState({ name: 'categorias', value: [] });
+
+  const { params: { id: dishId } } = match;
+
+  useEffect(() => {
+    initForm();
+  }, []);
+
+  useEffect(() => {
+    if (dishId) {
+      getDish(dishId);
+      setDishesLoading({ loading: true });
     }
-  }
+  }, [dishId]);
 
-  handleCloseMessage() {
-    this.setState({ showAlert: false });
-  }
+  useEffect(() => {
+    const {
+      nombre,
+      orden,
+      precio,
+      cantidad,
+      descripcion,
+      categorias: cats = [],
+    } = dish;
+    // console.log('/////////////////////');
+    // console.log(dish);
+    // console.log('/////////////////////');
+    setName({ ...nameField, value: nombre });
+    setOrden({ ...ordenField, value: orden });
+    setPrecio({ ...precioField, value: precio });
+    setCantidad({ ...cantidadField, value: cantidad });
+    setDescripcion({ ...descripcionField, value: descripcion });
+    setCategorias({ ...categoriasField, value: cats });
+  }, [loading]);
 
-  handleSubmit(e) {
+  function handleSubmit(e) {
     e.preventDefault();
-    const { type } = this.props;
-    const { formInputs } = this.state;
-    const newValidForm = isValidForm(formInputs);
-    this.setState({
-      validForm: newValidForm,
-      showAlert: true,
-    });
-    if (newValidForm) {
-      // dependiendo del prop es si llama a crear o a editar
-      console.log('SUBMIT', type, formInputs);
-    }
+    const actionPayload = {
+      nameField,
+      ordenField,
+      precioField,
+      cantidadField,
+      descripcionField,
+      categoriasField,
+    };
+    if (dishId) updateDish({ ...actionPayload, dishId });
+    else createDish(actionPayload);
   }
 
-  handleInputChange(e) {
-    const { formInputs } = this.state;
-    const newFormInputs = inputHandle(formInputs, e.target);
-    this.setState({
-      formInputs: newFormInputs,
-    });
-  }
+  const formEntries = [
+    { ...nameField, change: createChangeCb(nameField, setName) },
+    { ...ordenField, change: createChangeCb(ordenField, setOrden) },
+    { ...precioField, change: createChangeCb(precioField, setPrecio) },
+    { ...cantidadField, change: createChangeCb(cantidadField, setCantidad) },
+    { ...descripcionField, change: createChangeCb(descripcionField, setDescripcion) },
+    {
+      ...categoriasField, change: createChangeCb(categoriasField, setCategorias), items: categorias,
+    },
+  ];
 
-  render() {
-    const { type } = this.props;
-    const { validForm, formInputs, showAlert } = this.state;
-    const message = validForm
-      ? 'Creando platillo...!'
-      : 'Favor de revisar los datos...!';
-    const messageType = validForm ? 'success' : 'error';
-    return (
-      <Layout>
-        <HeadComponent
-          title={`${type === 'create' ? 'Crear' : 'Editar'} platillo`}
-        />
-        <FormComponent
-          handleSubmit={this.handleSubmit}
-          handleInputChange={this.handleInputChange}
-          fields={formInputs}
-        />
-        <MessageComponent
-          open={showAlert}
-          handleClose={this.handleCloseMessage}
-          message={message}
-          type={messageType}
-        />
-      </Layout>
-    );
-  }
-}
+  // console.log('*************');
+  // console.log(formEntries);
+  // console.log('*************');
+  if (loading) return <h1>Cargando...</h1>;
 
-FormDishContainer.propTypes = {
-  type: PropTypes.string.isRequired,
+  return (
+    <Layout>
+      <HeadComponent
+        title={`${dishId ? 'Editar' : 'Crear'} platillo`}
+      />
+      <FormComponent
+        handleSubmit={handleSubmit}
+        fields={formEntries}
+        config={formInputs}
+      />
+    </Layout>
+  );
 };
 
-export default FormDishContainer;
+DishCreate.propTypes = {
+  match: PropTypes.object.isRequired,
+  getDish: PropTypes.func.isRequired,
+  setDishesLoading: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
+  createDish: PropTypes.func.isRequired,
+  updateDish: PropTypes.func.isRequired,
+  categorias: PropTypes.array.isRequired,
+  initForm: PropTypes.func.isRequired,
+  dish: PropTypes.object,
+};
+
+DishCreate.defaultProps = {
+  dish: {
+    name: '',
+    orden: '1',
+    precio: '',
+    cantidad: '',
+    descripcion: '',
+    // categorias = [],
+  },
+};
+
+export default connect(selectors.createSelector, createDispatcher)(DishCreate);

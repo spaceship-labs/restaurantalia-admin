@@ -4,22 +4,20 @@ import TextInputComponent from './text';
 import SelectChipInputComponent from './select';
 import NumberInputComponent from './number';
 
-const FieldComponent = ({ field, handleInputChange }) => {
-  if (field.type === 'multiselect') {
-    return <SelectChipInputComponent multiple field={field} handleChange={handleInputChange} />;
+const FieldComponent = ({ field, fieldConfig }) => {
+  // something
+  if (fieldConfig.type === 'select') {
+    return <SelectChipInputComponent field={field} fieldConfig={fieldConfig} />;
   }
-  if (field.type === 'select') {
-    return <SelectChipInputComponent field={field} handleChange={handleInputChange} />;
+  if (fieldConfig.type === 'number') {
+    return <NumberInputComponent field={field} fieldConfig={fieldConfig} />;
   }
-  if (field.type === 'number') {
-    return <NumberInputComponent field={field} handleChange={handleInputChange} />;
-  }
-  return <TextInputComponent field={field} handleChange={handleInputChange} />;
+  return <TextInputComponent field={field} fieldConfig={fieldConfig} />;
 };
 
 FieldComponent.propTypes = {
   field: PropTypes.object.isRequired,
-  handleInputChange: PropTypes.func.isRequired,
+  fieldConfig: PropTypes.object.isRequired,
 };
 
 export default FieldComponent;

@@ -12,8 +12,19 @@ import {
 } from './restaurants';
 import {
   watchgetCategoriesSaga,
+  watchInitCategoryFormSaga,
+  watchgetCategorySaga,
+  watchCreateCategorySaga,
+  watchUpdateCategorySaga,
 } from './categories';
-import { watchgetCategoriesDishesSaga, watchgetDishesSaga } from './dishes';
+import {
+  watchgetCategoriesDishesSaga,
+  watchgetDishesSaga,
+  watchgetDishSaga,
+  watchCreateDishSaga,
+  watchUpdateDishSaga,
+  watchInitFormSaga,
+} from './dishes';
 
 const getstatus = (state) => ({
   status: state.status,
@@ -39,5 +50,14 @@ export function* rootSaga() {
     watchgetCategoriesSaga(),
     watchgetCategoriesDishesSaga(),
     watchgetDishesSaga(),
+    watchgetDishSaga(),
+    watchCreateDishSaga(),
+    watchUpdateDishSaga(),
+    watchInitFormSaga(),
+    // catgories sagas
+    watchInitCategoryFormSaga(),
+    watchgetCategorySaga(),
+    watchCreateCategorySaga(),
+    watchUpdateCategorySaga(),
   ]);
 }

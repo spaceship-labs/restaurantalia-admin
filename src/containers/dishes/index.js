@@ -1,23 +1,21 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Layout from '../layout';
 import HeadComponent from '../../components/head';
 import TableComponent from '../../components/table';
 import LoadingComponent from '../../components/loading';
-import dishesActions from '../../actions/dishes';
+import { mainDispatcher } from './dispatcher';
+import selectors from './selectors';
 
-class DishesContainerNoConnect extends Component {
-  constructor(props) {
-    super(props);
+class DishesContainer extends Component {
+  componentDidMount() {
     const {
-      dishesIds, getCategoriesDishes, setDishesLoading,
+      getCategoriesDishes, setDishesLoading,
     } = this.props;
-    if (dishesIds.length === 0) {
-      setDishesLoading({ loading: true });
-      getCategoriesDishes();
-    }
+
+    getCategoriesDishes();
+    setDishesLoading({ loading: true });
   }
 
   render() {
@@ -63,36 +61,14 @@ class DishesContainerNoConnect extends Component {
   }
 }
 
-DishesContainerNoConnect.propTypes = {
+DishesContainer.propTypes = {
   dishesList: PropTypes.object.isRequired,
-  dishesIds: PropTypes.arrayOf(PropTypes.string).isRequired,
   loading: PropTypes.bool.isRequired,
   getCategoriesDishes: PropTypes.func.isRequired,
   setDishesLoading: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => {
-  const { dishesList, dishesIds, loading } = state.dishes;
-  return {
-    dishesList, dishesIds, loading,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  const { getCategoriesDishes, setDishesLoading } = dishesActions.creators;
-  return bindActionCreators(
-    {
-      getCategoriesDishes,
-      setDishesLoading,
-    },
-    dispatch,
-  );
-};
-
-const DishesContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(DishesContainerNoConnect);
-
-export { DishesContainerNoConnect };
-export default DishesContainer;
+export default connect(
+  selectors.propsSelector,
+  mainDispatcher,
+)(DishesContainer);

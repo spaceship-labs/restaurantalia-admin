@@ -54,3 +54,69 @@ export const getDishes = async ({ jwt, categoriesIds }) => {
   const { data } = await getData(`platillos${params}`, jwt);
   return data;
 };
+
+export const getDish = async ({ jwt, dishId }) => {
+  const { data } = await getData(`platillos/${dishId}`, jwt);
+  return data;
+};
+
+export const createDish = async ({ jwt, dish }) => {
+  const { data } = await axios.post(
+    `${apiBase}platillos`,
+    { ...dish },
+    {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    },
+  );
+
+  return data;
+};
+
+export const updateDish = async ({ jwt, dish }) => {
+  const { data } = await axios.put(
+    `${apiBase}platillos/${dish.dishId}`,
+    { ...dish },
+    {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    },
+  );
+
+  return data;
+};
+
+export const getCategory = async ({ jwt, catId }) => {
+  const { data } = await getData(`categorias/${catId}`, jwt);
+  return data;
+};
+
+export const createCategory = async ({ jwt, cat }) => {
+  const { data } = await axios.post(
+    `${apiBase}categorias`,
+    { ...cat },
+    {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    },
+  );
+
+  return data;
+};
+
+export const updateCategory = async ({ jwt, cat }) => {
+  const { data } = await axios.put(
+    `${apiBase}categorias/${cat.catId}`,
+    { ...cat },
+    {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    },
+  );
+
+  return data;
+};
