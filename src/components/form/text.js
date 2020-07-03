@@ -6,7 +6,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 
 const TextInputComponent = ({ field }) => {
   const {
-    label, attr, value, isRequired, error, setValue,
+    label, attr, value, isRequired, error, change,
   } = field;
   return (
     <FormControl>
@@ -17,7 +17,7 @@ const TextInputComponent = ({ field }) => {
         required={isRequired}
         name={attr}
         value={value}
-        onChange={({ target: { value: val } }) => setValue(val)}
+        onChange={({ target: { value: val } }) => change(val)}
       />
     </FormControl>
   );

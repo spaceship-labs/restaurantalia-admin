@@ -9,4 +9,20 @@ const useFormInput = (field) => {
   };
 };
 
-export default { useFormInput };
+const useFormSelectInput = (field) => {
+  const [value, setVal] = useState(field.value);
+  return {
+    ...field,
+    value,
+    setValue: (category) => {
+      const findInd = value.findIndex((it) => category.id === it.id);
+      const newElements = findInd > -1
+        ? value.filter((it) => it.id === category.id)
+        : [...value, category];
+
+      setVal(newElements);
+    },
+  };
+};
+
+export default { useFormInput, useFormSelectInput };
