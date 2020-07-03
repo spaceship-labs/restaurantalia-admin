@@ -23,9 +23,9 @@ const SelectChipInputComponent = ({ field, fieldConfig }) => {
         multiple
         value={vls}
         onChange={({ target: { value: val } }) => {
-          console.log(';;;;;;;;;;;;;;;;;');
-          console.log(val);
-          console.log(';;;;;;;;;;;;;;;;;');
+          // console.log(';;;;;;;;;;;;;;;;;');
+          // console.log(val);
+          // console.log(';;;;;;;;;;;;;;;;;');
           const newVal = val.map((it) => JSON.parse(it));
           change(newVal);
         }}

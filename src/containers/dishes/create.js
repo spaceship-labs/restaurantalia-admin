@@ -93,9 +93,9 @@ const DishCreate = ({
       descripcion,
       categorias: cats = [],
     } = dish;
-    console.log('/////////////////////');
-    console.log(dish);
-    console.log('/////////////////////');
+    // console.log('/////////////////////');
+    // console.log(dish);
+    // console.log('/////////////////////');
     setName({ ...nameField, value: nombre });
     setOrden({ ...ordenField, value: orden });
     setPrecio({ ...precioField, value: precio });
@@ -129,9 +129,9 @@ const DishCreate = ({
     },
   ];
 
-  console.log('*************');
-  console.log(formEntries);
-  console.log('*************');
+  // console.log('*************');
+  // console.log(formEntries);
+  // console.log('*************');
   if (loading) return <h1>Cargando...</h1>;
 
   return (
