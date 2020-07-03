@@ -3,14 +3,15 @@ import dishesActions from '../actions/dishes';
 const initalState = {
   dishesList: {},
   dish: {
-    nombre: ' ',
+    nombre: '',
     orden: '1',
     precio: '0',
-    cantidad: ' ',
-    descripcion: ' ',
-    // categorias = [],
+    cantidad: '',
+    descripcion: '',
+    categorias: [],
   },
   dishesIds: [],
+  categories: [],
   loading: false,
 };
 
@@ -49,6 +50,12 @@ const categoriesReducer = (state = initalState, action) => {
       ...state,
       dish: { ...payload },
     };
+    if (!payload.categorias) newState.categorias = [];
+    return newState;
+  }
+
+  if (type === dishesActions.types.SET_CREATE_CATEGORIES) {
+    const newState = { ...state, categories: [...payload] };
     return newState;
   }
 

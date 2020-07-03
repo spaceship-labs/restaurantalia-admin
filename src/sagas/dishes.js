@@ -1,7 +1,9 @@
 import {
   call, select, put, takeLatest,
 } from 'redux-saga/effects';
-import { getCategories, getDishes, getDish } from '../api';
+import {
+  getCategories, getDishes, getDish, createDish, updateDish,
+} from '../api';
 import dishesActions from '../actions/dishes';
 import categoriesActions from '../actions/categories';
 
@@ -12,6 +14,9 @@ const {
   SET_DISHES,
   SET_DISHES_LOADING,
   SET_DISH,
+  CREATE_DISH,
+  UPDATE_DISH,
+  SET_CREATE_CATEGORIES,
 } = dishesActions.types;
 
 const {
@@ -24,6 +29,8 @@ const getCategoriesRequest = async (data) => getCategories(data);
 const getDishRequest = async (data) => getDish(data);
 const getUser = (state) => (state.auth.user);
 const getJwt = (state) => (state.auth.jwt);
+const createDishRequest = async (data) => createDish(data);
+const updateDishRequest = async (data) => updateDish(data);
 
 function* getCategoriesDishesSaga() {
   try {
@@ -33,6 +40,7 @@ function* getCategoriesDishesSaga() {
       const user = yield select(getUser);
       const empresasIds = user.empresas.map((r) => r.id);
       const categoriesResponse = yield call(getCategoriesRequest, { jwt, empresasIds });
+      console.log(categoriesResponse);
       yield put({ type: SET_CATEGORIES, payload: { categoriesResponse } });
       const categoriesIds = categoriesResponse.map((c) => c.id);
       yield put({ type: GET_DISHES, payload: { categoriesIds } });
@@ -62,16 +70,76 @@ function* getDishesSaga(action) {
 }
 
 function* getDishSaga({ payload: dishId }) {
-  console.log(dishId);
   const jwt = yield select(getJwt);
+  const user = yield select(getUser);
+  const empresasIds = user.empresas.map((r) => r.id);
+
   try {
+    const categoriesResponse = yield call(getCategoriesRequest, { jwt, empresasIds });
+    const categoriesState = categoriesResponse.map((it) => ({ id: it.id, nombre: it.nombre }));
+    yield put({ type: SET_CREATE_CATEGORIES, payload: [...categoriesState] });
+
     const dishResponse = yield call(getDishRequest, { jwt, dishId });
-    yield put({ type: SET_DISH, payload: { ...dishResponse } });
-    console.log(dishResponse);
+    const dishCategories = dishResponse.categorias.map((it) => ({ id: it.id, nombre: it.nombre }));
+    yield put({ type: SET_DISH, payload: { ...dishResponse, categorias: dishCategories } });
   } catch (e) {
     console.log(e);
   } finally {
     yield put({ type: SET_DISHES_LOADING, payload: { loading: false } });
+  }
+}
+
+function* createDishSaga({ payload }) {
+  const jwt = yield select(getJwt);
+  const {
+    nameField: { value: nombre },
+    ordenField: { value: orden },
+    precioField: { value: precio },
+    cantidadField: { value: cantidad },
+    descripcionField: { value: descripcion },
+    categoriasField: { value: categorias },
+  } = payload;
+  const params = {
+    nombre,
+    orden,
+    precio,
+    cantidad,
+    descripcion,
+    categorias,
+  };
+  try {
+    const dishPostResponse = yield call(createDishRequest, { jwt, dish: { ...params } });
+    console.log(dishPostResponse);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+function* updateDishSaga({ payload }) {
+  const jwt = yield select(getJwt);
+  const {
+    nameField: { value: nombre },
+    ordenField: { value: orden },
+    precioField: { value: precio },
+    cantidadField: { value: cantidad },
+    descripcionField: { value: descripcion },
+    categoriasField: { value: categorias },
+    dishId,
+  } = payload;
+  const params = {
+    nombre,
+    orden,
+    precio,
+    cantidad,
+    descripcion,
+    categorias,
+    dishId,
+  };
+  try {
+    const dishPUResponse = yield call(updateDishRequest, { jwt, dish: { ...params } });
+    console.log(dishPUResponse);
+  } catch (e) {
+    console.log(e);
   }
 }
 
@@ -86,4 +154,12 @@ export function* watchgetDishesSaga() {
 
 export function* watchgetDishSaga() {
   yield takeLatest(GET_DISH, getDishSaga);
+}
+
+export function* watchCreateDishSaga() {
+  yield takeLatest(CREATE_DISH, createDishSaga);
+}
+
+export function* watchUpdateDishSaga() {
+  yield takeLatest(UPDATE_DISH, updateDishSaga);
 }

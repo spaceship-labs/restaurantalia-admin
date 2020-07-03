@@ -59,3 +59,31 @@ export const getDish = async ({ jwt, dishId }) => {
   const { data } = await getData(`platillos/${dishId}`, jwt);
   return data;
 };
+
+export const createDish = async ({ jwt, dish }) => {
+  const { data } = await axios.post(
+    `${apiBase}platillos`,
+    { ...dish },
+    {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    },
+  );
+
+  return data;
+};
+
+export const updateDish = async ({ jwt, dish }) => {
+  const { data } = await axios.put(
+    `${apiBase}platillos/${dish.dishId}`,
+    { ...dish },
+    {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    },
+  );
+
+  return data;
+};
