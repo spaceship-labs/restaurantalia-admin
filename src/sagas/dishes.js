@@ -1,6 +1,7 @@
 import {
   call, select, put, takeLatest,
 } from 'redux-saga/effects';
+import history from '../history';
 import {
   getCategories, getDishes, getDish, createDish, updateDish,
 } from '../api';
@@ -121,6 +122,7 @@ function* createDishSaga({ payload }) {
   };
   try {
     const dishPostResponse = yield call(createDishRequest, { jwt, dish: { ...params } });
+    yield call(history.push, '/platillos');
     console.log(dishPostResponse);
   } catch (e) {
     console.log(e);
@@ -152,6 +154,7 @@ function* updateDishSaga({ payload }) {
   };
   try {
     const dishPUResponse = yield call(updateDishRequest, { jwt, dish: { ...params } });
+    yield call(history.push, '/platillos');
     console.log(dishPUResponse);
   } catch (e) {
     console.log(e);

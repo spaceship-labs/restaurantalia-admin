@@ -27,7 +27,12 @@ const TableCellComponent = ({ cellvalue, cellindex, type }) => {
     }
     if (type === 'link') {
       return (
-        <Link href={cellvalue}>
+        <Link
+          href={cellvalue}
+          target="_blank"
+          aria-label="Ver sitio"
+          rel="noopener noreferrer"
+        >
           <LinkIcon />
         </Link>
       );
