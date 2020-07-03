@@ -7,6 +7,7 @@ const {
   setDishesLoading,
   createDish,
   updateDish,
+  initForm,
 } = dishesActions.creators;
 
 export const createDispatcher = (dispatch) => bindActionCreators({
@@ -14,6 +15,7 @@ export const createDispatcher = (dispatch) => bindActionCreators({
   setDishesLoading,
   createDish,
   updateDish,
+  initForm,
 }, dispatch);
 
 export const mainDispatcher = (dispatch) => bindActionCreators({

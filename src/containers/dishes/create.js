@@ -62,6 +62,7 @@ const DishCreate = ({
   categorias,
   updateDish,
   createDish,
+  initForm,
 }) => {
   const [nameField, setName] = useState({ name: 'name', value: '' });
   const [ordenField, setOrden] = useState({ name: 'orden', value: '' });
@@ -71,6 +72,10 @@ const DishCreate = ({
   const [categoriasField, setCategorias] = useState({ name: 'categorias', value: [] });
 
   const { params: { id: dishId } } = match;
+
+  useEffect(() => {
+    initForm();
+  }, []);
 
   useEffect(() => {
     if (dishId) {
@@ -151,6 +156,7 @@ DishCreate.propTypes = {
   createDish: PropTypes.func.isRequired,
   updateDish: PropTypes.func.isRequired,
   categorias: PropTypes.array.isRequired,
+  initForm: PropTypes.func.isRequired,
   dish: PropTypes.object,
 };
 
