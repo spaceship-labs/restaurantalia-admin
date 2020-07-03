@@ -68,7 +68,6 @@ function* getCategorySaga({ payload: catId }) {
     const catResponse = yield call(getCategoryRequest, { jwt, catId });
     const catMenus = catResponse.menus.map((it) => ({ id: it.id, nombre: it.nombre }));
     const validCat = empresasIds.indexOf(catResponse.empresa.id);
-    // console.log('CATE RESPONSE', validCat, catResponse);
     if (validCat >= 0) {
       yield put({ type: SET_CATEGORY, payload: { ...catResponse, menus: catMenus } });
     } else {
