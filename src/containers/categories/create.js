@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import HeadComponent from '../../components/head';
 import FormComponent from '../../components/form';
+import LoadingComponent from '../../components/loading';
 import { createDispatcher } from './dispatcher';
 import Layout from '../layout';
 import selectors from './selectors';
@@ -64,8 +65,8 @@ const CategoryCreate = ({
 
   useEffect(() => {
     if (catId) {
-      getCategory(catId);
       setCategoriesLoading({ loading: true });
+      getCategory(catId);
     }
   }, [catId]);
 
@@ -77,13 +78,13 @@ const CategoryCreate = ({
       menus: ms = [],
     } = category;
     // console.log('/////////////////////');
-    // console.log(category);
+    // console.log(loading, category);
     // console.log('/////////////////////');
     setName({ ...nombreField, value: nombre });
     setOrden({ ...ordenField, value: orden });
     setDescripcion({ ...descripcionField, value: descripcion });
     setmenus({ ...menusField, value: ms });
-  }, [loading]);
+  }, [loading, category]);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -107,18 +108,21 @@ const CategoryCreate = ({
   // console.log('*************');
   // console.log(formEntries);
   // console.log('*************');
-  if (loading) return <h1>Cargando...</h1>;
+  // if (loading) return <h1>Cargando...</h1>;
 
   return (
     <Layout>
       <HeadComponent
         title={`${catId ? 'Editar' : 'Crear'} categoria`}
       />
+      {!loading && (
       <FormComponent
         handleSubmit={handleSubmit}
         fields={formEntries}
         config={formInputs}
       />
+      )}
+      <LoadingComponent open={loading} />
     </Layout>
   );
 };
