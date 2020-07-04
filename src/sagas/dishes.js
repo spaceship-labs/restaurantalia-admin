@@ -54,14 +54,16 @@ function* getCategoriesDishesSaga() {
   }
 }
 
-function* getDishesSaga(action) {
+function* getDishesSaga() {
   try {
     // console.log('GETING DISHES');
     const jwt = yield select(getJwt);
-    const { categoriesIds } = action.payload;
-    if (categoriesIds.length > 0) {
-      const dishesResponse = yield call(getDishesRequest, { jwt, categoriesIds });
-      // console.log('dishesResponse', categoriesIds, dishesResponse);
+    // const { categoriesIds } = action.payload;
+    const user = yield select(getUser);
+    const empresasIds = user.empresas.map((r) => r.id);
+    if (empresasIds.length > 0) {
+      const dishesResponse = yield call(getDishesRequest, { jwt, empresasIds });
+      console.log('dishesResponse', empresasIds, dishesResponse);
       yield put({ type: SET_DISHES, payload: { dishesResponse } });
     }
   } catch (e) {
@@ -88,10 +90,18 @@ function* initFormSaga() {
 
 function* getDishSaga({ payload: dishId }) {
   const jwt = yield select(getJwt);
+  const user = yield select(getUser);
+  const empresasIds = user.empresas.map((r) => r.id);
   try {
     const dishResponse = yield call(getDishRequest, { jwt, dishId });
     const dishCategories = dishResponse.categorias.map((it) => ({ id: it.id, nombre: it.nombre }));
-    yield put({ type: SET_DISH, payload: { ...dishResponse, categorias: dishCategories } });
+    const validDish = empresasIds.indexOf(dishResponse.empresa.id);
+    // console.log('DISH RESPONSE', validDish, dishResponse);
+    if (validDish >= 0) {
+      yield put({ type: SET_DISH, payload: { ...dishResponse, categorias: dishCategories } });
+    } else {
+      yield call(history.push, '/platillos');
+    }
   } catch (e) {
     console.log(e);
   } finally {

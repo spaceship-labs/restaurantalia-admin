@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import Layout from '../layout';
 import HeadComponent from '../../components/head';
 import FormComponent from '../../components/form';
+import LoadingComponent from '../../components/loading';
 import { createDispatcher } from './dispatcher';
 import selectors from './selectors';
 
@@ -102,7 +103,7 @@ const DishCreate = ({
     setCantidad({ ...cantidadField, value: cantidad });
     setDescripcion({ ...descripcionField, value: descripcion });
     setCategorias({ ...categoriasField, value: cats });
-  }, [loading]);
+  }, [loading, dish]);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -132,18 +133,21 @@ const DishCreate = ({
   // console.log('*************');
   // console.log(formEntries);
   // console.log('*************');
-  if (loading) return <h1>Cargando...</h1>;
+  // if (loading) return <h1>Cargando...</h1>;
 
   return (
     <Layout>
       <HeadComponent
         title={`${dishId ? 'Editar' : 'Crear'} platillo`}
       />
+      {!loading && (
       <FormComponent
         handleSubmit={handleSubmit}
         fields={formEntries}
         config={formInputs}
       />
+      )}
+      <LoadingComponent open={loading} />
     </Layout>
   );
 };

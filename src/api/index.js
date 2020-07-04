@@ -46,12 +46,12 @@ export const getCategories = async ({ jwt, empresasIds }) => {
   return data;
 };
 
-export const getDishes = async ({ jwt, categoriesIds }) => {
+export const getDishes = async ({ jwt, empresasIds }) => {
   const limit = -1;
-  const categories = categoriesIds.reduce((result, r) => (
-    `${result}&categorias.id_in=${r}`
+  const empresas = empresasIds.reduce((result, r) => (
+    `${result}&empresa_in=${r}`
   ), '');
-  const params = `?_limit=${limit}${categories}`;
+  const params = `?_limit=${limit}${empresas}`;
   const { data } = await getData(`platillos${params}`, jwt);
   return data;
 };

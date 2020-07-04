@@ -62,10 +62,17 @@ function* initFormSaga() {
 
 function* getCategorySaga({ payload: catId }) {
   const jwt = yield select(getJwt);
+  const user = yield select(getUser);
+  const empresasIds = user.empresas.map((r) => r.id);
   try {
     const catResponse = yield call(getCategoryRequest, { jwt, catId });
     const catMenus = catResponse.menus.map((it) => ({ id: it.id, nombre: it.nombre }));
-    yield put({ type: SET_CATEGORY, payload: { ...catResponse, menus: catMenus } });
+    const validCat = empresasIds.indexOf(catResponse.empresa.id);
+    if (validCat >= 0) {
+      yield put({ type: SET_CATEGORY, payload: { ...catResponse, menus: catMenus } });
+    } else {
+      yield call(history.push, '/categorias');
+    }
   } catch (e) {
     console.log(e);
   } finally {
