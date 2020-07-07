@@ -2,7 +2,7 @@ import {
   put, call, select, takeLatest,
 } from 'redux-saga/effects';
 
-import { login } from '../api';
+import { login, setToken } from '../api';
 import { loadState, saveState, clearState } from '../api/localstorage';
 import history from '../history';
 
@@ -39,6 +39,7 @@ function* getDoLoginSaga(action) {
         jwt: loginResponse.jwt,
         user: loginResponse.user,
       });
+      yield call(setToken, loginResponse.jwt);
       const result = loginResponse;
       yield put({ type: SET_LOGIN, payload: { result } });
       yield call(history.push, '/');
@@ -58,6 +59,7 @@ function* getUserSaga() {
       jwt: localData.jwt,
       user: localData.user,
     };
+    yield call(setToken, loginResponse.jwt);
     yield put({ type: SET_LOGIN, payload: { result: loginResponse } });
     const { restaurantes: restaurantesResponse } = loginResponse.user;
     yield put({ type: SET_RESTAURANTES, payload: { restaurantesResponse } });
