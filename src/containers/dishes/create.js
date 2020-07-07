@@ -5,6 +5,7 @@ import Layout from '../layout';
 import HeadComponent from '../../components/head';
 import FormComponent from '../../components/form';
 import LoadingComponent from '../../components/loading';
+import ImageZoneComponent from '../../components/imageupload';
 import { createDispatcher } from './dispatcher';
 import selectors from './selectors';
 
@@ -52,6 +53,20 @@ const formInputs = {
     error: false,
   },
 };
+// multimedia
+const imageInputs = {
+  imagen: {
+    attr: 'imagen',
+    label: 'Imagen',
+    multiple: false,
+  },
+  logo: {
+    attr: 'imagen',
+    label: 'Imagen',
+    multiple: true,
+  },
+};
+
 const createChangeCb = (currentVal, setCb) => (newVal) => setCb({ ...currentVal, value: newVal });
 
 const DishCreate = ({
@@ -71,6 +86,9 @@ const DishCreate = ({
   const [cantidadField, setCantidad] = useState({ name: 'cantidad', value: '' });
   const [descripcionField, setDescripcion] = useState({ name: 'descripcion', value: '' });
   const [categoriasField, setCategorias] = useState({ name: 'categorias', value: [] });
+  // multimedia
+  const [imagenField, setImagen] = useState({ name: 'imagen', value: [], uploaded: [] });
+  const [logoField, setLogo] = useState({ name: 'logo', value: [], uploaded: [] });
 
   const { params: { id: dishId } } = match;
 
@@ -93,6 +111,8 @@ const DishCreate = ({
       cantidad,
       descripcion,
       categorias: cats = [],
+      imagen,
+      logo,
     } = dish;
     // console.log('/////////////////////');
     // console.log(dish);
@@ -103,6 +123,9 @@ const DishCreate = ({
     setCantidad({ ...cantidadField, value: cantidad });
     setDescripcion({ ...descripcionField, value: descripcion });
     setCategorias({ ...categoriasField, value: cats });
+    // multimedia
+    setImagen({ ...imagenField, uploaded: imagen || [] });
+    setLogo({ ...logoField, uploaded: logo || [] });
   }, [loading, dish]);
 
   function handleSubmit(e) {
@@ -119,6 +142,17 @@ const DishCreate = ({
     else createDish(actionPayload);
   }
 
+  function handleSubmitMultimedia() {
+    const actionPayload = {
+      imagenField,
+      logoField,
+      dishId,
+    };
+    // se llama el action que creara los elementos
+    // setDishesLoading({ loading: true });
+    console.log('UPLOAD', actionPayload);
+  }
+
   const formEntries = [
     { ...nameField, change: createChangeCb(nameField, setName) },
     { ...ordenField, change: createChangeCb(ordenField, setOrden) },
@@ -128,6 +162,11 @@ const DishCreate = ({
     {
       ...categoriasField, change: createChangeCb(categoriasField, setCategorias), items: categorias,
     },
+  ];
+
+  const multimediaFields = [
+    { ...imagenField, change: createChangeCb(imagenField, setImagen) },
+    { ...logoField, change: createChangeCb(logoField, setLogo) },
   ];
 
   // console.log('*************');
@@ -147,6 +186,15 @@ const DishCreate = ({
         config={formInputs}
       />
       )}
+      {!loading
+        && dishId
+        && (
+        <ImageZoneComponent
+          handleSubmit={handleSubmitMultimedia}
+          fields={multimediaFields}
+          config={imageInputs}
+        />
+        )}
       <LoadingComponent open={loading} />
     </Layout>
   );
