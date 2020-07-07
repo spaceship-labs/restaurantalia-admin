@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import HeadComponent from '../../components/head';
 import FormComponent from '../../components/form';
 import LoadingComponent from '../../components/loading';
+import DeleteSectionComponent from '../../components/delete';
 import { createDispatcher } from './dispatcher';
 import Layout from '../layout';
 import selectors from './selectors';
@@ -51,6 +52,7 @@ const CategoryCreate = ({
   updateCategory,
   createCategory,
   initForm,
+  deleteCategory,
 }) => {
   const [nombreField, setName] = useState({ name: 'nombre', value: '' });
   const [ordenField, setOrden] = useState({ name: 'orden', value: '' });
@@ -85,6 +87,13 @@ const CategoryCreate = ({
     setDescripcion({ ...descripcionField, value: descripcion });
     setmenus({ ...menusField, value: ms });
   }, [loading, category]);
+
+  function handleDelete() {
+    console.log('DELETE ELEMENT', catId);
+    if (catId) {
+      deleteCategory({ catId });
+    }
+  }
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -123,6 +132,7 @@ const CategoryCreate = ({
       />
       )}
       <LoadingComponent open={loading} />
+      {!loading && catId && <DeleteSectionComponent onDelete={handleDelete} />}
     </Layout>
   );
 };
@@ -137,6 +147,7 @@ CategoryCreate.propTypes = {
   menus: PropTypes.array.isRequired,
   initForm: PropTypes.func.isRequired,
   category: PropTypes.object,
+  deleteCategory: PropTypes.func.isRequired,
 };
 
 CategoryCreate.defaultProps = {
