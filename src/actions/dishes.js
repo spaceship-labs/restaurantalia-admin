@@ -8,6 +8,7 @@ const CREATE_DISH = 'CREATE_DISH';
 const UPDATE_DISH = 'UPDATE_DISH';
 const SET_CREATE_CATEGORIES = 'SET_CREATE_CATEGORIES';
 const INIT_FORM = 'INIT_FORM';
+const DELETE_DISH = 'DELETE_DISH';
 
 const getDish = (payload = {}) => ({ type: GET_DISH, payload });
 const getCategoriesDishes = (payload = {}) => ({ type: GET_CATEGORIES_DISHES, payload });
@@ -19,6 +20,7 @@ const createDish = (payload = {}) => ({ type: CREATE_DISH, payload });
 const updateDish = (payload = {}) => ({ type: UPDATE_DISH, payload });
 const setCreateCategories = (payload = []) => ({ type: SET_CREATE_CATEGORIES, payload });
 const initForm = (payload = []) => ({ type: INIT_FORM, payload });
+const deleteDish = (payload = []) => ({ type: DELETE_DISH, payload });
 
 export default {
   types: {
@@ -32,6 +34,7 @@ export default {
     UPDATE_DISH,
     SET_CREATE_CATEGORIES,
     INIT_FORM,
+    DELETE_DISH,
   },
   creators: {
     getDish,
@@ -44,5 +47,6 @@ export default {
     updateDish,
     setCreateCategories,
     initForm,
+    deleteDish,
   },
 };

@@ -5,6 +5,7 @@ import Layout from '../layout';
 import HeadComponent from '../../components/head';
 import FormComponent from '../../components/form';
 import LoadingComponent from '../../components/loading';
+import DeleteSectionComponent from '../../components/delete';
 import { createDispatcher } from './dispatcher';
 import selectors from './selectors';
 
@@ -64,6 +65,7 @@ const DishCreate = ({
   updateDish,
   createDish,
   initForm,
+  deleteDish,
 }) => {
   const [nameField, setName] = useState({ name: 'name', value: '' });
   const [ordenField, setOrden] = useState({ name: 'orden', value: '' });
@@ -104,6 +106,13 @@ const DishCreate = ({
     setDescripcion({ ...descripcionField, value: descripcion });
     setCategorias({ ...categoriasField, value: cats });
   }, [loading, dish]);
+
+  function handleDelete() {
+    console.log('DELETE ELEMENT', dishId);
+    if (dishId) {
+      deleteDish({ dishId });
+    }
+  }
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -148,6 +157,7 @@ const DishCreate = ({
       />
       )}
       <LoadingComponent open={loading} />
+      {!loading && dishId && <DeleteSectionComponent onDelete={handleDelete} />}
     </Layout>
   );
 };
@@ -162,6 +172,7 @@ DishCreate.propTypes = {
   categorias: PropTypes.array.isRequired,
   initForm: PropTypes.func.isRequired,
   dish: PropTypes.object,
+  deleteDish: PropTypes.func.isRequired,
 };
 
 DishCreate.defaultProps = {

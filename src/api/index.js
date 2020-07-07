@@ -12,6 +12,15 @@ const getData = async (url, jwt) => axios.get(
   },
 );
 
+const deleteItem = async (url, jwt) => axios.delete(
+  `${apiBase}${url}`,
+  {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+  },
+);
+
 export const login = async (user) => {
   const { identifier, password } = user;
   const { data } = await axios.post(`${apiBase}auth/local`, {
@@ -119,5 +128,15 @@ export const updateCategory = async ({ jwt, cat }) => {
     },
   );
 
+  return data;
+};
+
+export const deleteDish = async ({ jwt, dishId }) => {
+  const { data } = await deleteItem(`platillos/${dishId}`, jwt);
+  return data;
+};
+
+export const deleteCategory = async ({ jwt, catId }) => {
+  const { data } = await deleteItem(`categorias/${catId}`, jwt);
   return data;
 };

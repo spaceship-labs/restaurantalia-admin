@@ -16,6 +16,7 @@ import {
   watchgetCategorySaga,
   watchCreateCategorySaga,
   watchUpdateCategorySaga,
+  watchDeleteCategorySaga,
 } from './categories';
 import {
   watchgetCategoriesDishesSaga,
@@ -24,6 +25,7 @@ import {
   watchCreateDishSaga,
   watchUpdateDishSaga,
   watchInitFormSaga,
+  watchDeleteDishSaga,
 } from './dishes';
 
 const getstatus = (state) => ({
@@ -54,10 +56,12 @@ export function* rootSaga() {
     watchCreateDishSaga(),
     watchUpdateDishSaga(),
     watchInitFormSaga(),
+    watchDeleteDishSaga(),
     // catgories sagas
     watchInitCategoryFormSaga(),
     watchgetCategorySaga(),
     watchCreateCategorySaga(),
     watchUpdateCategorySaga(),
+    watchDeleteCategorySaga(),
   ]);
 }

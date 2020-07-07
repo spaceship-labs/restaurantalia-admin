@@ -3,7 +3,7 @@ import {
 } from 'redux-saga/effects';
 import history from '../history';
 import {
-  getCategories, getDishes, getDish, createDish, updateDish,
+  getCategories, getDishes, getDish, createDish, updateDish, deleteDish,
 } from '../api';
 import dishesActions from '../actions/dishes';
 import categoriesActions from '../actions/categories';
@@ -19,6 +19,7 @@ const {
   UPDATE_DISH,
   SET_CREATE_CATEGORIES,
   INIT_FORM,
+  DELETE_DISH,
 } = dishesActions.types;
 
 const {
@@ -33,6 +34,7 @@ const getUser = (state) => (state.auth.user);
 const getJwt = (state) => (state.auth.jwt);
 const createDishRequest = async (data) => createDish(data);
 const updateDishRequest = async (data) => updateDish(data);
+const deleteDishRequest = async (data) => deleteDish(data);
 
 function* getCategoriesDishesSaga() {
   try {
@@ -171,6 +173,29 @@ function* updateDishSaga({ payload }) {
   }
 }
 
+function* deleteDishSaga({ payload }) {
+  const { dishId } = payload;
+  const jwt = yield select(getJwt);
+  const user = yield select(getUser);
+  const empresasIds = user.empresas.map((r) => r.id);
+
+  try {
+    const dishResponse = yield call(getDishRequest, { jwt, dishId });
+    const validDish = empresasIds.indexOf(dishResponse.empresa.id);
+    if (validDish >= 0) {
+      const dishDELETEesponse = yield call(deleteDishRequest, { jwt, dishId });
+      yield call(history.push, '/platillos');
+      console.log('DELETE RESPONSE', dishDELETEesponse);
+    } else {
+      throw new Error('forbidden');
+    }
+  // hjgj
+  } catch (e) {
+    console.log('error', e);
+    yield call(history.push, '/platillos');
+  }
+}
+
 // Export generators
 export function* watchgetCategoriesDishesSaga() {
   yield takeLatest(GET_CATEGORIES_DISHES, getCategoriesDishesSaga);
@@ -194,4 +219,8 @@ export function* watchUpdateDishSaga() {
 
 export function* watchInitFormSaga() {
   yield takeLatest(INIT_FORM, initFormSaga);
+}
+
+export function* watchDeleteDishSaga() {
+  yield takeLatest(DELETE_DISH, deleteDishSaga);
 }
