@@ -8,6 +8,7 @@ const {
   createCategory,
   updateCategory,
   initForm,
+  deleteCategory,
 } = categoriesActions.creators;
 
 export const createDispatcher = (dispatch) => bindActionCreators({
@@ -16,6 +17,7 @@ export const createDispatcher = (dispatch) => bindActionCreators({
   createCategory,
   updateCategory,
   initForm,
+  deleteCategory,
 }, dispatch);
 
 export const mainDispatcher = (dispatch) => bindActionCreators({

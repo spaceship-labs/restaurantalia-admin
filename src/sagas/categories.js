@@ -3,7 +3,7 @@ import {
 } from 'redux-saga/effects';
 import history from '../history';
 import {
-  getCategories, getMenus, getCategory, createCategory, updateCategory,
+  getCategories, getMenus, getCategory, createCategory, updateCategory, deleteCategory,
 } from '../api';
 import categoriesActions from '../actions/categories';
 
@@ -18,6 +18,7 @@ const {
   SET_CATEGORY,
   CREATE_CATEGORY,
   UPDATE_CATEGORY,
+  DELETE_CATEGORY,
 } = categoriesActions.types;
 
 const getMenusRequest = async (data) => getMenus(data);
@@ -25,6 +26,7 @@ const getCategoryRequest = async (data) => getCategory(data);
 const getCategoriesRequest = async (data) => getCategories(data);
 const createCategoryRequest = async (data) => createCategory(data);
 const updateCategoryRequest = async (data) => updateCategory(data);
+const deleteDishRequest = async (data) => deleteCategory(data);
 const getUser = (state) => (state.auth.user);
 const getJwt = (state) => (state.auth.jwt);
 
@@ -134,6 +136,29 @@ function* updateCategorySaga({ payload }) {
   }
 }
 
+function* deleteCategorySaga({ payload }) {
+  const { catId } = payload;
+  const jwt = yield select(getJwt);
+  const user = yield select(getUser);
+  const empresasIds = user.empresas.map((r) => r.id);
+
+  try {
+    const dishResponse = yield call(getCategoryRequest, { jwt, catId });
+    const validCat = empresasIds.indexOf(dishResponse.empresa.id);
+    if (validCat >= 0) {
+      const dishDELETEesponse = yield call(deleteDishRequest, { jwt, catId });
+      yield call(history.push, '/categorias');
+      console.log('DELETE RESPONSE', dishDELETEesponse);
+    } else {
+      throw new Error('forbidden');
+    }
+    // hjgj
+  } catch (e) {
+    console.log('error', e);
+    yield call(history.push, '/categorias');
+  }
+}
+
 // Export generators
 
 export function* watchgetCategoriesSaga() {
@@ -154,4 +179,8 @@ export function* watchCreateCategorySaga() {
 
 export function* watchUpdateCategorySaga() {
   yield takeLatest(UPDATE_CATEGORY, updateCategorySaga);
+}
+
+export function* watchDeleteCategorySaga() {
+  yield takeLatest(DELETE_CATEGORY, deleteCategorySaga);
 }
