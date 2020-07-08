@@ -33,7 +33,6 @@ function* getDoLoginSaga(action) {
     try {
       const loginResponse = yield call(loginRequest, action.payload);
       console.log('LOGIN response', loginResponse);
-      // falta guardar la sesion
       saveState({
         userId: loginResponse.user.id,
         jwt: loginResponse.jwt,

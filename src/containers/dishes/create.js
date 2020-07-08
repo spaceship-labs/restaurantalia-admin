@@ -96,9 +96,6 @@ const DishCreate = ({
       descripcion,
       categorias: cats = [],
     } = dish;
-    // console.log('/////////////////////');
-    // console.log(dish);
-    // console.log('/////////////////////');
     setName({ ...nameField, value: nombre });
     setOrden({ ...ordenField, value: orden });
     setPrecio({ ...precioField, value: precio });
@@ -150,11 +147,11 @@ const DishCreate = ({
         title={`${dishId ? 'Editar' : 'Crear'} platillo`}
       />
       {!loading && (
-      <FormComponent
-        handleSubmit={handleSubmit}
-        fields={formEntries}
-        config={formInputs}
-      />
+        <FormComponent
+          handleSubmit={handleSubmit}
+          fields={formEntries}
+          config={formInputs}
+        />
       )}
       <LoadingComponent open={loading} />
       {!loading && dishId && <DeleteSectionComponent onDelete={handleDelete} />}

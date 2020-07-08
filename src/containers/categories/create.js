@@ -79,9 +79,6 @@ const CategoryCreate = ({
       descripcion,
       menus: ms = [],
     } = category;
-    // console.log('/////////////////////');
-    // console.log(loading, category);
-    // console.log('/////////////////////');
     setName({ ...nombreField, value: nombre });
     setOrden({ ...ordenField, value: orden });
     setDescripcion({ ...descripcionField, value: descripcion });
@@ -114,22 +111,17 @@ const CategoryCreate = ({
     { ...menusField, change: createChangeCb(menusField, setmenus), items: menus },
   ];
 
-  // console.log('*************');
-  // console.log(formEntries);
-  // console.log('*************');
-  // if (loading) return <h1>Cargando...</h1>;
-
   return (
     <Layout>
       <HeadComponent
         title={`${catId ? 'Editar' : 'Crear'} categoria`}
       />
       {!loading && (
-      <FormComponent
-        handleSubmit={handleSubmit}
-        fields={formEntries}
-        config={formInputs}
-      />
+        <FormComponent
+          handleSubmit={handleSubmit}
+          fields={formEntries}
+          config={formInputs}
+        />
       )}
       <LoadingComponent open={loading} />
       {!loading && catId && <DeleteSectionComponent onDelete={handleDelete} />}
