@@ -1,32 +1,10 @@
 import {
   all, takeEvery, select,
 } from 'redux-saga/effects';
-import {
-  watchGetUserSaga,
-  watchDoLoginSaga,
-  watchLogoutSaga,
-} from './auth';
-import {
-  watchgetMenusSaga,
-  watchgetMenuSingleSaga,
-} from './restaurants';
-import {
-  watchgetCategoriesSaga,
-  watchInitCategoryFormSaga,
-  watchgetCategorySaga,
-  watchCreateCategorySaga,
-  watchUpdateCategorySaga,
-  watchDeleteCategorySaga,
-} from './categories';
-import {
-  watchgetCategoriesDishesSaga,
-  watchgetDishesSaga,
-  watchgetDishSaga,
-  watchCreateDishSaga,
-  watchUpdateDishSaga,
-  watchInitFormSaga,
-  watchDeleteDishSaga,
-} from './dishes';
+import auth from './auth';
+import restaurants from './restaurants';
+import categories from './categories';
+import dishes from './dishes';
 
 const getstatus = (state) => ({
   status: state.status,
@@ -41,27 +19,11 @@ export function* watchEmptySaga() {
   yield takeEvery('FETCH', getSaga);
 }
 
-// Root saga
 export function* rootSaga() {
   yield all([
-    watchGetUserSaga(),
-    watchDoLoginSaga(),
-    watchLogoutSaga(),
-    watchgetMenusSaga(),
-    watchgetMenuSingleSaga(),
-    watchgetCategoriesSaga(),
-    watchgetCategoriesDishesSaga(),
-    watchgetDishesSaga(),
-    watchgetDishSaga(),
-    watchCreateDishSaga(),
-    watchUpdateDishSaga(),
-    watchInitFormSaga(),
-    watchDeleteDishSaga(),
-    // catgories sagas
-    watchInitCategoryFormSaga(),
-    watchgetCategorySaga(),
-    watchCreateCategorySaga(),
-    watchUpdateCategorySaga(),
-    watchDeleteCategorySaga(),
+    auth(),
+    restaurants(),
+    categories(),
+    dishes(),
   ]);
 }

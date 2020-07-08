@@ -13,14 +13,7 @@ const get = (url, params = null) => axios.get(url, { ...params });
 const post = (url, params = null) => axios.post(url, { ...params });
 const put = (url, params = null) => axios.put(url, { ...params });
 
-const getData = async (url) => axios.get(
-  `${apiBase}${url}`,
-  // {
-  //   headers: {
-  //     Authorization: `Bearer ${jwt}`,
-  //   },
-  // },
-);
+const getData = async (url) => axios.get(`${apiBase}${url}`);
 
 const deleteItem = async (url) => axios.delete(`${apiBase}${url}`);
 

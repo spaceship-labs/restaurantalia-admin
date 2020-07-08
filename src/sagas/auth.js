@@ -86,3 +86,9 @@ export function* watchGetUserSaga() {
 export function* watchLogoutSaga() {
   yield takeLatest(LOGOUT, logoutSaga);
 }
+
+export default function* run() {
+  yield takeLatest(DO_LOGIN, getDoLoginSaga);
+  yield takeLatest(GET_USER, getUserSaga);
+  yield takeLatest(LOGOUT, logoutSaga);
+}
