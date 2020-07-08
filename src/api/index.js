@@ -156,6 +156,7 @@ export const deleteFile = async ({ jwt, fileId }) => {
       },
     },
   );
+  return data;
 };
 
 export const deleteDish = async ({ jwt, dishId }) => {
