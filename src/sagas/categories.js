@@ -3,7 +3,8 @@ import {
 } from 'redux-saga/effects';
 import history from '../history';
 import {
-  getCategories, getMenus, getCategory, createCategory, updateCategory, deleteCategory,
+  getCategories, getMenus, getCategory, createCategory, updateCategory, createFiles,
+  deleteFile, deleteCategory,
 } from '../api';
 import categoriesActions from '../actions/categories';
 
@@ -18,6 +19,8 @@ const {
   SET_CATEGORY,
   CREATE_CATEGORY,
   UPDATE_CATEGORY,
+  UPLOAD_CATEGORY_IMAGE,
+  DELETE_CATEGORY_IMAGE,
   DELETE_CATEGORY,
 } = categoriesActions.types;
 
@@ -26,6 +29,8 @@ const getCategoryRequest = async (data) => getCategory(data);
 const getCategoriesRequest = async (data) => getCategories(data);
 const createCategoryRequest = async (data) => createCategory(data);
 const updateCategoryRequest = async (data) => updateCategory(data);
+const uploadMediaRequest = async (data) => createFiles(data);
+const deleteFileRequest = async (data) => deleteFile(data);
 const deleteDishRequest = async (data) => deleteCategory(data);
 const getUser = (state) => (state.auth.user);
 const getJwt = (state) => (state.auth.jwt);
@@ -136,6 +141,28 @@ function* updateCategorySaga({ payload }) {
   }
 }
 
+function* uploadCategoryImageSaga({ payload }) {
+  const { files, catId } = payload;
+  const jwt = yield select(getJwt);
+  // const user = yield select(getUser);
+  // eslint-disable-next-line no-undef
+  const data = new FormData();
+  data.append('ref', 'categorias');
+  data.append('refId', catId);
+  data.append('field', 'imagen');
+  files.map((f) => data.append('files', f.file, f.file.name));
+  try {
+    // console.log('UPLOAD 1', catId, data);
+    const uploadResponse = yield call(uploadMediaRequest, { jwt, params: data });
+    console.log('UPLOAD 2', uploadResponse);
+    // yield call(history.push, `/platillos/editar/${catId}`);
+    yield put({ type: GET_CATEGORY, payload: catId });
+  } catch (e) {
+    console.log(e);
+    yield put({ type: SET_CATEGORIES_LOADING, payload: { loading: false } });
+  }
+}
+
 function* deleteCategorySaga({ payload }) {
   const { catId } = payload;
   const jwt = yield select(getJwt);
@@ -159,8 +186,22 @@ function* deleteCategorySaga({ payload }) {
   }
 }
 
-// Export generators
+function* deleteCategoryImageSaga({ payload }) {
+  const { fileId, catId } = payload;
+  const jwt = yield select(getJwt);
+  // const user = yield select(getUser);
+  try {
+    const deleteResponse = yield call(deleteFileRequest, { jwt, fileId });
+    console.log('DELETE', fileId, catId, deleteResponse);
+    yield put({ type: GET_CATEGORY, payload: catId });
+    // yield call(history.push, `/platillos/editar/${catId}`);
+  } catch (e) {
+    console.log(e);
+    yield put({ type: SET_CATEGORIES_LOADING, payload: { loading: false } });
+  }
+}
 
+// Export generators
 export function* watchgetCategoriesSaga() {
   yield takeLatest(GET_CATEGORIES, getCategoriesSaga);
 }
@@ -179,6 +220,14 @@ export function* watchCreateCategorySaga() {
 
 export function* watchUpdateCategorySaga() {
   yield takeLatest(UPDATE_CATEGORY, updateCategorySaga);
+}
+
+export function* watchUploadCategoryImageSaga() {
+  yield takeLatest(UPLOAD_CATEGORY_IMAGE, uploadCategoryImageSaga);
+}
+
+export function* watchDeleteCategoryImageSaga() {
+  yield takeLatest(DELETE_CATEGORY_IMAGE, deleteCategoryImageSaga);
 }
 
 export function* watchDeleteCategorySaga() {

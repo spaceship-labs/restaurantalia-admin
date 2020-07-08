@@ -16,6 +16,8 @@ import {
   watchgetCategorySaga,
   watchCreateCategorySaga,
   watchUpdateCategorySaga,
+  watchUploadCategoryImageSaga,
+  watchDeleteCategoryImageSaga,
   watchDeleteCategorySaga,
 } from './categories';
 import {
@@ -25,6 +27,8 @@ import {
   watchCreateDishSaga,
   watchUpdateDishSaga,
   watchInitFormSaga,
+  watchUploadDishImageSaga,
+  watchDeleteDishImageSaga,
   watchDeleteDishSaga,
 } from './dishes';
 
@@ -56,12 +60,16 @@ export function* rootSaga() {
     watchCreateDishSaga(),
     watchUpdateDishSaga(),
     watchInitFormSaga(),
+    watchUploadDishImageSaga(),
+    watchDeleteDishImageSaga(),
     watchDeleteDishSaga(),
     // catgories sagas
     watchInitCategoryFormSaga(),
     watchgetCategorySaga(),
     watchCreateCategorySaga(),
     watchUpdateCategorySaga(),
+    watchUploadCategoryImageSaga(),
+    watchDeleteCategoryImageSaga(),
     watchDeleteCategorySaga(),
   ]);
 }
