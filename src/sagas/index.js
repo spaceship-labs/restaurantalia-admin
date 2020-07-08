@@ -16,6 +16,8 @@ import {
   watchgetCategorySaga,
   watchCreateCategorySaga,
   watchUpdateCategorySaga,
+  watchUploadCategoryImageSaga,
+  watchDeleteCategoryImageSaga,
 } from './categories';
 import {
   watchgetCategoriesDishesSaga,
@@ -63,5 +65,7 @@ export function* rootSaga() {
     watchgetCategorySaga(),
     watchCreateCategorySaga(),
     watchUpdateCategorySaga(),
+    watchUploadCategoryImageSaga(),
+    watchDeleteCategoryImageSaga(),
   ]);
 }

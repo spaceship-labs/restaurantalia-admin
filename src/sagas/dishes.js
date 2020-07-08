@@ -189,7 +189,7 @@ function* uploadDishImageSaga({ payload }) {
   data.append('field', 'imagen');
   files.map((f) => data.append('files', f.file, f.file.name));
   try {
-    console.log('UPLOAD 1', dishId, data);
+    // console.log('UPLOAD 1', dishId, data);
     const uploadResponse = yield call(uploadMediaRequest, { jwt, params: data });
     console.log('UPLOAD 2', uploadResponse);
     // yield call(history.push, `/platillos/editar/${dishId}`);
@@ -203,12 +203,10 @@ function* uploadDishImageSaga({ payload }) {
 function* deleteDishImageSaga({ payload }) {
   const { fileId, dishId } = payload;
   const jwt = yield select(getJwt);
-  // const user = yield select(getUser);
   try {
     const deleteResponse = yield call(deleteFileRequest, { jwt, fileId });
     console.log('DELETE', fileId, dishId, deleteResponse);
     yield put({ type: GET_DISH, payload: dishId });
-    // yield call(history.push, `/platillos/editar/${dishId}`);
   } catch (e) {
     console.log(e);
     yield put({ type: SET_DISHES_LOADING, payload: { loading: false } });
