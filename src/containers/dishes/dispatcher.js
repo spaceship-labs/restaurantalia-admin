@@ -10,6 +10,7 @@ const {
   initForm,
   uploadDishImage,
   deleteDishImage,
+  deleteDish,
 } = dishesActions.creators;
 
 export const createDispatcher = (dispatch) => bindActionCreators({
@@ -20,6 +21,7 @@ export const createDispatcher = (dispatch) => bindActionCreators({
   initForm,
   uploadDishImage,
   deleteDishImage,
+  deleteDish,
 }, dispatch);
 
 export const mainDispatcher = (dispatch) => bindActionCreators({

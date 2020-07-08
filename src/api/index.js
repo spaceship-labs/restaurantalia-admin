@@ -23,6 +23,15 @@ const createForm = async (url, jwt, params) => axios.post(
   },
 );
 
+const deleteItem = async (url, jwt) => axios.delete(
+  `${apiBase}${url}`,
+  {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+  },
+);
+
 export const login = async (user) => {
   const { identifier, password } = user;
   const { data } = await axios.post(`${apiBase}auth/local`, {
@@ -147,5 +156,14 @@ export const deleteFile = async ({ jwt, fileId }) => {
       },
     },
   );
+};
+
+export const deleteDish = async ({ jwt, dishId }) => {
+  const { data } = await deleteItem(`platillos/${dishId}`, jwt);
+  return data;
+};
+
+export const deleteCategory = async ({ jwt, catId }) => {
+  const { data } = await deleteItem(`categorias/${catId}`, jwt);
   return data;
 };

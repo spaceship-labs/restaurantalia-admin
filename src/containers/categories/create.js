@@ -5,6 +5,7 @@ import HeadComponent from '../../components/head';
 import FormComponent from '../../components/form';
 import LoadingComponent from '../../components/loading';
 import ImageZoneComponent from '../../components/imageupload';
+import DeleteSectionComponent from '../../components/delete';
 import { createDispatcher } from './dispatcher';
 import Layout from '../layout';
 import selectors from './selectors';
@@ -62,6 +63,7 @@ const CategoryCreate = ({
   initForm,
   uploadCategoryImage,
   deleteCategoryImage,
+  deleteCategory,
 }) => {
   const [nombreField, setName] = useState({ name: 'nombre', value: '' });
   const [ordenField, setOrden] = useState({ name: 'orden', value: '' });
@@ -98,6 +100,13 @@ const CategoryCreate = ({
     // multimedia
     setImagen({ ...imagenField, uploaded: imagen || [] });
   }, [loading, category]);
+
+  function handleDelete() {
+    console.log('DELETE ELEMENT', catId);
+    if (catId) {
+      deleteCategory({ catId });
+    }
+  }
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -160,6 +169,7 @@ const CategoryCreate = ({
           />
         )}
       <LoadingComponent open={loading} />
+      {!loading && catId && <DeleteSectionComponent onDelete={handleDelete} />}
     </Layout>
   );
 };
@@ -176,6 +186,7 @@ CategoryCreate.propTypes = {
   category: PropTypes.object,
   uploadCategoryImage: PropTypes.func.isRequired,
   deleteCategoryImage: PropTypes.func.isRequired,
+  deleteCategory: PropTypes.func.isRequired,
 };
 
 CategoryCreate.defaultProps = {

@@ -9,6 +9,7 @@ const INIT_CATEGORY_FORM = 'INIT_CATEGORY_FORM';
 const SET_CREATE_MENUS = 'SET_CREATE_MENUS';
 const UPLOAD_CATEGORY_IMAGE = 'UPLOAD_CATEGORY_IMAGE';
 const DELETE_CATEGORY_IMAGE = 'DELETE_CATEGORY_IMAGE';
+const DELETE_CATEGORY = 'DELETE_CATEGORY';
 
 const getCategory = (payload = {}) => ({ type: GET_CATEGORY, payload });
 const getCategories = () => ({ type: GET_CATEGORIES });
@@ -21,6 +22,7 @@ const setCreateMenus = (payload = []) => ({ type: SET_CREATE_MENUS, payload });
 const initForm = (payload = []) => ({ type: INIT_CATEGORY_FORM, payload });
 const uploadCategoryImage = (payload = []) => ({ type: UPLOAD_CATEGORY_IMAGE, payload });
 const deleteCategoryImage = (payload = []) => ({ type: DELETE_CATEGORY_IMAGE, payload });
+const deleteCategory = (payload = []) => ({ type: DELETE_CATEGORY, payload });
 
 export default {
   types: {
@@ -35,6 +37,7 @@ export default {
     INIT_CATEGORY_FORM,
     UPLOAD_CATEGORY_IMAGE,
     DELETE_CATEGORY_IMAGE,
+    DELETE_CATEGORY,
   },
   creators: {
     getCategory,
@@ -48,5 +51,6 @@ export default {
     initForm,
     uploadCategoryImage,
     deleteCategoryImage,
+    deleteCategory,
   },
 };

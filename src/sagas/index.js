@@ -18,6 +18,7 @@ import {
   watchUpdateCategorySaga,
   watchUploadCategoryImageSaga,
   watchDeleteCategoryImageSaga,
+  watchDeleteCategorySaga,
 } from './categories';
 import {
   watchgetCategoriesDishesSaga,
@@ -28,6 +29,7 @@ import {
   watchInitFormSaga,
   watchUploadDishImageSaga,
   watchDeleteDishImageSaga,
+  watchDeleteDishSaga,
 } from './dishes';
 
 const getstatus = (state) => ({
@@ -60,6 +62,7 @@ export function* rootSaga() {
     watchInitFormSaga(),
     watchUploadDishImageSaga(),
     watchDeleteDishImageSaga(),
+    watchDeleteDishSaga(),
     // catgories sagas
     watchInitCategoryFormSaga(),
     watchgetCategorySaga(),
@@ -67,5 +70,6 @@ export function* rootSaga() {
     watchUpdateCategorySaga(),
     watchUploadCategoryImageSaga(),
     watchDeleteCategoryImageSaga(),
+    watchDeleteCategorySaga(),
   ]);
 }

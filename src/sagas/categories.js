@@ -4,7 +4,7 @@ import {
 import history from '../history';
 import {
   getCategories, getMenus, getCategory, createCategory, updateCategory, createFiles,
-  deleteFile,
+  deleteFile, deleteCategory,
 } from '../api';
 import categoriesActions from '../actions/categories';
 
@@ -21,6 +21,7 @@ const {
   UPDATE_CATEGORY,
   UPLOAD_CATEGORY_IMAGE,
   DELETE_CATEGORY_IMAGE,
+  DELETE_CATEGORY,
 } = categoriesActions.types;
 
 const getMenusRequest = async (data) => getMenus(data);
@@ -30,6 +31,7 @@ const createCategoryRequest = async (data) => createCategory(data);
 const updateCategoryRequest = async (data) => updateCategory(data);
 const uploadMediaRequest = async (data) => createFiles(data);
 const deleteFileRequest = async (data) => deleteFile(data);
+const deleteDishRequest = async (data) => deleteCategory(data);
 const getUser = (state) => (state.auth.user);
 const getJwt = (state) => (state.auth.jwt);
 
@@ -161,6 +163,29 @@ function* uploadCategoryImageSaga({ payload }) {
   }
 }
 
+function* deleteCategorySaga({ payload }) {
+  const { catId } = payload;
+  const jwt = yield select(getJwt);
+  const user = yield select(getUser);
+  const empresasIds = user.empresas.map((r) => r.id);
+
+  try {
+    const dishResponse = yield call(getCategoryRequest, { jwt, catId });
+    const validCat = empresasIds.indexOf(dishResponse.empresa.id);
+    if (validCat >= 0) {
+      const dishDELETEesponse = yield call(deleteDishRequest, { jwt, catId });
+      yield call(history.push, '/categorias');
+      console.log('DELETE RESPONSE', dishDELETEesponse);
+    } else {
+      throw new Error('forbidden');
+    }
+    // hjgj
+  } catch (e) {
+    console.log('error', e);
+    yield call(history.push, '/categorias');
+  }
+}
+
 function* deleteCategoryImageSaga({ payload }) {
   const { fileId, catId } = payload;
   const jwt = yield select(getJwt);
@@ -203,4 +228,8 @@ export function* watchUploadCategoryImageSaga() {
 
 export function* watchDeleteCategoryImageSaga() {
   yield takeLatest(DELETE_CATEGORY_IMAGE, deleteCategoryImageSaga);
+}
+
+export function* watchDeleteCategorySaga() {
+  yield takeLatest(DELETE_CATEGORY, deleteCategorySaga);
 }
