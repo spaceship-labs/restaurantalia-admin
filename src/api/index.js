@@ -12,10 +12,19 @@ export const setToken = (jwt) => {
 const get = (url, params = null) => axios.get(url, { ...params });
 const post = (url, params = null) => axios.post(url, { ...params });
 const put = (url, params = null) => axios.put(url, { ...params });
+const deleteItem = async (url) => axios.delete(`${apiBase}${url}`);
 
 const getData = async (url) => axios.get(`${apiBase}${url}`);
 
-const deleteItem = async (url) => axios.delete(`${apiBase}${url}`);
+const createForm = async (url, params) => axios.post(
+  `${apiBase}${url}`,
+  params,
+  {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  },
+);
 
 export const login = async (user) => {
   const { identifier, password } = user;
@@ -94,6 +103,16 @@ export const updateCategory = async ({ cat }) => {
 
 export const deleteDish = async ({ dishId }) => {
   const { data } = await deleteItem(`platillos/${dishId}`);
+  return data;
+};
+
+export const createFiles = async ({ params }) => {
+  const { data } = await createForm('upload', params);
+  return data;
+};
+
+export const deleteFile = async ({ fileId }) => {
+  const { data } = await axios.delete(`${apiBase}upload/files/${fileId}`);
   return data;
 };
 

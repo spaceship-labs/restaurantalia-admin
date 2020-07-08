@@ -8,6 +8,8 @@ const {
   createCategory,
   updateCategory,
   initForm,
+  uploadCategoryImage,
+  deleteCategoryImage,
   deleteCategory,
 } = categoriesActions.creators;
 
@@ -17,6 +19,8 @@ export const createDispatcher = (dispatch) => bindActionCreators({
   createCategory,
   updateCategory,
   initForm,
+  uploadCategoryImage,
+  deleteCategoryImage,
   deleteCategory,
 }, dispatch);
 

@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import HeadComponent from '../../components/head';
 import FormComponent from '../../components/form';
 import LoadingComponent from '../../components/loading';
+import ImageZoneComponent from '../../components/imageupload';
 import DeleteSectionComponent from '../../components/delete';
 import { createDispatcher } from './dispatcher';
 import Layout from '../layout';
@@ -39,6 +40,14 @@ const formInputs = {
     error: false,
   },
 };
+// multimedia
+const imageInputs = {
+  imagen: {
+    attr: 'imagen',
+    label: 'Imagen',
+    multiple: false,
+  },
+};
 
 const createChangeCb = (currentVal, setCb) => (newVal) => setCb({ ...currentVal, value: newVal });
 
@@ -52,12 +61,16 @@ const CategoryCreate = ({
   updateCategory,
   createCategory,
   initForm,
+  uploadCategoryImage,
+  deleteCategoryImage,
   deleteCategory,
 }) => {
   const [nombreField, setName] = useState({ name: 'nombre', value: '' });
   const [ordenField, setOrden] = useState({ name: 'orden', value: '' });
   const [descripcionField, setDescripcion] = useState({ name: 'descripcion', value: '' });
   const [menusField, setmenus] = useState({ name: 'menus', value: [] });
+  // multimedia
+  const [imagenField, setImagen] = useState({ name: 'imagen', value: [], uploaded: [] });
 
   const { params: { id: catId } } = match;
 
@@ -78,11 +91,14 @@ const CategoryCreate = ({
       orden,
       descripcion,
       menus: ms = [],
+      imagen,
     } = category;
     setName({ ...nombreField, value: nombre });
     setOrden({ ...ordenField, value: orden });
     setDescripcion({ ...descripcionField, value: descripcion });
     setmenus({ ...menusField, value: ms });
+    // multimedia
+    setImagen({ ...imagenField, uploaded: imagen || [] });
   }, [loading, category]);
 
   function handleDelete() {
@@ -104,11 +120,30 @@ const CategoryCreate = ({
     else createCategory(actionPayload);
   }
 
+  function handleSubmitMultimedia() {
+    const actionPayload = {
+      files: imagenField.value,
+      catId,
+    };
+    // se llama el action que creara los elementos
+    setCategoriesLoading({ loading: true });
+    uploadCategoryImage(actionPayload);
+  }
+
+  function handleDeleteImage(fileId) {
+    setCategoriesLoading({ loading: true });
+    deleteCategoryImage({ fileId, catId });
+  }
+
   const formEntries = [
     { ...nombreField, change: createChangeCb(nombreField, setName) },
     { ...ordenField, change: createChangeCb(ordenField, setOrden) },
     { ...descripcionField, change: createChangeCb(descripcionField, setDescripcion) },
     { ...menusField, change: createChangeCb(menusField, setmenus), items: menus },
+  ];
+
+  const multimediaFields = [
+    { ...imagenField, change: createChangeCb(imagenField, setImagen) },
   ];
 
   return (
@@ -123,6 +158,16 @@ const CategoryCreate = ({
           config={formInputs}
         />
       )}
+      {!loading
+        && catId
+        && (
+          <ImageZoneComponent
+            handleDeleteImage={handleDeleteImage}
+            handleSubmit={handleSubmitMultimedia}
+            fields={multimediaFields}
+            config={imageInputs}
+          />
+        )}
       <LoadingComponent open={loading} />
       {!loading && catId && <DeleteSectionComponent onDelete={handleDelete} />}
     </Layout>
@@ -139,6 +184,8 @@ CategoryCreate.propTypes = {
   menus: PropTypes.array.isRequired,
   initForm: PropTypes.func.isRequired,
   category: PropTypes.object,
+  uploadCategoryImage: PropTypes.func.isRequired,
+  deleteCategoryImage: PropTypes.func.isRequired,
   deleteCategory: PropTypes.func.isRequired,
 };
 
@@ -147,7 +194,6 @@ CategoryCreate.defaultProps = {
     name: '',
     orden: '1',
     descripcion: '',
-    // menus = [],
   },
 };
 
