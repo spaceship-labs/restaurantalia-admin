@@ -9,7 +9,7 @@ import DropZoneComponent from './dropzone';
 import ImageListComponent from './imagelist';
 
 const ImageZoneComponent = ({
-  fields, config, title, handleSubmit,
+  fields, config, title, handleSubmit, handleDeleteImage,
 }) => {
   console.log('TITLE', title, config);
   return (
@@ -21,7 +21,11 @@ const ImageZoneComponent = ({
             <Typography variant="h5" component="h4">{f.name}</Typography>
             <br />
             <DropZoneComponent field={f} config={config[f.name]} />
-            <ImageListComponent field={f} config={config[f.name]} />
+            <ImageListComponent
+              handleDeleteImage={handleDeleteImage}
+              field={f}
+              config={config[f.name]}
+            />
           </CardContent>
           <CardActions>
             <Button onClick={handleSubmit} size="small" color="primary">Guardar</Button>
@@ -41,6 +45,7 @@ ImageZoneComponent.propTypes = {
   config: PropTypes.object.isRequired,
   title: PropTypes.string,
   handleSubmit: PropTypes.func.isRequired,
+  handleDeleteImage: PropTypes.func.isRequired,
 };
 
 export default ImageZoneComponent;

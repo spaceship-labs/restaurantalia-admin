@@ -12,6 +12,17 @@ const getData = async (url, jwt) => axios.get(
   },
 );
 
+const createForm = async (url, jwt, params) => axios.post(
+  `${apiBase}${url}`,
+  params,
+  {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+      'Content-Type': 'multipart/form-data',
+    },
+  },
+);
+
 export const login = async (user) => {
   const { identifier, password } = user;
   const { data } = await axios.post(`${apiBase}auth/local`, {
@@ -119,5 +130,22 @@ export const updateCategory = async ({ jwt, cat }) => {
     },
   );
 
+  return data;
+};
+
+export const createFiles = async ({ jwt, params }) => {
+  const { data } = await createForm('upload', jwt, params);
+  return data;
+};
+
+export const deleteFile = async ({ jwt, fileId }) => {
+  const { data } = await axios.delete(
+    `${apiBase}upload/files/${fileId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    },
+  );
   return data;
 };

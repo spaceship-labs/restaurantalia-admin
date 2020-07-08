@@ -60,11 +60,6 @@ const imageInputs = {
     label: 'Imagen',
     multiple: false,
   },
-  logo: {
-    attr: 'imagen',
-    label: 'Imagen',
-    multiple: true,
-  },
 };
 
 const createChangeCb = (currentVal, setCb) => (newVal) => setCb({ ...currentVal, value: newVal });
@@ -79,6 +74,8 @@ const DishCreate = ({
   updateDish,
   createDish,
   initForm,
+  uploadDishImage,
+  deleteDishImage,
 }) => {
   const [nameField, setName] = useState({ name: 'name', value: '' });
   const [ordenField, setOrden] = useState({ name: 'orden', value: '' });
@@ -88,7 +85,6 @@ const DishCreate = ({
   const [categoriasField, setCategorias] = useState({ name: 'categorias', value: [] });
   // multimedia
   const [imagenField, setImagen] = useState({ name: 'imagen', value: [], uploaded: [] });
-  const [logoField, setLogo] = useState({ name: 'logo', value: [], uploaded: [] });
 
   const { params: { id: dishId } } = match;
 
@@ -112,11 +108,7 @@ const DishCreate = ({
       descripcion,
       categorias: cats = [],
       imagen,
-      logo,
     } = dish;
-    // console.log('/////////////////////');
-    // console.log(dish);
-    // console.log('/////////////////////');
     setName({ ...nameField, value: nombre });
     setOrden({ ...ordenField, value: orden });
     setPrecio({ ...precioField, value: precio });
@@ -125,7 +117,6 @@ const DishCreate = ({
     setCategorias({ ...categoriasField, value: cats });
     // multimedia
     setImagen({ ...imagenField, uploaded: imagen || [] });
-    setLogo({ ...logoField, uploaded: logo || [] });
   }, [loading, dish]);
 
   function handleSubmit(e) {
@@ -144,13 +135,17 @@ const DishCreate = ({
 
   function handleSubmitMultimedia() {
     const actionPayload = {
-      imagenField,
-      logoField,
+      files: imagenField.value,
       dishId,
     };
     // se llama el action que creara los elementos
-    // setDishesLoading({ loading: true });
-    console.log('UPLOAD', actionPayload);
+    setDishesLoading({ loading: true });
+    uploadDishImage(actionPayload);
+  }
+
+  function handleDeleteImage(fileId) {
+    setDishesLoading({ loading: true });
+    deleteDishImage({ fileId, dishId });
   }
 
   const formEntries = [
@@ -166,13 +161,7 @@ const DishCreate = ({
 
   const multimediaFields = [
     { ...imagenField, change: createChangeCb(imagenField, setImagen) },
-    { ...logoField, change: createChangeCb(logoField, setLogo) },
   ];
-
-  // console.log('*************');
-  // console.log(formEntries);
-  // console.log('*************');
-  // if (loading) return <h1>Cargando...</h1>;
 
   return (
     <Layout>
@@ -190,6 +179,7 @@ const DishCreate = ({
         && dishId
         && (
         <ImageZoneComponent
+          handleDeleteImage={handleDeleteImage}
           handleSubmit={handleSubmitMultimedia}
           fields={multimediaFields}
           config={imageInputs}
@@ -209,6 +199,8 @@ DishCreate.propTypes = {
   updateDish: PropTypes.func.isRequired,
   categorias: PropTypes.array.isRequired,
   initForm: PropTypes.func.isRequired,
+  uploadDishImage: PropTypes.func.isRequired,
+  deleteDishImage: PropTypes.func.isRequired,
   dish: PropTypes.object,
 };
 
@@ -219,7 +211,6 @@ DishCreate.defaultProps = {
     precio: '',
     cantidad: '',
     descripcion: '',
-    // categorias = [],
   },
 };
 

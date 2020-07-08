@@ -3,7 +3,7 @@ import {
 } from 'redux-saga/effects';
 import history from '../history';
 import {
-  getCategories, getDishes, getDish, createDish, updateDish,
+  getCategories, getDishes, getDish, createDish, updateDish, createFiles, deleteFile,
 } from '../api';
 import dishesActions from '../actions/dishes';
 import categoriesActions from '../actions/categories';
@@ -19,6 +19,8 @@ const {
   UPDATE_DISH,
   SET_CREATE_CATEGORIES,
   INIT_FORM,
+  UPLOAD_DISH_IMAGE,
+  DELETE_DISH_IMAGE,
 } = dishesActions.types;
 
 const {
@@ -33,6 +35,8 @@ const getUser = (state) => (state.auth.user);
 const getJwt = (state) => (state.auth.jwt);
 const createDishRequest = async (data) => createDish(data);
 const updateDishRequest = async (data) => updateDish(data);
+const uploadMediaRequest = async (data) => createFiles(data);
+const deleteFileRequest = async (data) => deleteFile(data);
 
 function* getCategoriesDishesSaga() {
   try {
@@ -92,6 +96,7 @@ function* getDishSaga({ payload: dishId }) {
   const jwt = yield select(getJwt);
   const user = yield select(getUser);
   const empresasIds = user.empresas.map((r) => r.id);
+  console.log('GET DISH', dishId);
   try {
     const dishResponse = yield call(getDishRequest, { jwt, dishId });
     const dishCategories = dishResponse.categorias.map((it) => ({ id: it.id, nombre: it.nombre }));
@@ -168,6 +173,45 @@ function* updateDishSaga({ payload }) {
     console.log(dishPUResponse);
   } catch (e) {
     console.log(e);
+  } finally {
+    yield put({ type: SET_DISHES_LOADING, payload: { loading: false } });
+  }
+}
+
+function* uploadDishImageSaga({ payload }) {
+  const { files, dishId } = payload;
+  const jwt = yield select(getJwt);
+  // const user = yield select(getUser);
+  // eslint-disable-next-line no-undef
+  const data = new FormData();
+  data.append('ref', 'platillos');
+  data.append('refId', dishId);
+  data.append('field', 'imagen');
+  files.map((f) => data.append('files', f.file, f.file.name));
+  try {
+    console.log('UPLOAD 1', dishId, data);
+    const uploadResponse = yield call(uploadMediaRequest, { jwt, params: data });
+    console.log('UPLOAD 2', uploadResponse);
+    // yield call(history.push, `/platillos/editar/${dishId}`);
+    yield put({ type: GET_DISH, payload: dishId });
+  } catch (e) {
+    console.log(e);
+    yield put({ type: SET_DISHES_LOADING, payload: { loading: false } });
+  }
+}
+
+function* deleteDishImageSaga({ payload }) {
+  const { fileId, dishId } = payload;
+  const jwt = yield select(getJwt);
+  // const user = yield select(getUser);
+  try {
+    const deleteResponse = yield call(deleteFileRequest, { jwt, fileId });
+    console.log('DELETE', fileId, dishId, deleteResponse);
+    yield put({ type: GET_DISH, payload: dishId });
+    // yield call(history.push, `/platillos/editar/${dishId}`);
+  } catch (e) {
+    console.log(e);
+    yield put({ type: SET_DISHES_LOADING, payload: { loading: false } });
   }
 }
 
@@ -194,4 +238,12 @@ export function* watchUpdateDishSaga() {
 
 export function* watchInitFormSaga() {
   yield takeLatest(INIT_FORM, initFormSaga);
+}
+
+export function* watchUploadDishImageSaga() {
+  yield takeLatest(UPLOAD_DISH_IMAGE, uploadDishImageSaga);
+}
+
+export function* watchDeleteDishImageSaga() {
+  yield takeLatest(DELETE_DISH_IMAGE, deleteDishImageSaga);
 }
