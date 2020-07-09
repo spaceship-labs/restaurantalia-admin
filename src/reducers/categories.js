@@ -35,7 +35,6 @@ const categoriesReducer = (state = initalState, action) => {
       categoriesList,
       categoriesIds,
     };
-    // console.log('categories state', newState);
     return newState;
   }
   if (type === categoriesActions.types.SET_CATEGORIES_LOADING) {

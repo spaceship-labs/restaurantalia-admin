@@ -58,7 +58,6 @@ class CategoriesContainer extends Component {
 
 CategoriesContainer.propTypes = {
   categoriesList: PropTypes.object.isRequired,
-  // categoriesIds: PropTypes.arrayOf(PropTypes.string).isRequired,
   loading: PropTypes.bool.isRequired,
   getCategories: PropTypes.func.isRequired,
   setCategoriesLoading: PropTypes.func.isRequired,

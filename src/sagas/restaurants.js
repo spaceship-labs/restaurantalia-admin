@@ -3,7 +3,7 @@ import {
 } from 'redux-saga/effects';
 import { getMenus, getMenu } from '../api';
 import menuActions from '../actions/restaurants';
-import { menusList } from './fakedata';
+// import { menusList } from './fakedata';
 
 const {
   GET_MENUS,
@@ -27,11 +27,12 @@ function* getMenusSaga(action) {
     // console.log('menusResponse', menusResponse);
     yield put({ type: SET_LOADING, payload: { loading: false } });
     yield put({ type: SET_MENUS, payload: { menusResponse } });
-  } catch {
-    const menusResponse = menusList;
+  } catch (e) {
+    // const menusResponse = menusList;
     yield put({ type: SET_LOADING, payload: { loading: false } });
-    yield put({ type: SET_MENUS, payload: { menusResponse } });
+    // yield put({ type: SET_MENUS, payload: { menusResponse } });
     // set error
+    console.log(e);
   }
 }
 
@@ -56,5 +57,10 @@ export function* watchgetMenusSaga() {
 }
 
 export function* watchgetMenuSingleSaga() {
+  yield takeLatest(GET_MENU, getMenuSingleSaga);
+}
+
+export default function* run() {
+  yield takeLatest(GET_MENUS, getMenusSaga);
   yield takeLatest(GET_MENU, getMenuSingleSaga);
 }

@@ -49,7 +49,6 @@ const menusReducer = (state = initalState, action) => {
       menusList,
       menusIds,
     };
-    // console.log('menus state', newState);
     return newState;
   }
   if (type === restaurantActions.types.SET_MENU) {

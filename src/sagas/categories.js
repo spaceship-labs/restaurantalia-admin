@@ -233,3 +233,12 @@ export function* watchDeleteCategoryImageSaga() {
 export function* watchDeleteCategorySaga() {
   yield takeLatest(DELETE_CATEGORY, deleteCategorySaga);
 }
+
+export default function* run() {
+  yield takeLatest(GET_CATEGORIES, getCategoriesSaga);
+  yield takeLatest(INIT_CATEGORY_FORM, initFormSaga);
+  yield takeLatest(GET_CATEGORY, getCategorySaga);
+  yield takeLatest(CREATE_CATEGORY, createCategorySaga);
+  yield takeLatest(UPDATE_CATEGORY, updateCategorySaga);
+  yield takeLatest(DELETE_CATEGORY, deleteCategorySaga);
+}
