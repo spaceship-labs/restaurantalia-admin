@@ -51,14 +51,14 @@ const menusReducer = (state = initalState, action) => {
     };
     return newState;
   }
-  if (type === restaurantActions.types.SET_MENU) {
-    const { menuSingle } = action.payload;
-    const newState = {
-      ...state,
-      menuSingle,
-    };
-    return newState;
-  }
+  // if (type === restaurantActions.types.SET_MENU) {
+  //   const { menuSingle } = action.payload;
+  //   const newState = {
+  //     ...state,
+  //     menuSingle,
+  //   };
+  //   return newState;
+  // }
   if (type === restaurantActions.types.SET_LOADING) {
     const { loading } = action.payload;
     const newState = {

@@ -3,8 +3,14 @@ import {
 } from 'redux-saga/effects';
 import history from '../history';
 import {
-  getCategories, getMenus, getCategory, createCategory, updateCategory, createFiles,
-  deleteFile, deleteCategory,
+  getCategories,
+  getMenus,
+  getCategory,
+  createCategory,
+  updateCategory,
+  createFiles,
+  deleteFile,
+  deleteCategory,
 } from '../api';
 import categoriesActions from '../actions/categories';
 

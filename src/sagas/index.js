@@ -5,6 +5,7 @@ import auth from './auth';
 import restaurants from './restaurants';
 import categories from './categories';
 import dishes from './dishes';
+import menus from './menus';
 
 const getstatus = (state) => ({
   status: state.status,
@@ -25,5 +26,6 @@ export function* rootSaga() {
     restaurants(),
     categories(),
     dishes(),
+    menus(),
   ]);
 }

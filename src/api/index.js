@@ -120,3 +120,18 @@ export const deleteCategory = async ({ catId }) => {
   const { data } = await deleteItem(`categorias/${catId}`);
   return data;
 };
+
+export const getTemplates = async () => {
+  const { data } = await get('templates');
+  return data;
+};
+
+export const getTemplate = async (id) => {
+  const { data } = await get(`templates/${id}`);
+  return data;
+};
+
+export const updateMenuTemplate = async ({ id, ...params }) => {
+  const { data } = await put(`menus-templates/${id}`, { ...params });
+  return data;
+};
