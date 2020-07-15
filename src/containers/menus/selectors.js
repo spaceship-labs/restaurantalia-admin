@@ -3,4 +3,9 @@ const propsSelector = ({ menus }) => {
   return { menusList, menusIds, loading };
 };
 
-export default { propsSelector };
+const formSelector = ({ menu: menuState }) => {
+  const { loading, menu, templates } = menuState;
+  return { loading, menu, templates };
+};
+
+export default { propsSelector, formSelector };
