@@ -18,7 +18,7 @@ const ImageZoneComponent = ({
       {fields.map((f) => (
         <UploadItem multiple={config[f.name].multiple} key={config[f.name].attr}>
           <CardContent>
-            <Typography variant="h5" component="h4">{f.name}</Typography>
+            <Typography variant="h5" component="h4">{config[f.name].label}</Typography>
             <br />
             <DropZoneComponent field={f} config={config[f.name]} />
             <ImageListComponent
