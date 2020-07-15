@@ -32,15 +32,15 @@ const menuTemplateIdSelector = ({ menu: { menu } }) => menu.menus_template.id;
 const menuIdSelector = ({ menu: { menu: { id } } }) => id;
 
 function* initFormSaga() {
-  console.log('Llega a init form');
+  // console.log('Llega a init form');
   yield put({ type: GET_TEMPLATES, payload: null });
 }
 
 function* getTemplatesSaga() {
-  console.log('llega al get Templates');
+  // console.log('llega al get Templates');
   try {
     const templatesResponse = yield call(getTemplatesRequest);
-    console.log(templatesResponse);
+    // console.log(templatesResponse);
     yield put({ type: SET_TEMPLATES, payload: templatesResponse });
   } catch (e) {
     console.log(e);
@@ -52,7 +52,7 @@ function* getTemplatesSaga() {
 function* getMenuSaga({ payload: menuId }) {
   try {
     const menuResponse = yield call(getMenuRequest, { id: menuId });
-    console.log(menuResponse);
+    // console.log(menuResponse);
     yield put({ type: SET_MENU, payload: menuResponse });
   } catch (e) {
     console.log(e);
@@ -61,10 +61,10 @@ function* getMenuSaga({ payload: menuId }) {
   }
 }
 
-function* updateMenuSaga({ payload: { template } }) {
-  console.log(template);
+function* updateMenuSaga({ payload: { template, menuId } }) {
+  // console.log(template);
   const menuTemplateId = yield select(menuTemplateIdSelector);
-  console.log(menuTemplateId);
+  // console.log(menuTemplateId);
   try {
     const updateResponse = yield call(
       updateMenuTemplateRequest,
@@ -84,7 +84,8 @@ function* updateMenuSaga({ payload: { template } }) {
         menuTemplate: menuTemplateId,
       },
     });
-    yield put({ type: SET_MENU_LOADING, payload: { loading: false } });
+    yield put({ type: GET_MENU, payload: menuId });
+    // yield put({ type: SET_MENU_LOADING, payload: { loading: false } });
   }
 }
 
@@ -108,14 +109,14 @@ function* uploadImagesSaga({ payload }) {
   const menuTemplateId = yield select(menuTemplateIdSelector);
 
   try {
-    console.log(payload);
+    // console.log(payload);
 
     // Upload logo in case it exists
     if (logoObj.value.length > 0) {
       const logo = logoObj.value[0];
-      console.log('---------------');
-      console.log(logo);
-      console.log('---------------');
+      // console.log('---------------');
+      // console.log(logo);
+      // console.log('---------------');
       const uploadLogo = new FormData();
       uploadLogo.append('ref', 'menus-template');
       uploadLogo.append('refId', menuTemplateId);
@@ -165,7 +166,7 @@ function* copyTemplateConfigSaga({ payload }) {
       id: menuTemplate,
       configuracion,
     });
-    console.log('/*-/*-/-*/-*/-*/-*/*-');
+    // console.log('/*-/*-/-*/-*/-*/-*/*-');
     console.log(updateResponse);
   } catch (e) {
     console.log(e);

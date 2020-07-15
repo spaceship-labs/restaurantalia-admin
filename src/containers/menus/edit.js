@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import Layout from '../layout';
 import HeadComponent from '../../components/head';
 import FormComponent from '../../components/form';
+import LoadingComponent from '../../components/loading';
 import ImageZoneComponent from '../../components/imageupload';
 import { formDispatcher } from './dispatcher';
 import selectors from './selectors';
@@ -86,7 +87,8 @@ const FormMenu = ({
 
   function handleSubmit(e) {
     e.preventDefault();
-    updateMenu({ template: templateField });
+    setMenuLoading({ loading: true });
+    updateMenu({ template: templateField, menuId });
   }
 
   function handleDeleteImage(imageId) {
@@ -94,10 +96,11 @@ const FormMenu = ({
   }
 
   function handleSubmitImage() {
-    console.log('Entra aca');
-    console.log(backgroundField);
-    console.log(imagesField);
-    console.log(logoField);
+    // console.log('Entra aca');
+    // console.log(backgroundField);
+    // console.log(imagesField);
+    // console.log(logoField);
+    setMenuLoading({ loading: true });
     uploadImages({
       fondo: backgroundField,
       imagenes: imagesField,
@@ -131,6 +134,7 @@ const FormMenu = ({
         fields={multimediaFields}
         config={imageInputs}
       />
+      <LoadingComponent open={loading} />
     </Layout>
   );
 };
