@@ -3,6 +3,7 @@ import {
   Router,
   Switch,
   Route,
+  Redirect,
 } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -18,6 +19,7 @@ import CategoriesCreateContainer from '../categories/create';
 import DishesContainer from '../dishes';
 import DishesCreateContainer from '../dishes/create';
 import MenusContainer from '../menus';
+import MenusForm from '../menus/edit';
 import LoginContainer from '../login';
 // import FormCategoryContainer from '../categories/create';
 // import FormDishContainer from '../dishes/create';
@@ -40,8 +42,10 @@ const Routes = ({ isLoggedIn, getUser }) => {
         <Route exact path="/platillos/crear" component={DishesCreateContainer} />
         <Route exact path="/platillos/editar/:id" component={DishesCreateContainer} />
         <Route exact path="/platillos" component={DishesContainer} />
+        <Route exact path="/menus/editar/:id" component={MenusForm} />
         <Route exact path="/menus" component={MenusContainer} />
         <Route exact path="/" component={HomeContainer} />
+        <Redirect to="/" />
       </Switch>
     </Router>
   );
