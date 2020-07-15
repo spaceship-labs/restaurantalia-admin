@@ -62,5 +62,5 @@ export function* watchgetMenuSingleSaga() {
 
 export default function* run() {
   yield takeLatest(GET_MENUS, getMenusSaga);
-  yield takeLatest(GET_MENU, getMenuSingleSaga);
+  // yield takeLatest(GET_MENU, getMenuSingleSaga);
 }
