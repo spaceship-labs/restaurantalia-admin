@@ -178,11 +178,11 @@ const DishCreate = ({
         title={`${dishId ? 'Editar' : 'Crear'} platillo`}
       />
       {!loading && (
-      <FormComponent
-        handleSubmit={handleSubmit}
-        fields={formEntries}
-        config={formInputs}
-      />
+        <FormComponent
+          handleSubmit={handleSubmit}
+          fields={formEntries}
+          config={formInputs}
+        />
       )}
       {!loading
         && dishId

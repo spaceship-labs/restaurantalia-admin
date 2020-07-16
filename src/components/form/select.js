@@ -1,16 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  FormControl, InputLabel, Select, Input, MenuItem, Chip,
+  FormControl, InputLabel, Select, Input, MenuItem,
 } from '@material-ui/core/';
 
-const SelectChipInputComponent = ({ field, fieldConfig }) => {
+const SelectSingleInputComponent = ({ field, fieldConfig }) => {
   const {
-    attr, value, items, isRequired, error, change,
+    attr, value, items = [], isRequired, error, change,
   } = field;
-  const { label } = fieldConfig;
-  const vls = value.map((it) => JSON.stringify(it));
-  const its = items.map((it) => JSON.stringify(it));
+  const { label, multiple } = fieldConfig;
   return (
     <FormControl>
       <InputLabel id={attr}>{label}</InputLabel>
@@ -20,43 +18,27 @@ const SelectChipInputComponent = ({ field, fieldConfig }) => {
         required={isRequired}
         error={error}
         name={attr}
-        multiple
-        value={vls}
+        multiple={multiple}
+        value={value}
         onChange={({ target: { value: val } }) => {
-          // console.log(';;;;;;;;;;;;;;;;;');
-          // console.log(val);
-          // console.log(';;;;;;;;;;;;;;;;;');
-          const newVal = val.map((it) => JSON.parse(it));
-          change(newVal);
+          change(val);
         }}
         input={<Input id={attr} />}
-        renderValue={(selected) => (
-          <div>
-            {selected.map((v) => {
-              const vObj = JSON.parse(v);
-              return (
-                <Chip key={vObj.id} label={vObj.nombre} />
-              );
-            })}
-          </div>
-        )}
       >
-        {its.map((item) => {
-          const tt = JSON.parse(item);
-          return (
-            <MenuItem key={tt.id} value={item}>
-              {tt.nombre}
-            </MenuItem>
-          );
-        })}
+        {items.map((item) => (
+          <MenuItem key={item.id} value={item.id}>
+            {item.nombre}
+          </MenuItem>
+        ))}
       </Select>
     </FormControl>
   );
 };
 
-SelectChipInputComponent.propTypes = {
+SelectSingleInputComponent.propTypes = {
   field: PropTypes.object.isRequired,
   fieldConfig: PropTypes.object.isRequired,
+  multiple: PropTypes.bool.isRequired,
 };
 
-export default SelectChipInputComponent;
+export default SelectSingleInputComponent;

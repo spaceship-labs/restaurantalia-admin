@@ -1,147 +1,155 @@
-import React, { Component } from 'react';
+// /* eslint-disable */
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import Layout from '../layout';
 import HeadComponent from '../../components/head';
 import FormComponent from '../../components/form';
-import { inputHandle, isValidForm } from '../../utils/inputvalidation';
-import MessageComponent from '../../components/message';
+import LoadingComponent from '../../components/loading';
+import ImageZoneComponent from '../../components/imageupload';
+import { formDispatcher } from './dispatcher';
+import selectors from './selectors';
+// import { inputHandle, isValidForm } from '../../utils/inputvalidation';
+// import MessageComponent from '../../components/message';
 
-class FormMenuContainer extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      validForm: false,
-      showAlert: false,
-      formInputs: [],
-    };
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleCloseMessage = this.handleCloseMessage.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  componentDidMount() {
-    const { formInputs } = this.state;
-    // si el prop que indica crear/editar hay que esperar la info del elemento
-    if (formInputs.length === 0) {
-      const newInputs = {
-        name: {
-          attr: 'name',
-          label: 'Nombre',
-          value: '',
-          type: 'text',
-          isRequired: true,
-          error: false,
-        },
-        descripcion: {
-          attr: 'slug',
-          label: 'Nombre url',
-          value: '',
-          type: 'text',
-          isRequired: true,
-          error: false,
-        },
-        categorias: {
-          attr: 'categorias',
-          label: 'Categorias',
-          value: [],
-          type: 'multiselect',
-          isRequired: true,
-          error: false,
-          items: [
-            {
-              id: 1,
-              nombre: 'categoria 1',
-            },
-            {
-              id: 2,
-              nombre: 'categoria 2',
-            },
-          ],
-        },
-        templates: {
-          attr: 'templates',
-          label: 'Template',
-          value: '',
-          type: 'select',
-          isRequired: true,
-          error: false,
-          items: [
-            {
-              id: 1,
-              nombre: 'template 1',
-            },
-            {
-              id: 2,
-              nombre: 'template 2',
-            },
-          ],
-        },
-      };
-      // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({
-        formInputs: newInputs,
-      });
-    }
-  }
-
-  handleCloseMessage() {
-    this.setState({ showAlert: false });
-  }
-
-  handleSubmit(e) {
-    e.preventDefault();
-    const { type } = this.props;
-    const { formInputs } = this.state;
-    const newValidForm = isValidForm(formInputs);
-    this.setState({
-      validForm: newValidForm,
-      showAlert: true,
-    });
-    if (newValidForm) {
-      // dependiendo del prop es si llama a crear o a editar
-      console.log('SUBMIT', type, formInputs);
-    }
-  }
-
-  handleInputChange(e) {
-    const { formInputs } = this.state;
-    const newFormInputs = inputHandle(formInputs, e.target);
-    this.setState({
-      formInputs: newFormInputs,
-    });
-  }
-
-  render() {
-    const { type } = this.props;
-    const { validForm, formInputs, showAlert } = this.state;
-    const message = validForm
-      ? 'Guardando menu...!'
-      : 'Favor de revisar los datos...!';
-    const messageType = validForm ? 'success' : 'error';
-    return (
-      <Layout>
-        <HeadComponent
-          title={`${type === 'create' ? 'Crear' : 'Editar'} menu`}
-        />
-        <FormComponent
-          handleSubmit={this.handleSubmit}
-          handleInputChange={this.handleInputChange}
-          fields={formInputs}
-        />
-        <MessageComponent
-          open={showAlert}
-          handleClose={this.handleCloseMessage}
-          message={message}
-          type={messageType}
-        />
-      </Layout>
-    );
-  }
-}
-
-FormMenuContainer.propTypes = {
-  type: PropTypes.string.isRequired,
+const formInputs = {
+  template: {
+    attr: 'template',
+    label: 'Template',
+    value: '',
+    type: 'select-single',
+    isRequired: true,
+    error: false,
+    multiple: false,
+  },
 };
 
-export default FormMenuContainer;
+const imageInputs = {
+  logo: {
+    attr: 'logo',
+    label: 'Logo',
+    multiple: false,
+  },
+  background: {
+    attr: 'background',
+    label: 'Imagen de Fondo',
+    multiple: false,
+  },
+  images: {
+    attr: 'images',
+    label: 'Imagenes Decorativas',
+    multiple: true,
+  },
+};
+
+const createChangeCb = (currentVal, setCb) => (newVal) => setCb({ ...currentVal, value: newVal });
+
+const FormMenu = ({
+  loading,
+  menu,
+  match,
+  getMenu,
+  setMenuLoading,
+  templates,
+  updateMenu,
+  initMenuForm,
+  deleteMenuImage,
+  uploadImages,
+}) => {
+  const [logoField, setLogo] = useState({ name: 'logo', value: [], uploaded: [] });
+  const [backgroundField, setBackground] = useState({ name: 'background', value: [], uploaded: [] });
+  const [templateField, setTemplate] = useState({ name: 'template', value: '' });
+  const [imagesField, setImages] = useState({ name: 'images', value: [], uploaded: [] });
+
+  const { params: { id: menuId } } = match;
+
+  useEffect(() => {
+    initMenuForm();
+  }, []);
+
+  useEffect(() => {
+    setMenuLoading({ loading: true });
+    getMenu(menuId);
+  }, [menuId]);
+
+  useEffect(() => {
+    const {
+      menus_template: {
+        logo = {}, imagenes = [], fondo = {}, template = 0,
+      } = {},
+    } = menu;
+
+    setLogo({ ...logoField, uploaded: logo || [] });
+    setBackground({ ...backgroundField, uploaded: fondo || [] });
+    setImages({ ...imagesField, uploaded: imagenes || [] });
+    setTemplate({ ...templateField, value: template });
+  }, [loading, menu]);
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    setMenuLoading({ loading: true });
+    updateMenu({ template: templateField, menuId });
+  }
+
+  function handleDeleteImage(imageId) {
+    deleteMenuImage({ fileId: imageId });
+  }
+
+  function handleSubmitImage() {
+    // console.log('Entra aca');
+    // console.log(backgroundField);
+    // console.log(imagesField);
+    // console.log(logoField);
+    setMenuLoading({ loading: true });
+    uploadImages({
+      fondo: backgroundField,
+      imagenes: imagesField,
+      logo: logoField,
+    });
+  }
+
+  const formEntries = [
+    { ...templateField, change: createChangeCb(templateField, setTemplate), items: templates },
+  ];
+
+  const multimediaFields = [
+    { ...logoField, change: createChangeCb(logoField, setLogo) },
+    { ...backgroundField, change: createChangeCb(backgroundField, setBackground) },
+    { ...imagesField, change: createChangeCb(imagesField, setImages) },
+  ];
+
+  return (
+    <Layout>
+      <HeadComponent
+        title="Editar menu"
+      />
+      <FormComponent
+        handleSubmit={handleSubmit}
+        fields={formEntries}
+        config={formInputs}
+      />
+      <ImageZoneComponent
+        handleDeleteImage={handleDeleteImage}
+        handleSubmit={handleSubmitImage}
+        fields={multimediaFields}
+        config={imageInputs}
+      />
+      <LoadingComponent open={loading} />
+    </Layout>
+  );
+};
+
+FormMenu.propTypes = {
+  loading: PropTypes.bool.isRequired,
+  menu: PropTypes.object.isRequired,
+  match: PropTypes.object.isRequired,
+  getMenu: PropTypes.func.isRequired,
+  setMenuLoading: PropTypes.func.isRequired,
+  initMenuForm: PropTypes.func.isRequired,
+  templates: PropTypes.array.isRequired,
+  updateMenu: PropTypes.func.isRequired,
+  deleteMenuImage: PropTypes.func.isRequired,
+  uploadImages: PropTypes.func.isRequired,
+};
+
+export default connect(selectors.formSelector, formDispatcher)(FormMenu);

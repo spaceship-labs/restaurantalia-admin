@@ -25,7 +25,7 @@ const ImageListComponent = ({ field, config, handleDeleteImage }) => {
   }
   return (
     <UploadList>
-      { multiple && uploaded.map((u) => (
+      {multiple && uploaded.map((u) => (
         <ImageItem multiple>
           {deleteButton(u)}
           <img alt={u.name} src={`${uploadsUrl}${u.url}`} />

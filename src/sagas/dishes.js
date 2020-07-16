@@ -231,7 +231,7 @@ function* deleteDishSaga({ payload }) {
     } else {
       throw new Error('forbidden');
     }
-  // hjgj
+    // hjgj
   } catch (e) {
     console.log('error', e);
     yield call(history.push, '/platillos');
@@ -273,4 +273,16 @@ export function* watchDeleteDishImageSaga() {
 
 export function* watchDeleteDishSaga() {
   yield takeLatest(DELETE_DISH, deleteDishSaga);
+}
+
+export default function* run() {
+  yield takeLatest(GET_CATEGORIES_DISHES, getCategoriesDishesSaga);
+  yield takeLatest(GET_DISHES, getDishesSaga);
+  yield takeLatest(GET_DISH, getDishSaga);
+  yield takeLatest(CREATE_DISH, createDishSaga);
+  yield takeLatest(UPDATE_DISH, updateDishSaga);
+  yield takeLatest(INIT_FORM, initFormSaga);
+  yield takeLatest(DELETE_DISH, deleteDishSaga);
+  yield takeLatest(UPLOAD_DISH_IMAGE, uploadDishImageSaga);
+  yield takeLatest(DELETE_DISH_IMAGE, deleteDishImageSaga);
 }

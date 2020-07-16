@@ -152,11 +152,11 @@ const CategoryCreate = ({
         title={`${catId ? 'Editar' : 'Crear'} categoria`}
       />
       {!loading && (
-      <FormComponent
-        handleSubmit={handleSubmit}
-        fields={formEntries}
-        config={formInputs}
-      />
+        <FormComponent
+          handleSubmit={handleSubmit}
+          fields={formEntries}
+          config={formInputs}
+        />
       )}
       {!loading
         && catId
@@ -194,7 +194,6 @@ CategoryCreate.defaultProps = {
     name: '',
     orden: '1',
     descripcion: '',
-    // menus = [],
   },
 };
 
