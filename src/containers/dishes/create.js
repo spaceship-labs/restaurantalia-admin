@@ -87,7 +87,7 @@ const DishCreate = ({
   deleteDish,
 }) => {
   const [nameField, setName] = useState({ name: 'name', value: '' });
-  const [activoField, setActivo] = useState({ name: 'activo', value: '' });
+  const [activoField, setActivo] = useState({ name: 'activo', value: false });
   const [ordenField, setOrden] = useState({ name: 'orden', value: '' });
   const [precioField, setPrecio] = useState({ name: 'precio', value: '' });
   const [cantidadField, setCantidad] = useState({ name: 'cantidad', value: '' });
@@ -121,7 +121,7 @@ const DishCreate = ({
       imagen,
     } = dish;
     setName({ ...nameField, value: nombre });
-    setActivo({ ...activoField, value: activo });
+    setActivo({ ...activoField, value: activo || false });
     setOrden({ ...ordenField, value: orden });
     setPrecio({ ...precioField, value: precio });
     setCantidad({ ...cantidadField, value: cantidad });
@@ -142,6 +142,7 @@ const DishCreate = ({
     e.preventDefault();
     const actionPayload = {
       nameField,
+      activoField,
       ordenField,
       precioField,
       cantidadField,

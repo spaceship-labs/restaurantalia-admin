@@ -73,7 +73,7 @@ const CategoryCreate = ({
   deleteCategory,
 }) => {
   const [nombreField, setName] = useState({ name: 'nombre', value: '' });
-  const [activoField, setActivo] = useState({ name: 'activo', value: '' });
+  const [activoField, setActivo] = useState({ name: 'activo', value: false });
   const [ordenField, setOrden] = useState({ name: 'orden', value: '' });
   const [descripcionField, setDescripcion] = useState({ name: 'descripcion', value: '' });
   const [menusField, setmenus] = useState({ name: 'menus', value: [] });
@@ -102,7 +102,8 @@ const CategoryCreate = ({
       menus: ms = [],
       imagen,
     } = category;
-    setActivo({ ...activoField, value: activo });
+    console.log('CAT', category);
+    setActivo({ ...activoField, value: activo || false });
     setName({ ...nombreField, value: nombre });
     setOrden({ ...ordenField, value: orden });
     setDescripcion({ ...descripcionField, value: descripcion });
@@ -122,6 +123,7 @@ const CategoryCreate = ({
     e.preventDefault();
     const actionPayload = {
       nombreField,
+      activoField,
       ordenField,
       descripcionField,
       menusField,

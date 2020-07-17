@@ -14,7 +14,7 @@ const BoolInputComponent = ({ field, fieldConfig }) => {
         control={(
           <Switch
             checked={value}
-            onChange={change}
+            onChange={({ target: { checked: val } }) => change(val)}
             name={attr}
             color="primary"
           />
