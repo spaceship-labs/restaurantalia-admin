@@ -11,6 +11,13 @@ import { createDispatcher } from './dispatcher';
 import selectors from './selectors';
 
 const formInputs = {
+  activo: {
+    attr: 'activo',
+    label: 'Activo',
+    type: 'bool',
+    isRequired: false,
+    error: false,
+  },
   name: {
     attr: 'name',
     label: 'Nombre',
@@ -80,6 +87,7 @@ const DishCreate = ({
   deleteDish,
 }) => {
   const [nameField, setName] = useState({ name: 'name', value: '' });
+  const [activoField, setActivo] = useState({ name: 'activo', value: '' });
   const [ordenField, setOrden] = useState({ name: 'orden', value: '' });
   const [precioField, setPrecio] = useState({ name: 'precio', value: '' });
   const [cantidadField, setCantidad] = useState({ name: 'cantidad', value: '' });
@@ -104,6 +112,7 @@ const DishCreate = ({
   useEffect(() => {
     const {
       nombre,
+      activo,
       orden,
       precio,
       cantidad,
@@ -112,6 +121,7 @@ const DishCreate = ({
       imagen,
     } = dish;
     setName({ ...nameField, value: nombre });
+    setActivo({ ...activoField, value: activo });
     setOrden({ ...ordenField, value: orden });
     setPrecio({ ...precioField, value: precio });
     setCantidad({ ...cantidadField, value: cantidad });
@@ -158,6 +168,7 @@ const DishCreate = ({
   }
 
   const formEntries = [
+    { ...activoField, change: createChangeCb(activoField, setActivo) },
     { ...nameField, change: createChangeCb(nameField, setName) },
     { ...ordenField, change: createChangeCb(ordenField, setOrden) },
     { ...precioField, change: createChangeCb(precioField, setPrecio) },
