@@ -11,6 +11,13 @@ import Layout from '../layout';
 import selectors from './selectors';
 
 const formInputs = {
+  activo: {
+    attr: 'activo',
+    label: 'Activo',
+    type: 'bool',
+    isRequired: false,
+    error: false,
+  },
   nombre: {
     attr: 'nombre',
     label: 'Nombre',
@@ -66,6 +73,7 @@ const CategoryCreate = ({
   deleteCategory,
 }) => {
   const [nombreField, setName] = useState({ name: 'nombre', value: '' });
+  const [activoField, setActivo] = useState({ name: 'activo', value: false });
   const [ordenField, setOrden] = useState({ name: 'orden', value: '' });
   const [descripcionField, setDescripcion] = useState({ name: 'descripcion', value: '' });
   const [menusField, setmenus] = useState({ name: 'menus', value: [] });
@@ -88,11 +96,14 @@ const CategoryCreate = ({
   useEffect(() => {
     const {
       nombre,
+      activo,
       orden,
       descripcion,
       menus: ms = [],
       imagen,
     } = category;
+    console.log('CAT', category);
+    setActivo({ ...activoField, value: activo || false });
     setName({ ...nombreField, value: nombre });
     setOrden({ ...ordenField, value: orden });
     setDescripcion({ ...descripcionField, value: descripcion });
@@ -112,6 +123,7 @@ const CategoryCreate = ({
     e.preventDefault();
     const actionPayload = {
       nombreField,
+      activoField,
       ordenField,
       descripcionField,
       menusField,
@@ -136,6 +148,7 @@ const CategoryCreate = ({
   }
 
   const formEntries = [
+    { ...activoField, change: createChangeCb(activoField, setActivo) },
     { ...nombreField, change: createChangeCb(nombreField, setName) },
     { ...ordenField, change: createChangeCb(ordenField, setOrden) },
     { ...descripcionField, change: createChangeCb(descripcionField, setDescripcion) },

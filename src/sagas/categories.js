@@ -99,12 +99,14 @@ function* createCategorySaga({ payload }) {
   const empresas = user.empresas.map((r) => r.id);
   const {
     nombreField: { value: nombre },
+    activoField: { value: activo },
     ordenField: { value: orden },
     descripcionField: { value: descripcion },
     menusField: { value: menus },
   } = payload;
   const params = {
     nombre,
+    activo,
     orden,
     descripcion,
     menus,
@@ -125,6 +127,7 @@ function* updateCategorySaga({ payload }) {
   const empresas = user.empresas.map((r) => r.id);
   const {
     nombreField: { value: nombre },
+    activoField: { value: activo },
     ordenField: { value: orden },
     descripcionField: { value: descripcion },
     menusField: { value: menus },
@@ -132,6 +135,7 @@ function* updateCategorySaga({ payload }) {
   } = payload;
   const params = {
     nombre,
+    activo,
     orden,
     descripcion,
     menus,

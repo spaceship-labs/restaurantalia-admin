@@ -15,6 +15,11 @@ export const Form = styled.form`
   }
 `;
 
+export const RowForm = styled.div`
+  max-width: ${({ fullwidth }) => (fullwidth ? 100 : 45)}%;
+  flex-basis: ${({ fullwidth }) => (fullwidth ? 100 : 45)}%;
+`;
+
 export const FormFooter = styled.div`
   width: 100%;
   margin-top: 25px;

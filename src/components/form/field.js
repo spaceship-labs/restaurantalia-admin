@@ -4,6 +4,7 @@ import TextInputComponent from './text';
 import SelectChipInputComponent from './selectMultiple';
 import SelectSingleInputComponent from './select';
 import NumberInputComponent from './number';
+import BoolInputComponent from './bool';
 
 const FieldComponent = ({ field, fieldConfig }) => {
   // something
@@ -15,6 +16,9 @@ const FieldComponent = ({ field, fieldConfig }) => {
   }
   if (fieldConfig.type === 'number') {
     return <NumberInputComponent field={field} fieldConfig={fieldConfig} />;
+  }
+  if (fieldConfig.type === 'bool') {
+    return <BoolInputComponent field={field} fieldConfig={fieldConfig} />;
   }
   return <TextInputComponent field={field} fieldConfig={fieldConfig} />;
 };

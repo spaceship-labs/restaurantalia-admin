@@ -122,6 +122,7 @@ function* createDishSaga({ payload }) {
   const empresas = user.empresas.map((r) => r.id);
   const {
     nameField: { value: nombre },
+    activoField: { value: activo },
     ordenField: { value: orden },
     precioField: { value: precio },
     cantidadField: { value: cantidad },
@@ -130,6 +131,7 @@ function* createDishSaga({ payload }) {
   } = payload;
   const params = {
     nombre,
+    activo,
     orden,
     precio,
     cantidad,
@@ -152,6 +154,7 @@ function* updateDishSaga({ payload }) {
   const empresas = user.empresas.map((r) => r.id);
   const {
     nameField: { value: nombre },
+    activoField: { value: activo },
     ordenField: { value: orden },
     precioField: { value: precio },
     cantidadField: { value: cantidad },
@@ -161,6 +164,7 @@ function* updateDishSaga({ payload }) {
   } = payload;
   const params = {
     nombre,
+    activo,
     orden,
     precio,
     cantidad,
