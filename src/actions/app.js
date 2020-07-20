@@ -1,6 +1,4 @@
-// BASE
-
-const prefix = '@restaurantalia/admin/auth/';
+const prefix = '@restaurantalia/admin/app/';
 
 const NEW_LOADING_PROCESS = `${prefix}NEW_LOADING_PROCESS`;
 const END_LOADING_PROCESS = `${prefix}END_LOADING_PROCESS`;
