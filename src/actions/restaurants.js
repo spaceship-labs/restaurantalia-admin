@@ -1,9 +1,13 @@
-const GET_MENUS = 'GET_MENUS';
-const GET_MENU = 'GET_MENU';
-const SET_MENUS = 'SET_MENUS';
-const SET_MENU = 'SET_MENU';
-const SET_LOADING = 'SET_LOADING';
-const SET_RESTAURANTES = 'SET_RESTAURANTES';
+const prefix = '@restaurantalia/admin/restaurantes/';
+
+const SET_RESTAURANTES = `${prefix}SET_RESTAURANTES`;
+
+// TODO: Maybe move away ALL of this.
+const GET_MENUS = `${prefix}GET_MENUS`;
+const GET_MENU = `${prefix}GET_MENU`;
+const SET_MENUS = `${prefix}SET_MENUS`;
+const SET_MENU = `${prefix}SET_MENU`;
+const SET_LOADING = `${prefix}SET_LOADING`;
 
 const getMenus = (payload = {}) => ({ type: GET_MENUS, payload });
 const getMenu = (payload = {}) => ({ type: GET_MENU, payload });
