@@ -16,11 +16,10 @@ const formInputs = {
     label: 'Activo',
     type: 'bool',
     isRequired: false,
-    error: false,
   },
   nombre: {
     attr: 'nombre',
-    label: 'Nombre',
+    label: 'Nombre*',
     type: 'text',
     isRequired: true,
     error: false,
@@ -37,11 +36,12 @@ const formInputs = {
     label: 'Descripcion',
     type: 'text',
     isRequired: false,
+    multiline: true,
     error: false,
   },
   menus: {
     attr: 'menus',
-    label: 'Menus',
+    label: 'Menus*',
     type: 'select',
     isRequired: true,
     error: false,
@@ -56,7 +56,12 @@ const imageInputs = {
   },
 };
 
-const createChangeCb = (currentVal, setCb) => (newVal) => setCb({ ...currentVal, value: newVal });
+const createChangeCb = (currentVal, setCb, setConfigOnChange) => (newVal, e) => {
+  setConfigOnChange(currentVal.name, e);
+  setCb({
+    ...currentVal, value: newVal,
+  });
+};
 
 const CategoryCreate = ({
   loading,
@@ -72,6 +77,7 @@ const CategoryCreate = ({
   deleteCategoryImage,
   deleteCategory,
 }) => {
+  const [configInputs, setConfigInputs] = useState(formInputs);
   const [nombreField, setName] = useState({ name: 'nombre', value: '' });
   const [activoField, setActivo] = useState({ name: 'activo', value: false });
   const [ordenField, setOrden] = useState({ name: 'orden', value: '' });
@@ -102,24 +108,24 @@ const CategoryCreate = ({
       menus: ms = [],
       imagen,
     } = category;
-    console.log('CAT', category);
+    // console.log('CAT', category);
     setActivo({ ...activoField, value: activo || false });
     setName({ ...nombreField, value: nombre });
     setOrden({ ...ordenField, value: orden });
-    setDescripcion({ ...descripcionField, value: descripcion });
+    setDescripcion({ ...descripcionField, value: descripcion || '' });
     setmenus({ ...menusField, value: ms });
     // multimedia
     setImagen({ ...imagenField, uploaded: imagen || [] });
   }, [loading, category]);
 
   function handleDelete() {
-    console.log('DELETE ELEMENT', catId);
+    // console.log('DELETE ELEMENT', catId);
     if (catId) {
       deleteCategory({ catId });
     }
   }
 
-  function handleSubmit(e) {
+  function handleSubmit(e, valid, newC) {
     e.preventDefault();
     const actionPayload = {
       nombreField,
@@ -128,8 +134,13 @@ const CategoryCreate = ({
       descripcionField,
       menusField,
     };
-    if (catId) updateCategory({ ...actionPayload, catId });
-    else createCategory(actionPayload);
+    // const valid = false;
+    // console.log('NEW CONF', v, newC);
+    setConfigInputs(newC);
+    if (valid) {
+      if (catId) updateCategory({ ...actionPayload, catId });
+      else createCategory(actionPayload);
+    }
   }
 
   function handleSubmitMultimedia() {
@@ -146,13 +157,28 @@ const CategoryCreate = ({
     setCategoriesLoading({ loading: true });
     deleteCategoryImage({ fileId, catId });
   }
-
+  function setConfigOnChange(name, newConfig) {
+    if (newConfig) setConfigInputs({ ...configInputs, [name]: newConfig });
+  }
   const formEntries = [
-    { ...activoField, change: createChangeCb(activoField, setActivo) },
-    { ...nombreField, change: createChangeCb(nombreField, setName) },
-    { ...ordenField, change: createChangeCb(ordenField, setOrden) },
-    { ...descripcionField, change: createChangeCb(descripcionField, setDescripcion) },
-    { ...menusField, change: createChangeCb(menusField, setmenus), items: menus },
+    {
+      ...activoField,
+      change: createChangeCb(activoField, setActivo, setConfigOnChange),
+    },
+    {
+      ...nombreField,
+      change: createChangeCb(nombreField, setName, setConfigOnChange),
+    },
+    { ...ordenField, change: createChangeCb(ordenField, setOrden, setConfigOnChange) },
+    {
+      ...descripcionField,
+      change: createChangeCb(descripcionField, setDescripcion, setConfigOnChange),
+    },
+    {
+      ...menusField,
+      change: createChangeCb(menusField, setmenus, setConfigOnChange),
+      items: menus,
+    },
   ];
 
   const multimediaFields = [
@@ -168,7 +194,7 @@ const CategoryCreate = ({
         <FormComponent
           handleSubmit={handleSubmit}
           fields={formEntries}
-          config={formInputs}
+          config={configInputs}
         />
       )}
       {!loading
