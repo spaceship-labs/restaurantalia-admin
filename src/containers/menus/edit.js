@@ -56,6 +56,7 @@ const FormMenu = ({
   deleteMenuImage,
   uploadImages,
 }) => {
+  const [configInputs, setConfigInputs] = useState(formInputs);
   const [logoField, setLogo] = useState({ name: 'logo', value: [], uploaded: [] });
   const [backgroundField, setBackground] = useState({ name: 'background', value: [], uploaded: [] });
   const [templateField, setTemplate] = useState({ name: 'template', value: '' });
@@ -85,10 +86,13 @@ const FormMenu = ({
     setTemplate({ ...templateField, value: template });
   }, [loading, menu]);
 
-  function handleSubmit(e) {
+  function handleSubmit(e, valid, newC) {
     e.preventDefault();
-    setMenuLoading({ loading: true });
-    updateMenu({ template: templateField, menuId });
+    setConfigInputs(newC);
+    if (valid) {
+      setMenuLoading({ loading: true });
+      updateMenu({ template: templateField, menuId });
+    }
   }
 
   function handleDeleteImage(imageId) {
@@ -126,7 +130,7 @@ const FormMenu = ({
       <FormComponent
         handleSubmit={handleSubmit}
         fields={formEntries}
-        config={formInputs}
+        config={configInputs}
       />
       <ImageZoneComponent
         handleDeleteImage={handleDeleteImage}

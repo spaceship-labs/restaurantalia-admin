@@ -70,8 +70,12 @@ const imageInputs = {
   },
 };
 
-const createChangeCb = (currentVal, setCb) => (newVal) => setCb({ ...currentVal, value: newVal });
-
+const createChangeCb = (currentVal, setCb, setConfigOnChange) => (newVal, e) => {
+  setConfigOnChange(currentVal.name, e);
+  setCb({
+    ...currentVal, value: newVal,
+  });
+};
 const DishCreate = ({
   loading,
   dish,
@@ -86,6 +90,7 @@ const DishCreate = ({
   deleteDishImage,
   deleteDish,
 }) => {
+  const [configInputs, setConfigInputs] = useState(formInputs);
   const [nameField, setName] = useState({ name: 'name', value: '' });
   const [activoField, setActivo] = useState({ name: 'activo', value: false });
   const [ordenField, setOrden] = useState({ name: 'orden', value: '' });
@@ -132,13 +137,13 @@ const DishCreate = ({
   }, [loading, dish]);
 
   function handleDelete() {
-    console.log('DELETE ELEMENT', dishId);
+    // console.log('DELETE ELEMENT', dishId);
     if (dishId) {
       deleteDish({ dishId });
     }
   }
 
-  function handleSubmit(e) {
+  function handleSubmit(e, valid, newC) {
     e.preventDefault();
     const actionPayload = {
       nameField,
@@ -149,8 +154,12 @@ const DishCreate = ({
       descripcionField,
       categoriasField,
     };
-    if (dishId) updateDish({ ...actionPayload, dishId });
-    else createDish(actionPayload);
+    // console.log('conf', newC);
+    setConfigInputs(newC);
+    if (valid) {
+      if (dishId) updateDish({ ...actionPayload, dishId });
+      else createDish(actionPayload);
+    }
   }
 
   function handleSubmitMultimedia() {
@@ -167,16 +176,24 @@ const DishCreate = ({
     setDishesLoading({ loading: true });
     deleteDishImage({ fileId, dishId });
   }
+  function setConfigOnChange(name, newConfig) {
+    if (newConfig) setConfigInputs({ ...configInputs, [name]: newConfig });
+  }
 
   const formEntries = [
-    { ...activoField, change: createChangeCb(activoField, setActivo) },
-    { ...nameField, change: createChangeCb(nameField, setName) },
-    { ...ordenField, change: createChangeCb(ordenField, setOrden) },
-    { ...precioField, change: createChangeCb(precioField, setPrecio) },
-    { ...cantidadField, change: createChangeCb(cantidadField, setCantidad) },
-    { ...descripcionField, change: createChangeCb(descripcionField, setDescripcion) },
+    { ...activoField, change: createChangeCb(activoField, setActivo, setConfigOnChange) },
+    { ...nameField, change: createChangeCb(nameField, setName, setConfigOnChange) },
+    { ...ordenField, change: createChangeCb(ordenField, setOrden, setConfigOnChange) },
+    { ...precioField, change: createChangeCb(precioField, setPrecio, setConfigOnChange) },
+    { ...cantidadField, change: createChangeCb(cantidadField, setCantidad, setConfigOnChange) },
     {
-      ...categoriasField, change: createChangeCb(categoriasField, setCategorias), items: categorias,
+      ...descripcionField,
+      change: createChangeCb(descripcionField, setDescripcion, setConfigOnChange),
+    },
+    {
+      ...categoriasField,
+      change: createChangeCb(categoriasField, setCategorias, setConfigOnChange),
+      items: categorias,
     },
   ];
 
@@ -193,7 +210,7 @@ const DishCreate = ({
         <FormComponent
           handleSubmit={handleSubmit}
           fields={formEntries}
-          config={formInputs}
+          config={configInputs}
         />
       )}
       {!loading
