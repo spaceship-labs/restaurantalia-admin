@@ -21,7 +21,7 @@ const {
   SET_CATEGORIES,
   SET_CATEGORIES_LOADING,
   SET_CREATE_MENUS,
-  INIT_CATEGORY_FORM,
+  INIT_FORM,
   SET_CATEGORY,
   CREATE_CATEGORY,
   UPDATE_CATEGORY,
@@ -217,7 +217,7 @@ export function* watchgetCategoriesSaga() {
 }
 
 export function* watchInitCategoryFormSaga() {
-  yield takeLatest(INIT_CATEGORY_FORM, initFormSaga);
+  yield takeLatest(INIT_FORM, initFormSaga);
 }
 
 export function* watchgetCategorySaga() {
@@ -246,7 +246,7 @@ export function* watchDeleteCategorySaga() {
 
 export default function* run() {
   yield takeLatest(GET_CATEGORIES, getCategoriesSaga);
-  yield takeLatest(INIT_CATEGORY_FORM, initFormSaga);
+  yield takeLatest(INIT_FORM, initFormSaga);
   yield takeLatest(GET_CATEGORY, getCategorySaga);
   yield takeLatest(CREATE_CATEGORY, createCategorySaga);
   yield takeLatest(UPDATE_CATEGORY, updateCategorySaga);

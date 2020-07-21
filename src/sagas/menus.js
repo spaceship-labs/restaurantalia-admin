@@ -9,7 +9,7 @@ import menusActions from '../actions/menus';
 
 //  REFACTOr NEEDED
 const {
-  INIT_MENU_FORM,
+  INIT_FORM,
   GET_MENU,
   GET_TEMPLATES,
   SET_TEMPLATES,
@@ -178,7 +178,7 @@ function* copyTemplateConfigSaga({ payload }) {
 // Export generator
 
 export default function* run() {
-  yield takeLatest(INIT_MENU_FORM, initFormSaga);
+  yield takeLatest(INIT_FORM, initFormSaga);
   yield takeLatest(GET_TEMPLATES, getTemplatesSaga);
   yield takeLatest(GET_MENU, getMenuSaga);
   yield takeLatest(UPDATE_MENU, updateMenuSaga);
