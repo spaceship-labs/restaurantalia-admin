@@ -1,22 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  FormControl, InputLabel, Select, Input, MenuItem,
+  FormControl, InputLabel, Select, Input, MenuItem, FormHelperText,
 } from '@material-ui/core/';
 
 const SelectSingleInputComponent = ({ field, fieldConfig }) => {
   const {
-    attr, value, items = [], isRequired, error, change,
+    value, items = [], change,
   } = field;
-  const { label, multiple } = fieldConfig;
+  const {
+    label, attr, multiple, isRequired, error,
+  } = fieldConfig;
   return (
-    <FormControl>
+    <FormControl error={error}>
       <InputLabel id={attr}>{label}</InputLabel>
       <Select
         labelId={attr}
         id={attr}
         required={isRequired}
-        error={error}
         name={attr}
         multiple={multiple}
         value={value}
@@ -31,6 +32,7 @@ const SelectSingleInputComponent = ({ field, fieldConfig }) => {
           </MenuItem>
         ))}
       </Select>
+      {error && <FormHelperText id="component-error-text">Campo requerido</FormHelperText>}
     </FormControl>
   );
 };
@@ -38,7 +40,6 @@ const SelectSingleInputComponent = ({ field, fieldConfig }) => {
 SelectSingleInputComponent.propTypes = {
   field: PropTypes.object.isRequired,
   fieldConfig: PropTypes.object.isRequired,
-  multiple: PropTypes.bool.isRequired,
 };
 
 export default SelectSingleInputComponent;

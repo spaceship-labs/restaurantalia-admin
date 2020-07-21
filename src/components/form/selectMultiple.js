@@ -1,33 +1,34 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  FormControl, InputLabel, Select, Input, MenuItem, Chip,
+  FormControl, InputLabel, Select, Input, MenuItem, Chip, FormHelperText,
 } from '@material-ui/core/';
 
 const SelectChipInputComponent = ({ field, fieldConfig }) => {
   const {
-    attr, value, items, isRequired, error, change,
+    value, items, change,
   } = field;
-  const { label } = fieldConfig;
+  const {
+    label, isRequired, attr, error,
+  } = fieldConfig;
   const vls = value.map((it) => JSON.stringify(it));
   const its = items.map((it) => JSON.stringify(it));
   return (
-    <FormControl>
+    <FormControl error={error}>
       <InputLabel id={attr}>{label}</InputLabel>
       <Select
         labelId={attr}
         id={attr}
         required={isRequired}
-        error={error}
         name={attr}
         multiple
         value={vls}
         onChange={({ target: { value: val } }) => {
-          // console.log(';;;;;;;;;;;;;;;;;');
-          // console.log(val);
-          // console.log(';;;;;;;;;;;;;;;;;');
           const newVal = val.map((it) => JSON.parse(it));
-          change(newVal);
+          const e = (isRequired && newVal.length === 0);
+          // console.log('e', label, e);
+          const newConfig = { ...fieldConfig, error: e };
+          change(newVal, newConfig);
         }}
         input={<Input id={attr} />}
         renderValue={(selected) => (
@@ -50,6 +51,7 @@ const SelectChipInputComponent = ({ field, fieldConfig }) => {
           );
         })}
       </Select>
+      {error && <FormHelperText id="component-error-text">Campo requerido</FormHelperText>}
     </FormControl>
   );
 };
