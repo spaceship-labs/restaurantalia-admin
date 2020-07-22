@@ -5,17 +5,19 @@ import Layout from '../layout';
 import HeadComponent from '../../components/head';
 import TableComponent from '../../components/table';
 import LoadingComponent from '../../components/loading';
+import { mainDispatcher } from './dispatcher';
+import selectors from './selectors';
 
 class MenusContainerNoConnect extends Component {
-  constructor(props) {
-    super(props);
-    // algo
-    const { menusList, menusIds } = this.props;
-    console.log('menus container', menusList, menusIds);
+  componentDidMount() {
+    const { getMenus } = this.props;
+    getMenus();
   }
 
   render() {
-    const { menusList, loading } = this.props;
+    const { menusList, menusIds, loading } = this.props;
+    console.log('menus container', menusList, menusIds);
+
     const attrsArray = [
       {
         attr: 'nombre',
@@ -65,14 +67,7 @@ MenusContainerNoConnect.propTypes = {
   menusList: PropTypes.object.isRequired,
   menusIds: PropTypes.arrayOf(PropTypes.string).isRequired,
   loading: PropTypes.bool.isRequired,
+  getMenus: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => {
-  const { menusList, menusIds, loading } = state.menus;
-  return { menusList, menusIds, loading };
-};
-
-const MenusContainer = connect(mapStateToProps)(MenusContainerNoConnect);
-
-export { MenusContainerNoConnect };
-export default MenusContainer;
+export default connect(selectors.propsSelector, mainDispatcher)(MenusContainerNoConnect);

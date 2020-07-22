@@ -3,13 +3,20 @@ import {
 } from 'redux-saga/effects';
 // import history from '../history';
 import {
-  getTemplates, getMenu, updateMenuTemplate, deleteFile, createFiles, getTemplate,
+  getTemplates,
+  getMenu,
+  updateMenuTemplate,
+  deleteFile,
+  createFiles,
+  getTemplate,
+  getMenus,
 } from '../api';
 import menusActions from '../actions/menus';
 
 //  REFACTOr NEEDED
 const {
   INIT_FORM,
+  GET_MENUS,
   GET_MENU,
   GET_TEMPLATES,
   SET_TEMPLATES,
@@ -19,9 +26,11 @@ const {
   DELETE_MENU_IMAGE,
   UPLOAD_IMAGES,
   COPY_TEMPLATE_CONFIG,
+  SET_MENUS,
 } = menusActions.types;
 
 const getTemplatesRequest = async (data) => getTemplates(data);
+const getMenusRequest = async (data) => getMenus(data);
 const getMenuRequest = async (data) => getMenu(data);
 const updateMenuTemplateRequest = async (data) => updateMenuTemplate(data);
 const uploadMediaRequest = async (data) => createFiles(data);
@@ -30,9 +39,26 @@ const getTemplateRequest = async (data) => getTemplate(data);
 
 const menuTemplateIdSelector = ({ menu: { menu } }) => menu.menus_template.id;
 const menuIdSelector = ({ menu: { menu: { id } } }) => id;
+const userSelector = (state) => (state.auth.user);
+
+function* getMenusSaga({ payload }) {
+  try {
+    const { page } = payload;
+
+    const user = yield select(userSelector);
+    const restaurantIds = user.restaurantes.map((r) => r.id);
+
+    const menusResponse = yield call(getMenusRequest, { restaurantIds, page });
+
+    yield put({ type: SET_MENUS, payload: { menusResponse } });
+  } catch (e) {
+    console.log(e);
+  } finally {
+    yield put({ type: SET_MENU_LOADING, payload: { loading: false } });
+  }
+}
 
 function* initFormSaga() {
-  // console.log('Llega a init form');
   yield put({ type: GET_TEMPLATES, payload: null });
 }
 
@@ -178,6 +204,7 @@ function* copyTemplateConfigSaga({ payload }) {
 // Export generator
 
 export default function* run() {
+  yield takeLatest(GET_MENUS, getMenusSaga);
   yield takeLatest(INIT_FORM, initFormSaga);
   yield takeLatest(GET_TEMPLATES, getTemplatesSaga);
   yield takeLatest(GET_MENU, getMenuSaga);

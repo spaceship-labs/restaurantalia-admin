@@ -3,6 +3,7 @@ import menusActions from '../../actions/menus';
 
 const {
   initMenuForm,
+  getMenus,
   setMenuLoading,
   getMenu,
   updateMenu,
@@ -20,5 +21,5 @@ export const formDispatcher = (dispatch) => bindActionCreators({
 }, dispatch);
 
 export const mainDispatcher = (dispatch) => bindActionCreators({
-  initMenuForm,
+  getMenus,
 }, dispatch);

@@ -2,7 +2,7 @@ import {
   all, takeEvery, select,
 } from 'redux-saga/effects';
 import auth from './auth';
-import restaurants from './restaurants';
+// import restaurants from './restaurants';
 import categories from './categories';
 import dishes from './dishes';
 import menus from './menus';
@@ -23,9 +23,11 @@ export function* watchEmptySaga() {
 export function* rootSaga() {
   yield all([
     auth(),
-    restaurants(),
+    // restaurants(),
     categories(),
     dishes(),
     menus(),
   ]);
 }
+
+// Leaving restaurants saga register for future improvements

@@ -7,7 +7,7 @@ import { loadState, saveState, clearState } from '../api/localstorage';
 import history from '../history';
 
 import authActions from '../actions/auth';
-import menuActions from '../actions/restaurants';
+import restaurantsActions from '../actions/restaurants';
 
 const {
   DO_LOGIN,
@@ -18,10 +18,9 @@ const {
 } = authActions.types;
 
 const {
-  GET_MENUS,
   SET_LOADING,
   SET_RESTAURANTES,
-} = menuActions.types;
+} = restaurantsActions.types;
 
 const loginRequest = async (data) => login(data);
 
@@ -32,7 +31,6 @@ function* getDoLoginSaga(action) {
   if (!logged) {
     try {
       const loginResponse = yield call(loginRequest, action.payload);
-      console.log('LOGIN response', loginResponse);
       saveState({
         userId: loginResponse.user.id,
         jwt: loginResponse.jwt,
@@ -62,7 +60,6 @@ function* getUserSaga() {
     yield put({ type: SET_LOGIN, payload: { result: loginResponse } });
     const { restaurantes: restaurantesResponse } = loginResponse.user;
     yield put({ type: SET_RESTAURANTES, payload: { restaurantesResponse } });
-    yield put({ type: GET_MENUS, payload: { page: 1 } });
     yield put({ type: SET_LOADING, payload: { loading: true } });
   }
 }

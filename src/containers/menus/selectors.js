@@ -1,5 +1,5 @@
-const propsSelector = ({ menus }) => {
-  const { menusList, menusIds, loading } = menus;
+const propsSelector = ({ menu }) => {
+  const { menusList, menusIds, loading } = menu;
   return { menusList, menusIds, loading };
 };
 
