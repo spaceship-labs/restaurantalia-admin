@@ -62,7 +62,6 @@ function* getCategoriesDishesSaga() {
   } catch (e) {
     console.log(e);
   } finally {
-    // yield put({ type: SET_DISHES_LOADING, payload: { loading: true } });
     yield put(endLoading());
   }
 }
@@ -214,7 +213,6 @@ function* uploadDishImageSaga({ payload }) {
     yield put({ type: GET_DISH, payload: dishId });
   } catch (e) {
     console.log(e);
-    // yield put(endLoading());
   } finally {
     yield put(endLoading());
   }

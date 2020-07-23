@@ -8,7 +8,6 @@ import history from '../history';
 
 import authActions from '../actions/auth';
 import restaurantsActions from '../actions/restaurants';
-// import appActions from '../actions/app';
 
 const {
   DO_LOGIN,
@@ -19,7 +18,6 @@ const {
 } = authActions.types;
 
 const {
-  // SET_LOADING,
   SET_RESTAURANTES,
 } = restaurantsActions.types;
 
@@ -61,7 +59,6 @@ function* getUserSaga() {
     yield put({ type: SET_LOGIN, payload: { result: loginResponse } });
     const { restaurantes: restaurantesResponse } = loginResponse.user;
     yield put({ type: SET_RESTAURANTES, payload: { restaurantesResponse } });
-    // yield put({ type: SET_LOADING, payload: { loading: true } });
   }
 }
 

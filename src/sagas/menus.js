@@ -59,7 +59,6 @@ function* getMenusSaga({ payload }) {
     console.log(e);
   } finally {
     yield put(endLoading());
-    // yield put({ type: SET_MENU_LOADING, payload: { loading: false } });
   }
 }
 
@@ -78,7 +77,6 @@ function* getTemplatesSaga() {
     console.log(e);
   } finally {
     yield put(endLoading());
-    // yield put({ type: SET_MENU_LOADING, payload: { loading: false } });
   }
 }
 
@@ -92,7 +90,6 @@ function* getMenuSaga({ payload: menuId }) {
     console.log(e);
   } finally {
     yield put(endLoading());
-    // yield put({ type: SET_MENU_LOADING, payload: { loading: false } });
   }
 }
 
@@ -121,14 +118,12 @@ function* updateMenuSaga({ payload: { template, menuId } }) {
     });
     yield put({ type: GET_MENU, payload: menuId });
     yield put(endLoading());
-    // yield put({ type: SET_MENU_LOADING, payload: { loading: false } });
   }
 }
 
 function* deleteMenuImageSaga({ payload: { fileId } }) {
   yield put(newLoading());
   try {
-    // yield put({ type: SET_MENU_LOADING, payload: { loading: true } });
     const deleteResponse = yield call(deleteFileRequest, { fileId });
     console.log(deleteResponse);
     const menuId = yield select(menuIdSelector);
@@ -136,14 +131,12 @@ function* deleteMenuImageSaga({ payload: { fileId } }) {
   } catch (e) {
     console.log(e);
   } finally {
-    // yield put({ type: SET_MENU_LOADING, payload: { loading: false } });
     yield put(endLoading());
   }
 }
 
 function* uploadImagesSaga({ payload }) {
   yield put(newLoading());
-  // yield put({ type: SET_MENU_LOADING, payload: { loading: true } });
   const { logo: logoObj, imagenes: imagenesObj, fondo: fondoObj } = payload;
   const menuTemplateId = yield select(menuTemplateIdSelector);
 
@@ -197,7 +190,6 @@ function* uploadImagesSaga({ payload }) {
 function* copyTemplateConfigSaga({ payload }) {
   const { template, menuTemplate } = payload;
   yield put(newLoading());
-  // yield put({ type: SET_MENU_LOADING, payload: { loading: true } });
   try {
     const templateObj = yield call(getTemplateRequest, template);
     // console.log(templateObj);
@@ -212,7 +204,6 @@ function* copyTemplateConfigSaga({ payload }) {
   } catch (e) {
     console.log(e);
   } finally {
-    // yield put({ type: SET_MENU_LOADING, payload: { loading: false } });
     yield put(endLoading());
   }
 }
