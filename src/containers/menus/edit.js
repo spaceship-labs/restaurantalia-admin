@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import Layout from '../layout';
 import HeadComponent from '../../components/head';
 import FormComponent from '../../components/form';
-import LoadingComponent from '../../components/loading';
+// import LoadingComponent from '../../components/loading';
 import ImageZoneComponent from '../../components/imageupload';
 import { formDispatcher } from './dispatcher';
 import selectors from './selectors';
@@ -134,7 +134,7 @@ const FormMenu = ({
         fields={multimediaFields}
         config={imageInputs}
       />
-      <LoadingComponent open={loading} />
+      {/* <LoadingComponent open={loading} /> */}
     </Layout>
   );
 };

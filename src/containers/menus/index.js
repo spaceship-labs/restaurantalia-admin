@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import Layout from '../layout';
 import HeadComponent from '../../components/head';
 import TableComponent from '../../components/table';
-import LoadingComponent from '../../components/loading';
 import { mainDispatcher } from './dispatcher';
 import selectors from './selectors';
 
@@ -15,7 +14,7 @@ class MenusContainerNoConnect extends Component {
   }
 
   render() {
-    const { menusList, menusIds, loading } = this.props;
+    const { menusList, menusIds } = this.props;
     console.log('menus container', menusList, menusIds);
 
     const attrsArray = [
@@ -57,7 +56,6 @@ class MenusContainerNoConnect extends Component {
           collection="menus"
           editButton
         />
-        <LoadingComponent open={loading} />
       </Layout>
     );
   }
@@ -66,7 +64,6 @@ class MenusContainerNoConnect extends Component {
 MenusContainerNoConnect.propTypes = {
   menusList: PropTypes.object.isRequired,
   menusIds: PropTypes.arrayOf(PropTypes.string).isRequired,
-  loading: PropTypes.bool.isRequired,
   getMenus: PropTypes.func.isRequired,
 };
 

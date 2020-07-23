@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import Layout from '../layout';
 import HeadComponent from '../../components/head';
 import FormComponent from '../../components/form';
-import LoadingComponent from '../../components/loading';
+// import LoadingComponent from '../../components/loading';
 import ImageZoneComponent from '../../components/imageupload';
 import DeleteSectionComponent from '../../components/delete';
 import { createDispatcher } from './dispatcher';
@@ -199,14 +199,14 @@ const DishCreate = ({
       {!loading
         && dishId
         && (
-        <ImageZoneComponent
-          handleDeleteImage={handleDeleteImage}
-          handleSubmit={handleSubmitMultimedia}
-          fields={multimediaFields}
-          config={imageInputs}
-        />
+          <ImageZoneComponent
+            handleDeleteImage={handleDeleteImage}
+            handleSubmit={handleSubmitMultimedia}
+            fields={multimediaFields}
+            config={imageInputs}
+          />
         )}
-      <LoadingComponent open={loading} />
+      {/* <LoadingComponent open={loading} /> */}
       {!loading && dishId && <DeleteSectionComponent onDelete={handleDelete} />}
     </Layout>
   );

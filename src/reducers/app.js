@@ -6,7 +6,7 @@ const initalState = {
 };
 
 const appReducer = (state = initalState, action) => {
-  const { type, payload } = action;
+  const { type } = action;
   if (type === appActions.types.NEW_LOADING_PROCESS) {
     const { loadingProcess } = state;
     const newState = {
@@ -22,10 +22,6 @@ const appReducer = (state = initalState, action) => {
       ...state,
       loadingProcess: loadingProcess - 1,
     };
-    return newState;
-  }
-  if (type === appActions.types.SET_LOADING) {
-    const newState = { ...initalState, loading: payload };
     return newState;
   }
   return state;

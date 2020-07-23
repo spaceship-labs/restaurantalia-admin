@@ -4,22 +4,21 @@ import { connect } from 'react-redux';
 import Layout from '../layout';
 import HeadComponent from '../../components/head';
 import TableComponent from '../../components/table';
-import LoadingComponent from '../../components/loading';
+// import LoadingComponent from '../../components/loading';
 import { mainDispatcher } from './dispatcher';
 import selectors from './selectors';
 
 class DishesContainer extends Component {
   componentDidMount() {
     const {
-      getCategoriesDishes, setDishesLoading,
+      getCategoriesDishes,
     } = this.props;
 
     getCategoriesDishes();
-    setDishesLoading({ loading: true });
   }
 
   render() {
-    const { dishesList, loading } = this.props;
+    const { dishesList } = this.props;
     const attrsArray = [
       {
         attr: 'nombre',
@@ -55,7 +54,7 @@ class DishesContainer extends Component {
           collection="platillos"
           editButton
         />
-        <LoadingComponent open={loading} />
+        {/* <LoadingComponent open={loading} /> */}
       </Layout>
     );
   }
@@ -63,9 +62,9 @@ class DishesContainer extends Component {
 
 DishesContainer.propTypes = {
   dishesList: PropTypes.object.isRequired,
-  loading: PropTypes.bool.isRequired,
+  // loading: PropTypes.bool.isRequired,
   getCategoriesDishes: PropTypes.func.isRequired,
-  setDishesLoading: PropTypes.func.isRequired,
+  // setDishesLoading: PropTypes.func.isRequired,
 };
 
 export default connect(

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import HeadComponent from '../../components/head';
 import FormComponent from '../../components/form';
-import LoadingComponent from '../../components/loading';
+// import LoadingComponent from '../../components/loading';
 import ImageZoneComponent from '../../components/imageupload';
 import DeleteSectionComponent from '../../components/delete';
 import { createDispatcher } from './dispatcher';
@@ -181,7 +181,7 @@ const CategoryCreate = ({
             config={imageInputs}
           />
         )}
-      <LoadingComponent open={loading} />
+      {/* <LoadingComponent open={loading} /> */}
       {!loading && catId && <DeleteSectionComponent onDelete={handleDelete} />}
     </Layout>
   );
