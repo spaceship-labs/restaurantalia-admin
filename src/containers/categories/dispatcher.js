@@ -4,7 +4,6 @@ import categoriesActions from '../../actions/categories';
 const {
   getCategory,
   getCategories,
-  setCategoriesLoading,
   createCategory,
   updateCategory,
   initForm,
@@ -15,7 +14,6 @@ const {
 
 export const createDispatcher = (dispatch) => bindActionCreators({
   getCategory,
-  setCategoriesLoading,
   createCategory,
   updateCategory,
   initForm,
@@ -26,5 +24,4 @@ export const createDispatcher = (dispatch) => bindActionCreators({
 
 export const mainDispatcher = (dispatch) => bindActionCreators({
   getCategories,
-  setCategoriesLoading,
 }, dispatch);

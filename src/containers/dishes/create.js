@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import Layout from '../layout';
 import HeadComponent from '../../components/head';
 import FormComponent from '../../components/form';
-// import LoadingComponent from '../../components/loading';
 import ImageZoneComponent from '../../components/imageupload';
 import DeleteSectionComponent from '../../components/delete';
 import { createDispatcher } from './dispatcher';
@@ -77,7 +76,6 @@ const DishCreate = ({
   dish,
   match,
   getDish,
-  setDishesLoading,
   categorias,
   updateDish,
   createDish,
@@ -105,7 +103,6 @@ const DishCreate = ({
   useEffect(() => {
     if (dishId) {
       getDish(dishId);
-      setDishesLoading({ loading: true });
     }
   }, [dishId]);
 
@@ -159,12 +156,10 @@ const DishCreate = ({
       dishId,
     };
     // se llama el action que creara los elementos
-    setDishesLoading({ loading: true });
     uploadDishImage(actionPayload);
   }
 
   function handleDeleteImage(fileId) {
-    setDishesLoading({ loading: true });
     deleteDishImage({ fileId, dishId });
   }
 
@@ -206,7 +201,6 @@ const DishCreate = ({
             config={imageInputs}
           />
         )}
-      {/* <LoadingComponent open={loading} /> */}
       {!loading && dishId && <DeleteSectionComponent onDelete={handleDelete} />}
     </Layout>
   );
@@ -215,7 +209,6 @@ const DishCreate = ({
 DishCreate.propTypes = {
   match: PropTypes.object.isRequired,
   getDish: PropTypes.func.isRequired,
-  setDishesLoading: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   createDish: PropTypes.func.isRequired,
   updateDish: PropTypes.func.isRequired,

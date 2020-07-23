@@ -4,7 +4,6 @@ import menusActions from '../../actions/menus';
 const {
   initMenuForm,
   getMenus,
-  setMenuLoading,
   getMenu,
   updateMenu,
   deleteMenuImage,
@@ -13,7 +12,6 @@ const {
 
 export const formDispatcher = (dispatch) => bindActionCreators({
   initMenuForm,
-  setMenuLoading,
   getMenu,
   updateMenu,
   deleteMenuImage,

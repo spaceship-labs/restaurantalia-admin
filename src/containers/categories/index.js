@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import Layout from '../layout';
 import HeadComponent from '../../components/head';
 import TableComponent from '../../components/table';
-// import LoadingComponent from '../../components/loading';
 import { mainDispatcher } from './dispatcher';
 import selectors from './selectors';
 
@@ -49,7 +48,6 @@ class CategoriesContainer extends Component {
           collection="categorias"
           editButton
         />
-        {/* <LoadingComponent open={loading} /> */}
       </Layout>
     );
   }
@@ -57,9 +55,7 @@ class CategoriesContainer extends Component {
 
 CategoriesContainer.propTypes = {
   categoriesList: PropTypes.object.isRequired,
-  // loading: PropTypes.bool.isRequired,
   getCategories: PropTypes.func.isRequired,
-  // setCategoriesLoading: PropTypes.func.isRequired,
 };
 
 export default connect(
