@@ -13,13 +13,13 @@ import {
   deleteCategory,
 } from '../api';
 import categoriesActions from '../actions/categories';
+import appActions from '../actions/app';
 
 //  REFACTOr NEEDED
 const {
   GET_CATEGORY,
   GET_CATEGORIES,
   SET_CATEGORIES,
-  SET_CATEGORIES_LOADING,
   SET_CREATE_MENUS,
   INIT_FORM,
   SET_CATEGORY,
@@ -29,6 +29,8 @@ const {
   DELETE_CATEGORY_IMAGE,
   DELETE_CATEGORY,
 } = categoriesActions.types;
+
+const { newLoading, endLoading } = appActions.creators;
 
 const getMenusRequest = async (data) => getMenus(data);
 const getCategoryRequest = async (data) => getCategory(data);
@@ -42,6 +44,7 @@ const getUser = (state) => (state.auth.user);
 const getJwt = (state) => (state.auth.jwt);
 
 function* getCategoriesSaga() {
+  yield put(newLoading());
   try {
     const jwt = yield select(getJwt);
     const user = yield select(getUser);
@@ -54,11 +57,12 @@ function* getCategoriesSaga() {
     console.log(e);
     // set error
   } finally {
-    yield put({ type: SET_CATEGORIES_LOADING, payload: { loading: false } });
+    yield put(endLoading());
   }
 }
 
 function* initFormSaga() {
+  yield put(newLoading());
   const jwt = yield select(getJwt);
   const user = yield select(getUser);
   const restaurantIds = user.restaurantes.map((r) => r.id);
@@ -69,11 +73,12 @@ function* initFormSaga() {
   } catch (e) {
     console.log(e);
   } finally {
-    yield put({ type: SET_CATEGORIES_LOADING, payload: { loading: false } });
+    yield put(endLoading());
   }
 }
 
 function* getCategorySaga({ payload: catId }) {
+  yield put(newLoading());
   const jwt = yield select(getJwt);
   const user = yield select(getUser);
   const empresasIds = user.empresas.map((r) => r.id);
@@ -89,7 +94,7 @@ function* getCategorySaga({ payload: catId }) {
   } catch (e) {
     console.log(e);
   } finally {
-    yield put({ type: SET_CATEGORIES_LOADING, payload: { loading: false } });
+    yield put(endLoading());
   }
 }
 
@@ -152,6 +157,7 @@ function* updateCategorySaga({ payload }) {
 }
 
 function* uploadCategoryImageSaga({ payload }) {
+  yield put(newLoading());
   const { files, catId } = payload;
   const jwt = yield select(getJwt);
   // const user = yield select(getUser);
@@ -169,7 +175,7 @@ function* uploadCategoryImageSaga({ payload }) {
     yield put({ type: GET_CATEGORY, payload: catId });
   } catch (e) {
     console.log(e);
-    yield put({ type: SET_CATEGORIES_LOADING, payload: { loading: false } });
+    yield put(endLoading());
   }
 }
 
@@ -197,6 +203,7 @@ function* deleteCategorySaga({ payload }) {
 }
 
 function* deleteCategoryImageSaga({ payload }) {
+  yield put(newLoading());
   const { fileId, catId } = payload;
   const jwt = yield select(getJwt);
   // const user = yield select(getUser);
@@ -207,7 +214,7 @@ function* deleteCategoryImageSaga({ payload }) {
     // yield call(history.push, `/platillos/editar/${catId}`);
   } catch (e) {
     console.log(e);
-    yield put({ type: SET_CATEGORIES_LOADING, payload: { loading: false } });
+    yield put(endLoading());
   }
 }
 

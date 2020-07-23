@@ -7,13 +7,14 @@ import {
 } from '../api';
 import dishesActions from '../actions/dishes';
 import categoriesActions from '../actions/categories';
+import appActions from '../actions/app';
 
 const {
   GET_CATEGORIES_DISHES,
   GET_DISHES,
   GET_DISH,
   SET_DISHES,
-  SET_DISHES_LOADING,
+  // SET_DISHES_LOADING,
   SET_DISH,
   CREATE_DISH,
   UPDATE_DISH,
@@ -28,6 +29,8 @@ const {
   SET_CATEGORIES,
 } = categoriesActions.types;
 
+const { newLoading, endLoading } = appActions.creators;
+
 const getDishesRequest = async (data) => getDishes(data);
 const getCategoriesState = (state) => (state.categories.categoriesIds);
 const getCategoriesRequest = async (data) => getCategories(data);
@@ -41,6 +44,7 @@ const deleteFileRequest = async (data) => deleteFile(data);
 const deleteDishRequest = async (data) => deleteDish(data);
 
 function* getCategoriesDishesSaga() {
+  yield put(newLoading());
   try {
     const ids = yield select(getCategoriesState);
     if (ids.length === 0) {
@@ -55,12 +59,16 @@ function* getCategoriesDishesSaga() {
     } else {
       yield put({ type: GET_DISHES, payload: { categoriesIds: ids } });
     }
-  } catch {
-    yield put({ type: SET_DISHES_LOADING, payload: { loading: true } });
+  } catch (e) {
+    console.log(e);
+  } finally {
+    // yield put({ type: SET_DISHES_LOADING, payload: { loading: true } });
+    yield put(endLoading());
   }
 }
 
 function* getDishesSaga() {
+  yield put(newLoading());
   try {
     // console.log('GETING DISHES');
     const jwt = yield select(getJwt);
@@ -75,11 +83,12 @@ function* getDishesSaga() {
   } catch (e) {
     console.log(e);
   } finally {
-    yield put({ type: SET_DISHES_LOADING, payload: { loading: false } });
+    yield put(endLoading());
   }
 }
 
 function* initFormSaga() {
+  yield put(newLoading());
   const jwt = yield select(getJwt);
   const user = yield select(getUser);
   const empresasIds = user.empresas.map((r) => r.id);
@@ -90,11 +99,12 @@ function* initFormSaga() {
   } catch (e) {
     console.log(e);
   } finally {
-    yield put({ type: SET_DISHES_LOADING, payload: { loading: false } });
+    yield put(endLoading());
   }
 }
 
 function* getDishSaga({ payload: dishId }) {
+  yield put(newLoading());
   const jwt = yield select(getJwt);
   const user = yield select(getUser);
   const empresasIds = user.empresas.map((r) => r.id);
@@ -112,7 +122,7 @@ function* getDishSaga({ payload: dishId }) {
   } catch (e) {
     console.log(e);
   } finally {
-    yield put({ type: SET_DISHES_LOADING, payload: { loading: false } });
+    yield put(endLoading());
   }
 }
 
@@ -149,6 +159,7 @@ function* createDishSaga({ payload }) {
 }
 
 function* updateDishSaga({ payload }) {
+  yield put(newLoading());
   const jwt = yield select(getJwt);
   const user = yield select(getUser);
   const empresas = user.empresas.map((r) => r.id);
@@ -180,11 +191,12 @@ function* updateDishSaga({ payload }) {
   } catch (e) {
     console.log(e);
   } finally {
-    yield put({ type: SET_DISHES_LOADING, payload: { loading: false } });
+    yield put(endLoading());
   }
 }
 
 function* uploadDishImageSaga({ payload }) {
+  yield put(newLoading());
   const { files, dishId } = payload;
   const jwt = yield select(getJwt);
   // const user = yield select(getUser);
@@ -202,11 +214,14 @@ function* uploadDishImageSaga({ payload }) {
     yield put({ type: GET_DISH, payload: dishId });
   } catch (e) {
     console.log(e);
-    yield put({ type: SET_DISHES_LOADING, payload: { loading: false } });
+    // yield put(endLoading());
+  } finally {
+    yield put(endLoading());
   }
 }
 
 function* deleteDishImageSaga({ payload }) {
+  yield put(newLoading());
   const { fileId, dishId } = payload;
   const jwt = yield select(getJwt);
   try {
@@ -215,7 +230,8 @@ function* deleteDishImageSaga({ payload }) {
     yield put({ type: GET_DISH, payload: dishId });
   } catch (e) {
     console.log(e);
-    yield put({ type: SET_DISHES_LOADING, payload: { loading: false } });
+  } finally {
+    yield put(endLoading());
   }
 }
 
