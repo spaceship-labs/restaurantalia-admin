@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-
 import { Container } from '@material-ui/core';
-import authActions from '../actions/auth';
 
-import HeaderComponent from '../components/header';
-import { Wrapper, Content } from '../theme/layout.styled';
-import SidebarComponent from '../components/sidebar';
+import HeaderComponent from '../../components/header';
+import { Wrapper, Content } from '../../theme/layout.styled';
+import SidebarComponent from '../../components/sidebar';
+import LoadingComponent from '../../components/loading';
+
+import selectors from './selectors';
+import dispatcher from './dispatcher';
 
 class LayoutUnconnect extends Component {
   constructor(props) {
@@ -46,7 +47,8 @@ class LayoutUnconnect extends Component {
 
   render() {
     const { sidebarToggle } = this.state;
-    const { children, userId } = this.props;
+    const { children, userId, loading } = this.props;
+    console.log(loading);
     return (
       <Wrapper>
         <HeaderComponent
@@ -62,6 +64,7 @@ class LayoutUnconnect extends Component {
         <Content>
           <Container>{userId > 0 && children}</Container>
         </Content>
+        <LoadingComponent open={loading} />
       </Wrapper>
     );
   }
@@ -71,26 +74,9 @@ LayoutUnconnect.propTypes = {
   children: PropTypes.node.isRequired,
   userId: PropTypes.number.isRequired,
   logout: PropTypes.func.isRequired,
-};
-
-const mapStateToProps = (state) => {
-  const { userId } = state.auth;
-  return {
-    userId,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  const { getUser, logout } = authActions.creators;
-  return bindActionCreators(
-    {
-      getUser,
-      logout,
-    },
-    dispatch,
-  );
+  loading: PropTypes.bool.isRequired,
 };
 
 export { LayoutUnconnect };
-const Layout = connect(mapStateToProps, mapDispatchToProps)(LayoutUnconnect);
+const Layout = connect(selectors.propsSelector, dispatcher.mainDispatcher)(LayoutUnconnect);
 export default Layout;
