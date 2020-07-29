@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Container } from '@material-ui/core';
+import { Container, Collapse, Alert } from '@material-ui/core';
 
 import HeaderComponent from '../../components/header';
 import { Wrapper, Content } from '../../theme/layout.styled';
@@ -47,7 +47,13 @@ class LayoutUnconnect extends Component {
 
   render() {
     const { sidebarToggle } = this.state;
-    const { children, userId, loading } = this.props;
+    const {
+      children,
+      userId,
+      loading,
+      alerts,
+      dismissAlert,
+    } = this.props;
     console.log(loading);
     return (
       <Wrapper>
@@ -62,6 +68,16 @@ class LayoutUnconnect extends Component {
           handleToggleSidebar={this.handleToggleSidebar}
         />
         <Content>
+          <Collapse in={alerts.length > 0}>
+            {alerts.map((it, ind) => {
+              const { msg, id } = it;
+              return (
+                <Alert onClose={() => dismissAlert({ ind, id })}>
+                  {msg}
+                </Alert>
+              );
+            })}
+          </Collapse>
           <Container>{userId > 0 && children}</Container>
         </Content>
         <LoadingComponent open={loading} />
@@ -74,7 +90,9 @@ LayoutUnconnect.propTypes = {
   children: PropTypes.node.isRequired,
   userId: PropTypes.number.isRequired,
   logout: PropTypes.func.isRequired,
+  alerts: PropTypes.array.isRequired,
   loading: PropTypes.bool.isRequired,
+  dismissAlert: PropTypes.func.isRequired,
 };
 
 export { LayoutUnconnect };

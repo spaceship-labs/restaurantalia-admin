@@ -1,12 +1,12 @@
 const propsSelector = (state) => {
   const {
     auth: { userId },
-    app: { loadingProcess },
+    app: { loadingProcess, alerts },
   } = state;
 
   const loading = loadingProcess !== 0;
 
-  return { userId, loading };
+  return { userId, loading, alerts };
 };
 
 export default { propsSelector };
