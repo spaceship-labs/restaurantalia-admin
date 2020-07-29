@@ -3,6 +3,7 @@ import appActions from '../actions/app';
 const initalState = {
   loading: false,
   loadingProcess: 0,
+  alerts: [],
 };
 
 const appReducer = (state = initalState, action) => {

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Container, Collapse, Alert } from '@material-ui/core';
-
+import { Container, Collapse } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 import HeaderComponent from '../../components/header';
 import { Wrapper, Content } from '../../theme/layout.styled';
 import SidebarComponent from '../../components/sidebar';
@@ -54,7 +54,7 @@ class LayoutUnconnect extends Component {
       alerts,
       dismissAlert,
     } = this.props;
-    console.log(loading);
+    const hasAlerts = alerts.length > 0;
     return (
       <Wrapper>
         <HeaderComponent
@@ -68,11 +68,11 @@ class LayoutUnconnect extends Component {
           handleToggleSidebar={this.handleToggleSidebar}
         />
         <Content>
-          <Collapse in={alerts.length > 0}>
+          <Collapse in={hasAlerts}>
             {alerts.map((it, ind) => {
-              const { msg, id } = it;
+              const { msg, id, type } = it;
               return (
-                <Alert onClose={() => dismissAlert({ ind, id })}>
+                <Alert key={id} severity={type} onClose={() => dismissAlert({ ind, id })}>
                   {msg}
                 </Alert>
               );
