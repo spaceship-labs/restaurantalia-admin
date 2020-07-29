@@ -39,7 +39,7 @@ function* getDoLoginSaga(action) {
       const result = loginResponse;
       yield put({ type: SET_LOGIN, payload: { result } });
       yield call(history.push, '/');
-    } catch {
+    } catch (e) {
       yield put({ type: LOGIN_ERROR });
     }
   }

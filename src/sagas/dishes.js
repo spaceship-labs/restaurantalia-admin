@@ -29,7 +29,7 @@ const {
   SET_CATEGORIES,
 } = categoriesActions.types;
 
-const { newLoading, endLoading } = appActions.creators;
+const { newLoading, endLoading, addAlert } = appActions.creators;
 
 const getDishesRequest = async (data) => getDishes(data);
 const getCategoriesState = (state) => (state.categories.categoriesIds);
@@ -61,6 +61,14 @@ function* getCategoriesDishesSaga() {
     }
   } catch (e) {
     console.log(e);
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al la lista de platillos intenta de nuevo.',
+      type: 'error',
+      id: `DISHES-${idNumber}`,
+    }));
   } finally {
     yield put(endLoading());
   }
@@ -81,6 +89,14 @@ function* getDishesSaga() {
     }
   } catch (e) {
     console.log(e);
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al la lista de platillos intenta de nuevo.',
+      type: 'error',
+      id: `DISHES-${idNumber}`,
+    }));
   } finally {
     yield put(endLoading());
   }
@@ -97,6 +113,14 @@ function* initFormSaga() {
     yield put({ type: SET_CREATE_CATEGORIES, payload: [...categoriesState] });
   } catch (e) {
     console.log(e);
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al cargar la pagina intenta de nuevo.',
+      type: 'error',
+      id: `DISHES-${idNumber}`,
+    }));
   } finally {
     yield put(endLoading());
   }
@@ -120,6 +144,14 @@ function* getDishSaga({ payload: dishId }) {
     }
   } catch (e) {
     console.log(e);
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al obtener la informacion del platillo intenta de nuevo.',
+      type: 'error',
+      id: `DISHES-${idNumber}`,
+    }));
   } finally {
     yield put(endLoading());
   }
@@ -154,6 +186,14 @@ function* createDishSaga({ payload }) {
     console.log(dishPostResponse);
   } catch (e) {
     console.log(e);
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al crear el platillo intenta de nuevo.',
+      type: 'error',
+      id: `DISHES-${idNumber}`,
+    }));
   }
 }
 
@@ -189,6 +229,14 @@ function* updateDishSaga({ payload }) {
     console.log(dishPUResponse);
   } catch (e) {
     console.log(e);
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al actualizar la informacion del platillo intenta de nuevo.',
+      type: 'error',
+      id: `DISHES-${idNumber}`,
+    }));
   } finally {
     yield put(endLoading());
   }
@@ -213,6 +261,14 @@ function* uploadDishImageSaga({ payload }) {
     yield put({ type: GET_DISH, payload: dishId });
   } catch (e) {
     console.log(e);
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al la lista de platillos intenta de nuevo.',
+      type: 'error',
+      id: `DISHES-${idNumber}`,
+    }));
   } finally {
     yield put(endLoading());
   }
@@ -228,6 +284,14 @@ function* deleteDishImageSaga({ payload }) {
     yield put({ type: GET_DISH, payload: dishId });
   } catch (e) {
     console.log(e);
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al borrar la imagen intenta de nuevo.',
+      type: 'error',
+      id: `DISHES-${idNumber}`,
+    }));
   } finally {
     yield put(endLoading());
   }
@@ -252,6 +316,14 @@ function* deleteDishSaga({ payload }) {
     // hjgj
   } catch (e) {
     console.log('error', e);
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al borrar el platillo intenta de nuevo.',
+      type: 'error',
+      id: `DISHES-${idNumber}`,
+    }));
     yield call(history.push, '/platillos');
   }
 }

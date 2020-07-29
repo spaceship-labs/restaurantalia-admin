@@ -202,6 +202,14 @@ function* copyTemplateConfigSaga({ payload }) {
     // console.log('/*-/*-/-*/-*/-*/-*/*-');
     console.log(updateResponse);
   } catch (e) {
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al generar la configuracion de tu plantilla intenta de nuevo.',
+      type: 'error',
+      id: `DISHES-${idNumber}`,
+    }));
     console.log(e);
   } finally {
     yield put(endLoading());

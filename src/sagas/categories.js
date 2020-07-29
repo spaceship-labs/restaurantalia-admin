@@ -30,7 +30,7 @@ const {
   DELETE_CATEGORY,
 } = categoriesActions.types;
 
-const { newLoading, endLoading } = appActions.creators;
+const { newLoading, endLoading, addAlert } = appActions.creators;
 
 const getMenusRequest = async (data) => getMenus(data);
 const getCategoryRequest = async (data) => getCategory(data);
@@ -56,6 +56,14 @@ function* getCategoriesSaga() {
   } catch (e) {
     console.log(e);
     // set error
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al cargar la lista de categorias intenta de nuevo.',
+      type: 'error',
+      id: `CATEGORIES-${idNumber}`,
+    }));
   } finally {
     yield put(endLoading());
   }
@@ -71,6 +79,14 @@ function* initFormSaga() {
     const menusState = menusResponse.map((it) => ({ id: it.id, nombre: it.nombre }));
     yield put({ type: SET_CREATE_MENUS, payload: [...menusState] });
   } catch (e) {
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error recarga la pagina.',
+      type: 'error',
+      id: `CATEGORIES-${idNumber}`,
+    }));
     console.log(e);
   } finally {
     yield put(endLoading());
@@ -92,6 +108,14 @@ function* getCategorySaga({ payload: catId }) {
       yield call(history.push, '/categorias');
     }
   } catch (e) {
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al obtener la lista de cartegorias intenta de nuevo.',
+      type: 'error',
+      id: `CATEGORIES-${idNumber}`,
+    }));
     console.log(e);
   } finally {
     yield put(endLoading());
@@ -122,6 +146,14 @@ function* createCategorySaga({ payload }) {
     yield call(history.push, '/categorias');
     console.log(catPostResponse);
   } catch (e) {
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al crear la categoria intenta de nuevo.',
+      type: 'error',
+      id: `CATEGORIES-${idNumber}`,
+    }));
     console.log(e);
   }
 }
@@ -153,6 +185,14 @@ function* updateCategorySaga({ payload }) {
     yield call(history.push, '/categorias');
   } catch (e) {
     console.log(e);
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al actualizar la categoria intenta de nuevo.',
+      type: 'error',
+      id: `CATEGORIES-${idNumber}`,
+    }));
   }
 }
 
@@ -175,6 +215,14 @@ function* uploadCategoryImageSaga({ payload }) {
     yield put({ type: GET_CATEGORY, payload: catId });
   } catch (e) {
     console.log(e);
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al subir la iamgen intenta de nuevo.',
+      type: 'error',
+      id: `CATEGORIES-${idNumber}`,
+    }));
     yield put(endLoading());
   }
 }
@@ -198,6 +246,14 @@ function* deleteCategorySaga({ payload }) {
     // hjgj
   } catch (e) {
     console.log('error', e);
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al borrar la categoria intenta de nuevo.',
+      type: 'error',
+      id: `CATEGORIES-${idNumber}`,
+    }));
     yield call(history.push, '/categorias');
   }
 }
@@ -214,6 +270,14 @@ function* deleteCategoryImageSaga({ payload }) {
     // yield call(history.push, `/platillos/editar/${catId}`);
   } catch (e) {
     console.log(e);
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al borrar la categoria intenta de nuevo.',
+      type: 'error',
+      id: `CATEGORIES-${idNumber}`,
+    }));
     yield put(endLoading());
   }
 }
