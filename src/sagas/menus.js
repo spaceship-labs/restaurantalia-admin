@@ -30,7 +30,7 @@ const {
   SET_MENUS,
 } = menusActions.types;
 
-const { newLoading, endLoading } = appActions.creators;
+const { newLoading, endLoading, addAlert } = appActions.creators;
 
 const getTemplatesRequest = async (data) => getTemplates(data);
 const getMenusRequest = async (data) => getMenus(data);
