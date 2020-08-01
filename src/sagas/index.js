@@ -1,5 +1,5 @@
 import {
-  all, takeEvery, select,
+  all, takeEvery,
 } from 'redux-saga/effects';
 import auth from './auth';
 // import restaurants from './restaurants';
@@ -7,13 +7,13 @@ import categories from './categories';
 import dishes from './dishes';
 import menus from './menus';
 
-const getstatus = (state) => ({
-  status: state.status,
-});
+// const getstatus = (state) => ({
+//   status: state.status,
+// });
 
 function* getSaga() {
-  const { status } = yield select(getstatus);
-  console.log('empty', status);
+  // const { status } = yield select(getstatus);
+  // console.log('empty', status);
 }
 
 export function* watchEmptySaga() {

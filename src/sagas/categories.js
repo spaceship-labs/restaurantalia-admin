@@ -54,7 +54,7 @@ function* getCategoriesSaga() {
     // console.log('categoriesResponse', categoriesResponse);
     yield put({ type: SET_CATEGORIES, payload: { categoriesResponse } });
   } catch (e) {
-    console.log(e);
+    // console.log(e);
     // set error
     const random = Math.random() * 10000000;
     const idNumber = random % 1000;
@@ -87,7 +87,7 @@ function* initFormSaga() {
       type: 'error',
       id: `CATEGORIES-${idNumber}`,
     }));
-    console.log(e);
+    // console.log(e);
   } finally {
     yield put(endLoading());
   }
@@ -116,7 +116,7 @@ function* getCategorySaga({ payload: catId }) {
       type: 'error',
       id: `CATEGORIES-${idNumber}`,
     }));
-    console.log(e);
+    // console.log(e);
   } finally {
     yield put(endLoading());
   }
@@ -144,7 +144,14 @@ function* createCategorySaga({ payload }) {
   try {
     const catPostResponse = yield call(createCategoryRequest, { jwt, cat: { ...params } });
     yield call(history.push, '/categorias');
-    console.log(catPostResponse);
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: false,
+      msg: `La categoria "${catPostResponse.nombre}" fue creada correctamente.`,
+      type: 'success',
+      id: `CATEGORIES-${idNumber}`,
+    }));
   } catch (e) {
     const random = Math.random() * 10000000;
     const idNumber = random % 1000;
@@ -154,7 +161,6 @@ function* createCategorySaga({ payload }) {
       type: 'error',
       id: `CATEGORIES-${idNumber}`,
     }));
-    console.log(e);
   }
 }
 
@@ -180,11 +186,17 @@ function* updateCategorySaga({ payload }) {
     catId,
   };
   try {
-    const catPUTResponse = yield call(updateCategoryRequest, { jwt, cat: { ...params } });
-    console.log(catPUTResponse);
+    yield call(updateCategoryRequest, { jwt, cat: { ...params } });
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: false,
+      msg: `La categoria "${nombre}" fue actualizada correctamente.`,
+      type: 'success',
+      id: `CATEGORIES-${idNumber}`,
+    }));
     yield call(history.push, '/categorias');
   } catch (e) {
-    console.log(e);
     const random = Math.random() * 10000000;
     const idNumber = random % 1000;
     yield put(addAlert({
@@ -208,13 +220,9 @@ function* uploadCategoryImageSaga({ payload }) {
   data.append('field', 'imagen');
   files.map((f) => data.append('files', f.file, f.file.name));
   try {
-    // console.log('UPLOAD 1', catId, data);
-    const uploadResponse = yield call(uploadMediaRequest, { jwt, params: data });
-    console.log('UPLOAD 2', uploadResponse);
-    // yield call(history.push, `/platillos/editar/${catId}`);
+    yield call(uploadMediaRequest, { jwt, params: data });
     yield put({ type: GET_CATEGORY, payload: catId });
   } catch (e) {
-    console.log(e);
     const random = Math.random() * 10000000;
     const idNumber = random % 1000;
     yield put(addAlert({
@@ -237,15 +245,20 @@ function* deleteCategorySaga({ payload }) {
     const dishResponse = yield call(getCategoryRequest, { jwt, catId });
     const validCat = empresasIds.indexOf(dishResponse.empresa.id);
     if (validCat >= 0) {
-      const dishDELETEesponse = yield call(deleteDishRequest, { jwt, catId });
+      yield call(deleteDishRequest, { jwt, catId });
       yield call(history.push, '/categorias');
-      console.log('DELETE RESPONSE', dishDELETEesponse);
+      const random = Math.random() * 10000000;
+      const idNumber = random % 1000;
+      yield put(addAlert({
+        err: false,
+        msg: 'La categoria fue eliminada correctamente.',
+        type: 'success',
+        id: `CATEGORIES-${idNumber}`,
+      }));
     } else {
       throw new Error('forbidden');
     }
-    // hjgj
   } catch (e) {
-    console.log('error', e);
     const random = Math.random() * 10000000;
     const idNumber = random % 1000;
     yield put(addAlert({
@@ -262,14 +275,10 @@ function* deleteCategoryImageSaga({ payload }) {
   yield put(newLoading());
   const { fileId, catId } = payload;
   const jwt = yield select(getJwt);
-  // const user = yield select(getUser);
   try {
-    const deleteResponse = yield call(deleteFileRequest, { jwt, fileId });
-    console.log('DELETE', fileId, catId, deleteResponse);
+    yield call(deleteFileRequest, { jwt, fileId });
     yield put({ type: GET_CATEGORY, payload: catId });
-    // yield call(history.push, `/platillos/editar/${catId}`);
   } catch (e) {
-    console.log(e);
     const random = Math.random() * 10000000;
     const idNumber = random % 1000;
     yield put(addAlert({

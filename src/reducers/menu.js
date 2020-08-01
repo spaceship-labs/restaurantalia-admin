@@ -33,12 +33,6 @@ const formatMenus = (data) => {
 const menuReducer = (state = initalState, action) => {
   const { type, payload } = action;
   if (type === menusActions.types.SET_MENUS) {
-    console.log('**************');
-    console.log('Entra al reducer de menus');
-    console.log(`Action: ${type}`);
-    console.log('Payload');
-    console.log(payload);
-    console.log('**************');
     const { menusResponse } = payload;
     const { menusList, menusIds } = formatMenus(menusResponse);
     const newState = {

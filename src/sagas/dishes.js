@@ -52,7 +52,6 @@ function* getCategoriesDishesSaga() {
       const user = yield select(getUser);
       const empresasIds = user.empresas.map((r) => r.id);
       const categoriesResponse = yield call(getCategoriesRequest, { jwt, empresasIds });
-      console.log(categoriesResponse);
       yield put({ type: SET_CATEGORIES, payload: { categoriesResponse } });
       const categoriesIds = categoriesResponse.map((c) => c.id);
       yield put({ type: GET_DISHES, payload: { categoriesIds } });
@@ -60,7 +59,6 @@ function* getCategoriesDishesSaga() {
       yield put({ type: GET_DISHES, payload: { categoriesIds: ids } });
     }
   } catch (e) {
-    console.log(e);
     const random = Math.random() * 10000000;
     const idNumber = random % 1000;
     yield put(addAlert({
@@ -84,11 +82,9 @@ function* getDishesSaga() {
     const empresasIds = user.empresas.map((r) => r.id);
     if (empresasIds.length > 0) {
       const dishesResponse = yield call(getDishesRequest, { jwt, empresasIds });
-      console.log('dishesResponse', empresasIds, dishesResponse);
       yield put({ type: SET_DISHES, payload: { dishesResponse } });
     }
   } catch (e) {
-    console.log(e);
     const random = Math.random() * 10000000;
     const idNumber = random % 1000;
     yield put(addAlert({
@@ -112,7 +108,6 @@ function* initFormSaga() {
     const categoriesState = categoriesResponse.map((it) => ({ id: it.id, nombre: it.nombre }));
     yield put({ type: SET_CREATE_CATEGORIES, payload: [...categoriesState] });
   } catch (e) {
-    console.log(e);
     const random = Math.random() * 10000000;
     const idNumber = random % 1000;
     yield put(addAlert({
@@ -131,19 +126,16 @@ function* getDishSaga({ payload: dishId }) {
   const jwt = yield select(getJwt);
   const user = yield select(getUser);
   const empresasIds = user.empresas.map((r) => r.id);
-  console.log('GET DISH', dishId);
   try {
     const dishResponse = yield call(getDishRequest, { jwt, dishId });
     const dishCategories = dishResponse.categorias.map((it) => ({ id: it.id, nombre: it.nombre }));
     const validDish = empresasIds.indexOf(dishResponse.empresa.id);
-    // console.log('DISH RESPONSE', validDish, dishResponse);
     if (validDish >= 0) {
       yield put({ type: SET_DISH, payload: { ...dishResponse, categorias: dishCategories } });
     } else {
       yield call(history.push, '/platillos');
     }
   } catch (e) {
-    console.log(e);
     const random = Math.random() * 10000000;
     const idNumber = random % 1000;
     yield put(addAlert({
@@ -181,11 +173,17 @@ function* createDishSaga({ payload }) {
     empresa: empresas[0],
   };
   try {
-    const dishPostResponse = yield call(createDishRequest, { jwt, dish: { ...params } });
+    yield call(createDishRequest, { jwt, dish: { ...params } });
     yield call(history.push, '/platillos');
-    console.log(dishPostResponse);
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: false,
+      msg: `El platillo "${nombre}" fue creado correctamente.`,
+      type: 'success',
+      id: `CATEGORIES-${idNumber}`,
+    }));
   } catch (e) {
-    console.log(e);
     const random = Math.random() * 10000000;
     const idNumber = random % 1000;
     yield put(addAlert({
@@ -224,11 +222,17 @@ function* updateDishSaga({ payload }) {
     dishId,
   };
   try {
-    const dishPUResponse = yield call(updateDishRequest, { jwt, dish: { ...params } });
+    yield call(updateDishRequest, { jwt, dish: { ...params } });
     yield call(history.push, '/platillos');
-    console.log(dishPUResponse);
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: false,
+      msg: `El platillo "${nombre}" fue actualizado correctamente.`,
+      type: 'success',
+      id: `CATEGORIES-${idNumber}`,
+    }));
   } catch (e) {
-    console.log(e);
     const random = Math.random() * 10000000;
     const idNumber = random % 1000;
     yield put(addAlert({
@@ -246,7 +250,6 @@ function* uploadDishImageSaga({ payload }) {
   yield put(newLoading());
   const { files, dishId } = payload;
   const jwt = yield select(getJwt);
-  // const user = yield select(getUser);
   // eslint-disable-next-line no-undef
   const data = new FormData();
   data.append('ref', 'platillos');
@@ -254,13 +257,9 @@ function* uploadDishImageSaga({ payload }) {
   data.append('field', 'imagen');
   files.map((f) => data.append('files', f.file, f.file.name));
   try {
-    // console.log('UPLOAD 1', dishId, data);
-    const uploadResponse = yield call(uploadMediaRequest, { jwt, params: data });
-    console.log('UPLOAD 2', uploadResponse);
-    // yield call(history.push, `/platillos/editar/${dishId}`);
+    yield call(uploadMediaRequest, { jwt, params: data });
     yield put({ type: GET_DISH, payload: dishId });
   } catch (e) {
-    console.log(e);
     const random = Math.random() * 10000000;
     const idNumber = random % 1000;
     yield put(addAlert({
@@ -279,11 +278,9 @@ function* deleteDishImageSaga({ payload }) {
   const { fileId, dishId } = payload;
   const jwt = yield select(getJwt);
   try {
-    const deleteResponse = yield call(deleteFileRequest, { jwt, fileId });
-    console.log('DELETE', fileId, dishId, deleteResponse);
+    yield call(deleteFileRequest, { jwt, fileId });
     yield put({ type: GET_DISH, payload: dishId });
   } catch (e) {
-    console.log(e);
     const random = Math.random() * 10000000;
     const idNumber = random % 1000;
     yield put(addAlert({
@@ -307,15 +304,20 @@ function* deleteDishSaga({ payload }) {
     const dishResponse = yield call(getDishRequest, { jwt, dishId });
     const validDish = empresasIds.indexOf(dishResponse.empresa.id);
     if (validDish >= 0) {
-      const dishDELETEesponse = yield call(deleteDishRequest, { jwt, dishId });
+      yield call(deleteDishRequest, { jwt, dishId });
       yield call(history.push, '/platillos');
-      console.log('DELETE RESPONSE', dishDELETEesponse);
+      const random = Math.random() * 10000000;
+      const idNumber = random % 1000;
+      yield put(addAlert({
+        err: false,
+        msg: 'El platillo fue eliminado correctamente.',
+        type: 'success',
+        id: `CATEGORIES-${idNumber}`,
+      }));
     } else {
       throw new Error('forbidden');
     }
-    // hjgj
   } catch (e) {
-    console.log('error', e);
     const random = Math.random() * 10000000;
     const idNumber = random % 1000;
     yield put(addAlert({

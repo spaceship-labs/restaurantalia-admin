@@ -56,7 +56,14 @@ function* getMenusSaga({ payload }) {
 
     yield put({ type: SET_MENUS, payload: { menusResponse } });
   } catch (e) {
-    console.log(e);
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al cargar la lista de menus intenta de nuevo.',
+      type: 'error',
+      id: `MENUS-${idNumber}`,
+    }));
   } finally {
     yield put(endLoading());
   }
@@ -68,13 +75,18 @@ function* initFormSaga() {
 
 function* getTemplatesSaga() {
   yield put(newLoading());
-  // console.log('llega al get Templates');
   try {
     const templatesResponse = yield call(getTemplatesRequest);
-    // console.log(templatesResponse);
     yield put({ type: SET_TEMPLATES, payload: templatesResponse });
   } catch (e) {
-    console.log(e);
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al cargar la lista de templates intenta de nuevo.',
+      type: 'error',
+      id: `MENUS-${idNumber}`,
+    }));
   } finally {
     yield put(endLoading());
   }
@@ -84,30 +96,48 @@ function* getMenuSaga({ payload: menuId }) {
   yield put(newLoading());
   try {
     const menuResponse = yield call(getMenuRequest, { id: menuId });
-    // console.log(menuResponse);
     yield put({ type: SET_MENU, payload: menuResponse });
   } catch (e) {
-    console.log(e);
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al cargar el menu intenta de nuevo.',
+      type: 'error',
+      id: `MENUS-${idNumber}`,
+    }));
   } finally {
     yield put(endLoading());
   }
 }
 
 function* updateMenuSaga({ payload: { template, menuId } }) {
-  // console.log(template);
   const menuTemplateId = yield select(menuTemplateIdSelector);
-  // console.log(menuTemplateId);
   try {
-    const updateResponse = yield call(
+    yield call(
       updateMenuTemplateRequest,
       {
         template: template.value,
         id: menuTemplateId,
       },
     );
-    console.log(updateResponse);
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: false,
+      msg: 'El menu fue actualizaco correctamente.',
+      type: 'success',
+      id: `MENUS-${idNumber}`,
+    }));
   } catch (e) {
-    console.log(e);
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al actualizar el menu intenta de nuevo.',
+      type: 'error',
+      id: `MENUS-${idNumber}`,
+    }));
   } finally {
     yield put({
       type: COPY_TEMPLATE_CONFIG,
@@ -124,12 +154,26 @@ function* updateMenuSaga({ payload: { template, menuId } }) {
 function* deleteMenuImageSaga({ payload: { fileId } }) {
   yield put(newLoading());
   try {
-    const deleteResponse = yield call(deleteFileRequest, { fileId });
-    console.log(deleteResponse);
+    yield call(deleteFileRequest, { fileId });
     const menuId = yield select(menuIdSelector);
     yield put({ type: GET_MENU, payload: menuId });
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: false,
+      msg: 'El menu fue actualizaco correctamente.',
+      type: 'success',
+      id: `MENUS-${idNumber}`,
+    }));
   } catch (e) {
-    console.log(e);
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al actualizar el menu intenta de nuevo.',
+      type: 'error',
+      id: `MENUS-${idNumber}`,
+    }));
   } finally {
     yield put(endLoading());
   }
@@ -141,14 +185,8 @@ function* uploadImagesSaga({ payload }) {
   const menuTemplateId = yield select(menuTemplateIdSelector);
 
   try {
-    // console.log(payload);
-
-    // Upload logo in case it exists
     if (logoObj.value.length > 0) {
       const logo = logoObj.value[0];
-      // console.log('---------------');
-      // console.log(logo);
-      // console.log('---------------');
       const uploadLogo = new FormData();
       uploadLogo.append('ref', 'menus-template');
       uploadLogo.append('refId', menuTemplateId);
@@ -179,7 +217,14 @@ function* uploadImagesSaga({ payload }) {
       yield call(uploadMediaRequest, { params: uploadImages });
     }
   } catch (e) {
-    console.log(e);
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al actualizar el menu intenta de nuevo.',
+      type: 'error',
+      id: `MENUS-${idNumber}`,
+    }));
   } finally {
     const menuId = yield select(menuIdSelector);
     yield put({ type: GET_MENU, payload: menuId });
@@ -192,15 +237,11 @@ function* copyTemplateConfigSaga({ payload }) {
   yield put(newLoading());
   try {
     const templateObj = yield call(getTemplateRequest, template);
-    // console.log(templateObj);
-    // console.log(menuTemplate);
     const { configuracion } = templateObj;
-    const updateResponse = yield call(updateMenuTemplateRequest, {
+    yield call(updateMenuTemplateRequest, {
       id: menuTemplate,
       configuracion,
     });
-    // console.log('/*-/*-/-*/-*/-*/-*/*-');
-    console.log(updateResponse);
   } catch (e) {
     const random = Math.random() * 10000000;
     const idNumber = random % 1000;
@@ -210,7 +251,6 @@ function* copyTemplateConfigSaga({ payload }) {
       type: 'error',
       id: `DISHES-${idNumber}`,
     }));
-    console.log(e);
   } finally {
     yield put(endLoading());
   }
