@@ -172,20 +172,18 @@ function* createDishSaga({ payload }) {
     categorias,
     empresa: empresas[0],
   };
+  const random = Math.random() * 10000000;
+  const idNumber = random % 1000;
   try {
     yield call(createDishRequest, { jwt, dish: { ...params } });
     yield call(history.push, '/platillos');
-    const random = Math.random() * 10000000;
-    const idNumber = random % 1000;
     yield put(addAlert({
       err: false,
       msg: `El platillo "${nombre}" fue creado correctamente.`,
       type: 'success',
-      id: `CATEGORIES-${idNumber}`,
+      id: `DISHES-${idNumber}`,
     }));
   } catch (e) {
-    const random = Math.random() * 10000000;
-    const idNumber = random % 1000;
     yield put(addAlert({
       err: e,
       msg: 'Hubo un error al crear el platillo intenta de nuevo.',
@@ -221,20 +219,18 @@ function* updateDishSaga({ payload }) {
     empresa: empresas[0],
     dishId,
   };
+  const random = Math.random() * 10000000;
+  const idNumber = random % 1000;
   try {
     yield call(updateDishRequest, { jwt, dish: { ...params } });
     yield call(history.push, '/platillos');
-    const random = Math.random() * 10000000;
-    const idNumber = random % 1000;
     yield put(addAlert({
       err: false,
       msg: `El platillo "${nombre}" fue actualizado correctamente.`,
       type: 'success',
-      id: `CATEGORIES-${idNumber}`,
+      id: `DISHES-${idNumber}`,
     }));
   } catch (e) {
-    const random = Math.random() * 10000000;
-    const idNumber = random % 1000;
     yield put(addAlert({
       err: e,
       msg: 'Hubo un error al actualizar la informacion del platillo intenta de nuevo.',
@@ -300,26 +296,24 @@ function* deleteDishSaga({ payload }) {
   const user = yield select(getUser);
   const empresasIds = user.empresas.map((r) => r.id);
 
+  const random = Math.random() * 10000000;
+  const idNumber = random % 1000;
   try {
     const dishResponse = yield call(getDishRequest, { jwt, dishId });
     const validDish = empresasIds.indexOf(dishResponse.empresa.id);
     if (validDish >= 0) {
       yield call(deleteDishRequest, { jwt, dishId });
       yield call(history.push, '/platillos');
-      const random = Math.random() * 10000000;
-      const idNumber = random % 1000;
       yield put(addAlert({
         err: false,
         msg: 'El platillo fue eliminado correctamente.',
         type: 'success',
-        id: `CATEGORIES-${idNumber}`,
+        id: `DISHES-${idNumber}`,
       }));
     } else {
       throw new Error('forbidden');
     }
   } catch (e) {
-    const random = Math.random() * 10000000;
-    const idNumber = random % 1000;
     yield put(addAlert({
       err: e,
       msg: 'Hubo un error al borrar el platillo intenta de nuevo.',

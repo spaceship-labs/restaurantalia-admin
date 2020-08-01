@@ -113,6 +113,8 @@ function* getMenuSaga({ payload: menuId }) {
 
 function* updateMenuSaga({ payload: { template, menuId } }) {
   const menuTemplateId = yield select(menuTemplateIdSelector);
+  const random = Math.random() * 10000000;
+  const idNumber = random % 1000;
   try {
     yield call(
       updateMenuTemplateRequest,
@@ -121,8 +123,6 @@ function* updateMenuSaga({ payload: { template, menuId } }) {
         id: menuTemplateId,
       },
     );
-    const random = Math.random() * 10000000;
-    const idNumber = random % 1000;
     yield put(addAlert({
       err: false,
       msg: 'El menu fue actualizaco correctamente.',
@@ -130,8 +130,6 @@ function* updateMenuSaga({ payload: { template, menuId } }) {
       id: `MENUS-${idNumber}`,
     }));
   } catch (e) {
-    const random = Math.random() * 10000000;
-    const idNumber = random % 1000;
     yield put(addAlert({
       err: e,
       msg: 'Hubo un error al actualizar el menu intenta de nuevo.',
@@ -153,12 +151,12 @@ function* updateMenuSaga({ payload: { template, menuId } }) {
 
 function* deleteMenuImageSaga({ payload: { fileId } }) {
   yield put(newLoading());
+  const random = Math.random() * 10000000;
+  const idNumber = random % 1000;
   try {
     yield call(deleteFileRequest, { fileId });
     const menuId = yield select(menuIdSelector);
     yield put({ type: GET_MENU, payload: menuId });
-    const random = Math.random() * 10000000;
-    const idNumber = random % 1000;
     yield put(addAlert({
       err: false,
       msg: 'El menu fue actualizaco correctamente.',
@@ -166,8 +164,6 @@ function* deleteMenuImageSaga({ payload: { fileId } }) {
       id: `MENUS-${idNumber}`,
     }));
   } catch (e) {
-    const random = Math.random() * 10000000;
-    const idNumber = random % 1000;
     yield put(addAlert({
       err: e,
       msg: 'Hubo un error al actualizar el menu intenta de nuevo.',
@@ -249,7 +245,7 @@ function* copyTemplateConfigSaga({ payload }) {
       err: e,
       msg: 'Hubo un error al generar la configuracion de tu plantilla intenta de nuevo.',
       type: 'error',
-      id: `DISHES-${idNumber}`,
+      id: `MENUS-${idNumber}`,
     }));
   } finally {
     yield put(endLoading());

@@ -141,11 +141,11 @@ function* createCategorySaga({ payload }) {
     menus,
     empresa: empresas[0],
   };
+  const random = Math.random() * 10000000;
+  const idNumber = random % 1000;
   try {
     const catPostResponse = yield call(createCategoryRequest, { jwt, cat: { ...params } });
     yield call(history.push, '/categorias');
-    const random = Math.random() * 10000000;
-    const idNumber = random % 1000;
     yield put(addAlert({
       err: false,
       msg: `La categoria "${catPostResponse.nombre}" fue creada correctamente.`,
@@ -153,8 +153,6 @@ function* createCategorySaga({ payload }) {
       id: `CATEGORIES-${idNumber}`,
     }));
   } catch (e) {
-    const random = Math.random() * 10000000;
-    const idNumber = random % 1000;
     yield put(addAlert({
       err: e,
       msg: 'Hubo un error al crear la categoria intenta de nuevo.',
@@ -185,10 +183,10 @@ function* updateCategorySaga({ payload }) {
     empresa: empresas[0],
     catId,
   };
+  const random = Math.random() * 10000000;
+  const idNumber = random % 1000;
   try {
     yield call(updateCategoryRequest, { jwt, cat: { ...params } });
-    const random = Math.random() * 10000000;
-    const idNumber = random % 1000;
     yield put(addAlert({
       err: false,
       msg: `La categoria "${nombre}" fue actualizada correctamente.`,
@@ -197,8 +195,6 @@ function* updateCategorySaga({ payload }) {
     }));
     yield call(history.push, '/categorias');
   } catch (e) {
-    const random = Math.random() * 10000000;
-    const idNumber = random % 1000;
     yield put(addAlert({
       err: e,
       msg: 'Hubo un error al actualizar la categoria intenta de nuevo.',
