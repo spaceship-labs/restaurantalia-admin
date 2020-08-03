@@ -1,16 +1,18 @@
 import { combineReducers } from 'redux';
 import auth from './auth';
-import menus from './restaurants';
+import restaurants from './restaurants';
 import categories from './categories';
 import dishes from './dishes';
 import menu from './menu';
+import app from './app';
 
 const reducer = combineReducers({
+  app,
   auth,
-  menus,
   menu,
   categories,
   dishes,
+  restaurants,
 });
 
 export default reducer;

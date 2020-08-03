@@ -4,7 +4,6 @@ import dishesActions from '../../actions/dishes';
 const {
   getDish,
   getCategoriesDishes,
-  setDishesLoading,
   createDish,
   updateDish,
   initForm,
@@ -15,7 +14,6 @@ const {
 
 export const createDispatcher = (dispatch) => bindActionCreators({
   getDish,
-  setDishesLoading,
   createDish,
   updateDish,
   initForm,
@@ -26,5 +24,4 @@ export const createDispatcher = (dispatch) => bindActionCreators({
 
 export const mainDispatcher = (dispatch) => bindActionCreators({
   getCategoriesDishes,
-  setDishesLoading,
 }, dispatch);

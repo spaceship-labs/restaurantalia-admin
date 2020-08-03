@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import HeadComponent from '../../components/head';
 import FormComponent from '../../components/form';
-import LoadingComponent from '../../components/loading';
 import ImageZoneComponent from '../../components/imageupload';
 import DeleteSectionComponent from '../../components/delete';
 import { createDispatcher } from './dispatcher';
@@ -63,7 +62,6 @@ const CategoryCreate = ({
   category,
   match,
   getCategory,
-  setCategoriesLoading,
   menus,
   updateCategory,
   createCategory,
@@ -88,7 +86,6 @@ const CategoryCreate = ({
 
   useEffect(() => {
     if (catId) {
-      setCategoriesLoading({ loading: true });
       getCategory(catId);
     }
   }, [catId]);
@@ -138,12 +135,10 @@ const CategoryCreate = ({
       catId,
     };
     // se llama el action que creara los elementos
-    setCategoriesLoading({ loading: true });
     uploadCategoryImage(actionPayload);
   }
 
   function handleDeleteImage(fileId) {
-    setCategoriesLoading({ loading: true });
     deleteCategoryImage({ fileId, catId });
   }
 
@@ -181,7 +176,6 @@ const CategoryCreate = ({
             config={imageInputs}
           />
         )}
-      <LoadingComponent open={loading} />
       {!loading && catId && <DeleteSectionComponent onDelete={handleDelete} />}
     </Layout>
   );
@@ -190,7 +184,6 @@ const CategoryCreate = ({
 CategoryCreate.propTypes = {
   match: PropTypes.object.isRequired,
   getCategory: PropTypes.func.isRequired,
-  setCategoriesLoading: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   createCategory: PropTypes.func.isRequired,
   updateCategory: PropTypes.func.isRequired,

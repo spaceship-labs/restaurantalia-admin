@@ -7,13 +7,14 @@ import {
 } from '../api';
 import dishesActions from '../actions/dishes';
 import categoriesActions from '../actions/categories';
+import appActions from '../actions/app';
 
 const {
   GET_CATEGORIES_DISHES,
   GET_DISHES,
   GET_DISH,
   SET_DISHES,
-  SET_DISHES_LOADING,
+  // SET_DISHES_LOADING,
   SET_DISH,
   CREATE_DISH,
   UPDATE_DISH,
@@ -28,6 +29,8 @@ const {
   SET_CATEGORIES,
 } = categoriesActions.types;
 
+const { newLoading, endLoading, addAlert } = appActions.creators;
+
 const getDishesRequest = async (data) => getDishes(data);
 const getCategoriesState = (state) => (state.categories.categoriesIds);
 const getCategoriesRequest = async (data) => getCategories(data);
@@ -41,6 +44,7 @@ const deleteFileRequest = async (data) => deleteFile(data);
 const deleteDishRequest = async (data) => deleteDish(data);
 
 function* getCategoriesDishesSaga() {
+  yield put(newLoading());
   try {
     const ids = yield select(getCategoriesState);
     if (ids.length === 0) {
@@ -48,19 +52,28 @@ function* getCategoriesDishesSaga() {
       const user = yield select(getUser);
       const empresasIds = user.empresas.map((r) => r.id);
       const categoriesResponse = yield call(getCategoriesRequest, { jwt, empresasIds });
-      console.log(categoriesResponse);
       yield put({ type: SET_CATEGORIES, payload: { categoriesResponse } });
       const categoriesIds = categoriesResponse.map((c) => c.id);
       yield put({ type: GET_DISHES, payload: { categoriesIds } });
     } else {
       yield put({ type: GET_DISHES, payload: { categoriesIds: ids } });
     }
-  } catch {
-    yield put({ type: SET_DISHES_LOADING, payload: { loading: true } });
+  } catch (e) {
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al la lista de platillos intenta de nuevo.',
+      type: 'error',
+      id: `DISHES-${idNumber}`,
+    }));
+  } finally {
+    yield put(endLoading());
   }
 }
 
 function* getDishesSaga() {
+  yield put(newLoading());
   try {
     // console.log('GETING DISHES');
     const jwt = yield select(getJwt);
@@ -69,17 +82,24 @@ function* getDishesSaga() {
     const empresasIds = user.empresas.map((r) => r.id);
     if (empresasIds.length > 0) {
       const dishesResponse = yield call(getDishesRequest, { jwt, empresasIds });
-      console.log('dishesResponse', empresasIds, dishesResponse);
       yield put({ type: SET_DISHES, payload: { dishesResponse } });
     }
   } catch (e) {
-    console.log(e);
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al la lista de platillos intenta de nuevo.',
+      type: 'error',
+      id: `DISHES-${idNumber}`,
+    }));
   } finally {
-    yield put({ type: SET_DISHES_LOADING, payload: { loading: false } });
+    yield put(endLoading());
   }
 }
 
 function* initFormSaga() {
+  yield put(newLoading());
   const jwt = yield select(getJwt);
   const user = yield select(getUser);
   const empresasIds = user.empresas.map((r) => r.id);
@@ -88,31 +108,44 @@ function* initFormSaga() {
     const categoriesState = categoriesResponse.map((it) => ({ id: it.id, nombre: it.nombre }));
     yield put({ type: SET_CREATE_CATEGORIES, payload: [...categoriesState] });
   } catch (e) {
-    console.log(e);
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al cargar la pagina intenta de nuevo.',
+      type: 'error',
+      id: `DISHES-${idNumber}`,
+    }));
   } finally {
-    yield put({ type: SET_DISHES_LOADING, payload: { loading: false } });
+    yield put(endLoading());
   }
 }
 
 function* getDishSaga({ payload: dishId }) {
+  yield put(newLoading());
   const jwt = yield select(getJwt);
   const user = yield select(getUser);
   const empresasIds = user.empresas.map((r) => r.id);
-  console.log('GET DISH', dishId);
   try {
     const dishResponse = yield call(getDishRequest, { jwt, dishId });
     const dishCategories = dishResponse.categorias.map((it) => ({ id: it.id, nombre: it.nombre }));
     const validDish = empresasIds.indexOf(dishResponse.empresa.id);
-    // console.log('DISH RESPONSE', validDish, dishResponse);
     if (validDish >= 0) {
       yield put({ type: SET_DISH, payload: { ...dishResponse, categorias: dishCategories } });
     } else {
       yield call(history.push, '/platillos');
     }
   } catch (e) {
-    console.log(e);
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al obtener la informacion del platillo intenta de nuevo.',
+      type: 'error',
+      id: `DISHES-${idNumber}`,
+    }));
   } finally {
-    yield put({ type: SET_DISHES_LOADING, payload: { loading: false } });
+    yield put(endLoading());
   }
 }
 
@@ -139,16 +172,29 @@ function* createDishSaga({ payload }) {
     categorias,
     empresa: empresas[0],
   };
+  const random = Math.random() * 10000000;
+  const idNumber = random % 1000;
   try {
-    const dishPostResponse = yield call(createDishRequest, { jwt, dish: { ...params } });
+    yield call(createDishRequest, { jwt, dish: { ...params } });
     yield call(history.push, '/platillos');
-    console.log(dishPostResponse);
+    yield put(addAlert({
+      err: false,
+      msg: `El platillo "${nombre}" fue creado correctamente.`,
+      type: 'success',
+      id: `DISHES-${idNumber}`,
+    }));
   } catch (e) {
-    console.log(e);
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al crear el platillo intenta de nuevo.',
+      type: 'error',
+      id: `DISHES-${idNumber}`,
+    }));
   }
 }
 
 function* updateDishSaga({ payload }) {
+  yield put(newLoading());
   const jwt = yield select(getJwt);
   const user = yield select(getUser);
   const empresas = user.empresas.map((r) => r.id);
@@ -173,21 +219,33 @@ function* updateDishSaga({ payload }) {
     empresa: empresas[0],
     dishId,
   };
+  const random = Math.random() * 10000000;
+  const idNumber = random % 1000;
   try {
-    const dishPUResponse = yield call(updateDishRequest, { jwt, dish: { ...params } });
+    yield call(updateDishRequest, { jwt, dish: { ...params } });
     yield call(history.push, '/platillos');
-    console.log(dishPUResponse);
+    yield put(addAlert({
+      err: false,
+      msg: `El platillo "${nombre}" fue actualizado correctamente.`,
+      type: 'success',
+      id: `DISHES-${idNumber}`,
+    }));
   } catch (e) {
-    console.log(e);
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al actualizar la informacion del platillo intenta de nuevo.',
+      type: 'error',
+      id: `DISHES-${idNumber}`,
+    }));
   } finally {
-    yield put({ type: SET_DISHES_LOADING, payload: { loading: false } });
+    yield put(endLoading());
   }
 }
 
 function* uploadDishImageSaga({ payload }) {
+  yield put(newLoading());
   const { files, dishId } = payload;
   const jwt = yield select(getJwt);
-  // const user = yield select(getUser);
   // eslint-disable-next-line no-undef
   const data = new FormData();
   data.append('ref', 'platillos');
@@ -195,27 +253,40 @@ function* uploadDishImageSaga({ payload }) {
   data.append('field', 'imagen');
   files.map((f) => data.append('files', f.file, f.file.name));
   try {
-    // console.log('UPLOAD 1', dishId, data);
-    const uploadResponse = yield call(uploadMediaRequest, { jwt, params: data });
-    console.log('UPLOAD 2', uploadResponse);
-    // yield call(history.push, `/platillos/editar/${dishId}`);
+    yield call(uploadMediaRequest, { jwt, params: data });
     yield put({ type: GET_DISH, payload: dishId });
   } catch (e) {
-    console.log(e);
-    yield put({ type: SET_DISHES_LOADING, payload: { loading: false } });
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al la lista de platillos intenta de nuevo.',
+      type: 'error',
+      id: `DISHES-${idNumber}`,
+    }));
+  } finally {
+    yield put(endLoading());
   }
 }
 
 function* deleteDishImageSaga({ payload }) {
+  yield put(newLoading());
   const { fileId, dishId } = payload;
   const jwt = yield select(getJwt);
   try {
-    const deleteResponse = yield call(deleteFileRequest, { jwt, fileId });
-    console.log('DELETE', fileId, dishId, deleteResponse);
+    yield call(deleteFileRequest, { jwt, fileId });
     yield put({ type: GET_DISH, payload: dishId });
   } catch (e) {
-    console.log(e);
-    yield put({ type: SET_DISHES_LOADING, payload: { loading: false } });
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al borrar la imagen intenta de nuevo.',
+      type: 'error',
+      id: `DISHES-${idNumber}`,
+    }));
+  } finally {
+    yield put(endLoading());
   }
 }
 
@@ -225,19 +296,30 @@ function* deleteDishSaga({ payload }) {
   const user = yield select(getUser);
   const empresasIds = user.empresas.map((r) => r.id);
 
+  const random = Math.random() * 10000000;
+  const idNumber = random % 1000;
   try {
     const dishResponse = yield call(getDishRequest, { jwt, dishId });
     const validDish = empresasIds.indexOf(dishResponse.empresa.id);
     if (validDish >= 0) {
-      const dishDELETEesponse = yield call(deleteDishRequest, { jwt, dishId });
+      yield call(deleteDishRequest, { jwt, dishId });
       yield call(history.push, '/platillos');
-      console.log('DELETE RESPONSE', dishDELETEesponse);
+      yield put(addAlert({
+        err: false,
+        msg: 'El platillo fue eliminado correctamente.',
+        type: 'success',
+        id: `DISHES-${idNumber}`,
+      }));
     } else {
       throw new Error('forbidden');
     }
-    // hjgj
   } catch (e) {
-    console.log('error', e);
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al borrar el platillo intenta de nuevo.',
+      type: 'error',
+      id: `DISHES-${idNumber}`,
+    }));
     yield call(history.push, '/platillos');
   }
 }
