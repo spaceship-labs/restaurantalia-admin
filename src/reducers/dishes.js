@@ -33,7 +33,7 @@ const categoriesReducer = (state = initalState, action) => {
       dishesList,
       dishesIds,
     };
-    // console.log('dishes state', newState);
+
     return newState;
   }
   if (type === dishesActions.types.SET_DISHES_LOADING) {

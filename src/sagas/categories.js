@@ -13,15 +13,15 @@ import {
   deleteCategory,
 } from '../api';
 import categoriesActions from '../actions/categories';
+import appActions from '../actions/app';
 
 //  REFACTOr NEEDED
 const {
   GET_CATEGORY,
   GET_CATEGORIES,
   SET_CATEGORIES,
-  SET_CATEGORIES_LOADING,
   SET_CREATE_MENUS,
-  INIT_CATEGORY_FORM,
+  INIT_FORM,
   SET_CATEGORY,
   CREATE_CATEGORY,
   UPDATE_CATEGORY,
@@ -29,6 +29,8 @@ const {
   DELETE_CATEGORY_IMAGE,
   DELETE_CATEGORY,
 } = categoriesActions.types;
+
+const { newLoading, endLoading, addAlert } = appActions.creators;
 
 const getMenusRequest = async (data) => getMenus(data);
 const getCategoryRequest = async (data) => getCategory(data);
@@ -42,6 +44,7 @@ const getUser = (state) => (state.auth.user);
 const getJwt = (state) => (state.auth.jwt);
 
 function* getCategoriesSaga() {
+  yield put(newLoading());
   try {
     const jwt = yield select(getJwt);
     const user = yield select(getUser);
@@ -51,14 +54,23 @@ function* getCategoriesSaga() {
     // console.log('categoriesResponse', categoriesResponse);
     yield put({ type: SET_CATEGORIES, payload: { categoriesResponse } });
   } catch (e) {
-    console.log(e);
+    // console.log(e);
     // set error
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al cargar la lista de categorias intenta de nuevo.',
+      type: 'error',
+      id: `CATEGORIES-${idNumber}`,
+    }));
   } finally {
-    yield put({ type: SET_CATEGORIES_LOADING, payload: { loading: false } });
+    yield put(endLoading());
   }
 }
 
 function* initFormSaga() {
+  yield put(newLoading());
   const jwt = yield select(getJwt);
   const user = yield select(getUser);
   const restaurantIds = user.restaurantes.map((r) => r.id);
@@ -67,13 +79,22 @@ function* initFormSaga() {
     const menusState = menusResponse.map((it) => ({ id: it.id, nombre: it.nombre }));
     yield put({ type: SET_CREATE_MENUS, payload: [...menusState] });
   } catch (e) {
-    console.log(e);
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error recarga la pagina.',
+      type: 'error',
+      id: `CATEGORIES-${idNumber}`,
+    }));
+    // console.log(e);
   } finally {
-    yield put({ type: SET_CATEGORIES_LOADING, payload: { loading: false } });
+    yield put(endLoading());
   }
 }
 
 function* getCategorySaga({ payload: catId }) {
+  yield put(newLoading());
   const jwt = yield select(getJwt);
   const user = yield select(getUser);
   const empresasIds = user.empresas.map((r) => r.id);
@@ -87,9 +108,17 @@ function* getCategorySaga({ payload: catId }) {
       yield call(history.push, '/categorias');
     }
   } catch (e) {
-    console.log(e);
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al obtener la lista de cartegorias intenta de nuevo.',
+      type: 'error',
+      id: `CATEGORIES-${idNumber}`,
+    }));
+    // console.log(e);
   } finally {
-    yield put({ type: SET_CATEGORIES_LOADING, payload: { loading: false } });
+    yield put(endLoading());
   }
 }
 
@@ -112,12 +141,24 @@ function* createCategorySaga({ payload }) {
     menus,
     empresa: empresas[0],
   };
+  const random = Math.random() * 10000000;
+  const idNumber = random % 1000;
   try {
     const catPostResponse = yield call(createCategoryRequest, { jwt, cat: { ...params } });
     yield call(history.push, '/categorias');
-    console.log(catPostResponse);
+    yield put(addAlert({
+      err: false,
+      msg: `La categoria "${catPostResponse.nombre}" fue creada correctamente.`,
+      type: 'success',
+      id: `CATEGORIES-${idNumber}`,
+    }));
   } catch (e) {
-    console.log(e);
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al crear la categoria intenta de nuevo.',
+      type: 'error',
+      id: `CATEGORIES-${idNumber}`,
+    }));
   }
 }
 
@@ -142,16 +183,29 @@ function* updateCategorySaga({ payload }) {
     empresa: empresas[0],
     catId,
   };
+  const random = Math.random() * 10000000;
+  const idNumber = random % 1000;
   try {
-    const catPUTResponse = yield call(updateCategoryRequest, { jwt, cat: { ...params } });
-    console.log(catPUTResponse);
+    yield call(updateCategoryRequest, { jwt, cat: { ...params } });
+    yield put(addAlert({
+      err: false,
+      msg: `La categoria "${nombre}" fue actualizada correctamente.`,
+      type: 'success',
+      id: `CATEGORIES-${idNumber}`,
+    }));
     yield call(history.push, '/categorias');
   } catch (e) {
-    console.log(e);
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al actualizar la categoria intenta de nuevo.',
+      type: 'error',
+      id: `CATEGORIES-${idNumber}`,
+    }));
   }
 }
 
 function* uploadCategoryImageSaga({ payload }) {
+  yield put(newLoading());
   const { files, catId } = payload;
   const jwt = yield select(getJwt);
   // const user = yield select(getUser);
@@ -162,14 +216,18 @@ function* uploadCategoryImageSaga({ payload }) {
   data.append('field', 'imagen');
   files.map((f) => data.append('files', f.file, f.file.name));
   try {
-    // console.log('UPLOAD 1', catId, data);
-    const uploadResponse = yield call(uploadMediaRequest, { jwt, params: data });
-    console.log('UPLOAD 2', uploadResponse);
-    // yield call(history.push, `/platillos/editar/${catId}`);
+    yield call(uploadMediaRequest, { jwt, params: data });
     yield put({ type: GET_CATEGORY, payload: catId });
   } catch (e) {
-    console.log(e);
-    yield put({ type: SET_CATEGORIES_LOADING, payload: { loading: false } });
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al subir la iamgen intenta de nuevo.',
+      type: 'error',
+      id: `CATEGORIES-${idNumber}`,
+    }));
+    yield put(endLoading());
   }
 }
 
@@ -183,31 +241,49 @@ function* deleteCategorySaga({ payload }) {
     const dishResponse = yield call(getCategoryRequest, { jwt, catId });
     const validCat = empresasIds.indexOf(dishResponse.empresa.id);
     if (validCat >= 0) {
-      const dishDELETEesponse = yield call(deleteDishRequest, { jwt, catId });
+      yield call(deleteDishRequest, { jwt, catId });
       yield call(history.push, '/categorias');
-      console.log('DELETE RESPONSE', dishDELETEesponse);
+      const random = Math.random() * 10000000;
+      const idNumber = random % 1000;
+      yield put(addAlert({
+        err: false,
+        msg: 'La categoria fue eliminada correctamente.',
+        type: 'success',
+        id: `CATEGORIES-${idNumber}`,
+      }));
     } else {
       throw new Error('forbidden');
     }
-    // hjgj
   } catch (e) {
-    console.log('error', e);
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al borrar la categoria intenta de nuevo.',
+      type: 'error',
+      id: `CATEGORIES-${idNumber}`,
+    }));
     yield call(history.push, '/categorias');
   }
 }
 
 function* deleteCategoryImageSaga({ payload }) {
+  yield put(newLoading());
   const { fileId, catId } = payload;
   const jwt = yield select(getJwt);
-  // const user = yield select(getUser);
   try {
-    const deleteResponse = yield call(deleteFileRequest, { jwt, fileId });
-    console.log('DELETE', fileId, catId, deleteResponse);
+    yield call(deleteFileRequest, { jwt, fileId });
     yield put({ type: GET_CATEGORY, payload: catId });
-    // yield call(history.push, `/platillos/editar/${catId}`);
   } catch (e) {
-    console.log(e);
-    yield put({ type: SET_CATEGORIES_LOADING, payload: { loading: false } });
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al borrar la categoria intenta de nuevo.',
+      type: 'error',
+      id: `CATEGORIES-${idNumber}`,
+    }));
+    yield put(endLoading());
   }
 }
 
@@ -217,7 +293,7 @@ export function* watchgetCategoriesSaga() {
 }
 
 export function* watchInitCategoryFormSaga() {
-  yield takeLatest(INIT_CATEGORY_FORM, initFormSaga);
+  yield takeLatest(INIT_FORM, initFormSaga);
 }
 
 export function* watchgetCategorySaga() {
@@ -246,7 +322,7 @@ export function* watchDeleteCategorySaga() {
 
 export default function* run() {
   yield takeLatest(GET_CATEGORIES, getCategoriesSaga);
-  yield takeLatest(INIT_CATEGORY_FORM, initFormSaga);
+  yield takeLatest(INIT_FORM, initFormSaga);
   yield takeLatest(GET_CATEGORY, getCategorySaga);
   yield takeLatest(CREATE_CATEGORY, createCategorySaga);
   yield takeLatest(UPDATE_CATEGORY, updateCategorySaga);

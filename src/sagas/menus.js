@@ -3,25 +3,37 @@ import {
 } from 'redux-saga/effects';
 // import history from '../history';
 import {
-  getTemplates, getMenu, updateMenuTemplate, deleteFile, createFiles, getTemplate,
+  getTemplates,
+  getMenu,
+  updateMenuTemplate,
+  deleteFile,
+  createFiles,
+  getTemplate,
+  getMenus,
 } from '../api';
 import menusActions from '../actions/menus';
+import appActions from '../actions/app';
 
 //  REFACTOr NEEDED
 const {
-  INIT_MENU_FORM,
+  INIT_FORM,
+  GET_MENUS,
   GET_MENU,
   GET_TEMPLATES,
   SET_TEMPLATES,
-  SET_MENU_LOADING,
+  // SET_MENU_LOADING,
   SET_MENU,
   UPDATE_MENU,
   DELETE_MENU_IMAGE,
   UPLOAD_IMAGES,
   COPY_TEMPLATE_CONFIG,
+  SET_MENUS,
 } = menusActions.types;
 
+const { newLoading, endLoading, addAlert } = appActions.creators;
+
 const getTemplatesRequest = async (data) => getTemplates(data);
+const getMenusRequest = async (data) => getMenus(data);
 const getMenuRequest = async (data) => getMenu(data);
 const updateMenuTemplateRequest = async (data) => updateMenuTemplate(data);
 const uploadMediaRequest = async (data) => createFiles(data);
@@ -30,52 +42,100 @@ const getTemplateRequest = async (data) => getTemplate(data);
 
 const menuTemplateIdSelector = ({ menu: { menu } }) => menu.menus_template.id;
 const menuIdSelector = ({ menu: { menu: { id } } }) => id;
+const userSelector = (state) => (state.auth.user);
+
+function* getMenusSaga({ payload }) {
+  yield put(newLoading());
+  try {
+    const { page } = payload;
+
+    const user = yield select(userSelector);
+    const restaurantIds = user.restaurantes.map((r) => r.id);
+
+    const menusResponse = yield call(getMenusRequest, { restaurantIds, page });
+
+    yield put({ type: SET_MENUS, payload: { menusResponse } });
+  } catch (e) {
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al cargar la lista de menus intenta de nuevo.',
+      type: 'error',
+      id: `MENUS-${idNumber}`,
+    }));
+  } finally {
+    yield put(endLoading());
+  }
+}
 
 function* initFormSaga() {
-  // console.log('Llega a init form');
   yield put({ type: GET_TEMPLATES, payload: null });
 }
 
 function* getTemplatesSaga() {
-  // console.log('llega al get Templates');
+  yield put(newLoading());
   try {
     const templatesResponse = yield call(getTemplatesRequest);
-    // console.log(templatesResponse);
     yield put({ type: SET_TEMPLATES, payload: templatesResponse });
   } catch (e) {
-    console.log(e);
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al cargar la lista de templates intenta de nuevo.',
+      type: 'error',
+      id: `MENUS-${idNumber}`,
+    }));
   } finally {
-    yield put({ type: SET_MENU_LOADING, payload: { loading: false } });
+    yield put(endLoading());
   }
 }
 
 function* getMenuSaga({ payload: menuId }) {
+  yield put(newLoading());
   try {
     const menuResponse = yield call(getMenuRequest, { id: menuId });
-    // console.log(menuResponse);
     yield put({ type: SET_MENU, payload: menuResponse });
   } catch (e) {
-    console.log(e);
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al cargar el menu intenta de nuevo.',
+      type: 'error',
+      id: `MENUS-${idNumber}`,
+    }));
   } finally {
-    yield put({ type: SET_MENU_LOADING, payload: { loading: false } });
+    yield put(endLoading());
   }
 }
 
 function* updateMenuSaga({ payload: { template, menuId } }) {
-  // console.log(template);
   const menuTemplateId = yield select(menuTemplateIdSelector);
-  // console.log(menuTemplateId);
+  const random = Math.random() * 10000000;
+  const idNumber = random % 1000;
   try {
-    const updateResponse = yield call(
+    yield call(
       updateMenuTemplateRequest,
       {
         template: template.value,
         id: menuTemplateId,
       },
     );
-    console.log(updateResponse);
+    yield put(addAlert({
+      err: false,
+      msg: 'El menu fue actualizaco correctamente.',
+      type: 'success',
+      id: `MENUS-${idNumber}`,
+    }));
   } catch (e) {
-    console.log(e);
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al actualizar el menu intenta de nuevo.',
+      type: 'error',
+      id: `MENUS-${idNumber}`,
+    }));
   } finally {
     yield put({
       type: COPY_TEMPLATE_CONFIG,
@@ -85,38 +145,44 @@ function* updateMenuSaga({ payload: { template, menuId } }) {
       },
     });
     yield put({ type: GET_MENU, payload: menuId });
-    // yield put({ type: SET_MENU_LOADING, payload: { loading: false } });
+    yield put(endLoading());
   }
 }
 
 function* deleteMenuImageSaga({ payload: { fileId } }) {
+  yield put(newLoading());
+  const random = Math.random() * 10000000;
+  const idNumber = random % 1000;
   try {
-    yield put({ type: SET_MENU_LOADING, payload: { loading: true } });
-    const deleteResponse = yield call(deleteFileRequest, { fileId });
-    console.log(deleteResponse);
+    yield call(deleteFileRequest, { fileId });
     const menuId = yield select(menuIdSelector);
     yield put({ type: GET_MENU, payload: menuId });
+    yield put(addAlert({
+      err: false,
+      msg: 'El menu fue actualizaco correctamente.',
+      type: 'success',
+      id: `MENUS-${idNumber}`,
+    }));
   } catch (e) {
-    console.log(e);
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al actualizar el menu intenta de nuevo.',
+      type: 'error',
+      id: `MENUS-${idNumber}`,
+    }));
   } finally {
-    yield put({ type: SET_MENU_LOADING, payload: { loading: false } });
+    yield put(endLoading());
   }
 }
 
 function* uploadImagesSaga({ payload }) {
-  yield put({ type: SET_MENU_LOADING, payload: { loading: true } });
+  yield put(newLoading());
   const { logo: logoObj, imagenes: imagenesObj, fondo: fondoObj } = payload;
   const menuTemplateId = yield select(menuTemplateIdSelector);
 
   try {
-    // console.log(payload);
-
-    // Upload logo in case it exists
     if (logoObj.value.length > 0) {
       const logo = logoObj.value[0];
-      // console.log('---------------');
-      // console.log(logo);
-      // console.log('---------------');
       const uploadLogo = new FormData();
       uploadLogo.append('ref', 'menus-template');
       uploadLogo.append('refId', menuTemplateId);
@@ -147,38 +213,50 @@ function* uploadImagesSaga({ payload }) {
       yield call(uploadMediaRequest, { params: uploadImages });
     }
   } catch (e) {
-    console.log(e);
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al actualizar el menu intenta de nuevo.',
+      type: 'error',
+      id: `MENUS-${idNumber}`,
+    }));
   } finally {
     const menuId = yield select(menuIdSelector);
     yield put({ type: GET_MENU, payload: menuId });
+    yield put(endLoading());
   }
 }
 
 function* copyTemplateConfigSaga({ payload }) {
   const { template, menuTemplate } = payload;
-  yield put({ type: SET_MENU_LOADING, payload: { loading: true } });
+  yield put(newLoading());
   try {
     const templateObj = yield call(getTemplateRequest, template);
-    // console.log(templateObj);
-    // console.log(menuTemplate);
     const { configuracion } = templateObj;
-    const updateResponse = yield call(updateMenuTemplateRequest, {
+    yield call(updateMenuTemplateRequest, {
       id: menuTemplate,
       configuracion,
     });
-    // console.log('/*-/*-/-*/-*/-*/-*/*-');
-    console.log(updateResponse);
   } catch (e) {
-    console.log(e);
+    const random = Math.random() * 10000000;
+    const idNumber = random % 1000;
+    yield put(addAlert({
+      err: e,
+      msg: 'Hubo un error al generar la configuracion de tu plantilla intenta de nuevo.',
+      type: 'error',
+      id: `MENUS-${idNumber}`,
+    }));
   } finally {
-    yield put({ type: SET_MENU_LOADING, payload: { loading: false } });
+    yield put(endLoading());
   }
 }
 
 // Export generator
 
 export default function* run() {
-  yield takeLatest(INIT_MENU_FORM, initFormSaga);
+  yield takeLatest(GET_MENUS, getMenusSaga);
+  yield takeLatest(INIT_FORM, initFormSaga);
   yield takeLatest(GET_TEMPLATES, getTemplatesSaga);
   yield takeLatest(GET_MENU, getMenuSaga);
   yield takeLatest(UPDATE_MENU, updateMenuSaga);

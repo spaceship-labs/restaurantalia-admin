@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import Layout from '../layout';
 import HeadComponent from '../../components/head';
 import FormComponent from '../../components/form';
-import LoadingComponent from '../../components/loading';
+// import LoadingComponent from '../../components/loading';
 import ImageZoneComponent from '../../components/imageupload';
 import { formDispatcher } from './dispatcher';
 import selectors from './selectors';
@@ -49,7 +49,6 @@ const FormMenu = ({
   menu,
   match,
   getMenu,
-  setMenuLoading,
   templates,
   updateMenu,
   initMenuForm,
@@ -68,7 +67,6 @@ const FormMenu = ({
   }, []);
 
   useEffect(() => {
-    setMenuLoading({ loading: true });
     getMenu(menuId);
   }, [menuId]);
 
@@ -87,7 +85,6 @@ const FormMenu = ({
 
   function handleSubmit(e) {
     e.preventDefault();
-    setMenuLoading({ loading: true });
     updateMenu({ template: templateField, menuId });
   }
 
@@ -96,11 +93,6 @@ const FormMenu = ({
   }
 
   function handleSubmitImage() {
-    // console.log('Entra aca');
-    // console.log(backgroundField);
-    // console.log(imagesField);
-    // console.log(logoField);
-    setMenuLoading({ loading: true });
     uploadImages({
       fondo: backgroundField,
       imagenes: imagesField,
@@ -134,7 +126,6 @@ const FormMenu = ({
         fields={multimediaFields}
         config={imageInputs}
       />
-      <LoadingComponent open={loading} />
     </Layout>
   );
 };
@@ -144,7 +135,6 @@ FormMenu.propTypes = {
   menu: PropTypes.object.isRequired,
   match: PropTypes.object.isRequired,
   getMenu: PropTypes.func.isRequired,
-  setMenuLoading: PropTypes.func.isRequired,
   initMenuForm: PropTypes.func.isRequired,
   templates: PropTypes.array.isRequired,
   updateMenu: PropTypes.func.isRequired,
